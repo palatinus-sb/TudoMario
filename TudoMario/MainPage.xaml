@@ -9,6 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        
     </Grid>
+    <Comment>
+        Hello world!
+    </Comment>
 </Page>
