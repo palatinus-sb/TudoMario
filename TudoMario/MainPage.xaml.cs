@@ -25,6 +25,18 @@ namespace TudoMario
         public MainPage()
         {
             this.InitializeComponent();
+
+            switch (Configuration.Dev)
+            {
+                case Configuration.Developer.Adam:
+                    break;
+                case Configuration.Developer.Dani:
+                    break;
+                case Configuration.Developer.Patrik:
+                    break;
+                case Configuration.Developer.Soma:
+                    break;
+            }
         }
     }
 }

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace TudoMario
 {
-    class Configuration
+    class MainAdam
     {
-        public static Developer Dev { get; } = Developer.Soma;
-
-        public enum Developer { Adam, Dani, Patrik, Soma }
     }
 }
