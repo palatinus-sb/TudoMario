@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using TudoMario.Map;
+using TudoMario.Ui;
+using TudoMario.Rendering;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,9 +25,18 @@ namespace TudoMario
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        UiController uicontroller;
+        public Grid MainGrid
+        {
+            get
+            {
+                return UiMainGrid;
+            }
+        }
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            new LogicController();
 
             switch (Configuration.Dev)
             {
@@ -37,6 +49,12 @@ namespace TudoMario
                 case Configuration.Developer.Soma:
                     break;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var cont = ((Button)sender).Content.ToString();
+            uicontroller.Testf(cont);
         }
     }
 }

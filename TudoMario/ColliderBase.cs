@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +14,8 @@ namespace TudoMario
     {
         private static readonly List<ColliderBase> colliders = new List<ColliderBase>();
 
-        public float RelativeXPos { get; set; }
-        public float RelativeYPos { get; set; }
-        public float ActualWidth { get; set; }
-        public float ActualHeight { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Size { get; set; }
 
         public bool IsCollidingWith(ColliderBase other)
         {
