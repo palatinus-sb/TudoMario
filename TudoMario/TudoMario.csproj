@@ -136,6 +136,7 @@
     <Compile Include="Map\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PhysicsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\CameraObject.cs" />
     <Compile Include="Rendering\Renderer.cs" />
