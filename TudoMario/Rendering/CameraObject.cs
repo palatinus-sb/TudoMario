@@ -9,8 +9,7 @@ namespace TudoMario.Rendering
     class CameraObject
     {
         private ActorBase Target;
-        private float positionX = 0;
-        private float positionY = 0;
+        private Vector2 Position { get; set; }
         public CameraObject() { }
         public CameraObject(ActorBase target) { Target = target; }
 
@@ -18,32 +17,47 @@ namespace TudoMario.Rendering
         { 
             get
             {
-                return positionX;
+                if (Target != null)
+                {
+                    Position.X = Target.Position.X;
+                }
+                return Position.X;
             }
             set
             {
-                positionX = value;
+                if (Target == null)
+                {
+                    Position.X = value;
+                }
             }
         }
         public float CameraY
         {
             get
             {
-                return positionY;
+                if (Target != null)
+                {
+                    Position.Y = Target.Position.Y;
+                }
+                return Position.Y;
             }
             set
             {
-                positionY = value;
+                if (Target == null)
+                {
+                    Position.Y = value;
+                }
             }
         }
 
         public void BindActor(ActorBase target)
         {
-
+            Target = target;
+            Position = target.Position;
         }
         public void UnbindActor()
         {
-
+            Target = null;
         }
     }
 }

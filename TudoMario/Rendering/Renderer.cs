@@ -22,6 +22,7 @@ namespace TudoMario.Rendering
         Canvas MainCanvasTransform = new Canvas();
 
         CameraObject camera;
+        private float ZoomLevel = 0;
         public CameraObject Camera {
             get
             {
@@ -74,9 +75,30 @@ namespace TudoMario.Rendering
             RenderAround(camera.CameraX, camera.CameraY);
         }
 
+        /// <summary>
+        /// Translates from top right coordinates to normal coordinate system Y.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private float TranslateFromYToMonitorY(float y)
         {
             return (-1 * y);
+        }
+        /// <summary>
+        /// Tells the actual render width in pixels
+        /// </summary>
+        /// <returns></returns>
+        private float DetermineRenderWidth()
+        {
+            return 0f;
+        }
+        /// <summary>
+        /// Returns the objects that are out of render distance therefore have to be unrendered.
+        /// </summary>
+        /// <returns></returns>
+        private List<Panel> GetAllUnrenderableObjects()
+        {
+            return new List<Panel>();
         }
     }
 }

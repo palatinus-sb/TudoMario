@@ -24,6 +24,7 @@ namespace TudoMario.Ui
             _renderer.Camera = camera;
             ShowMap();
         }
+
         public void ShowMap()
         {
             MapBase mapBase = new MapBase();
@@ -72,6 +73,8 @@ namespace TudoMario.Ui
 
             _renderer.RenderAtCamera();
         }
+
+        public void 
 
 
     }
