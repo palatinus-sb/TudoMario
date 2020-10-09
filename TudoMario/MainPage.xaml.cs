@@ -26,6 +26,7 @@ namespace TudoMario
     public sealed partial class MainPage : Page
     {
         UiController uicontroller;
+        Renderer renderer;
         public Grid MainGrid
         {
             get
@@ -41,6 +42,8 @@ namespace TudoMario
             switch (Configuration.Dev)
             {
                 case Configuration.Developer.Adam:
+                    renderer = new Renderer(this);
+                    uicontroller = new UiController(this,renderer);
                     break;
                 case Configuration.Developer.Dani:
                     break;

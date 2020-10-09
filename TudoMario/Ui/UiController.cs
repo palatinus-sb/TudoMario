@@ -15,7 +15,7 @@ namespace TudoMario.Ui
         MainPage _main;
         Renderer _renderer;
         CameraObject camera;
-        public UiController(MainPage mainpage,Renderer renderer)
+        public UiController(MainPage mainpage, Renderer renderer)
         {
             camera = new CameraObject();
 
@@ -25,9 +25,12 @@ namespace TudoMario.Ui
             ShowMap();
         }
 
+        /// <summary>
+        /// Only for UI testing;
+        /// </summary>
         public void ShowMap()
         {
-            MapBase mapBase = new MapBase();
+            MapBase mapBase = new MapBase(new Vector2(0,0));
             Chunk testchunk = new Chunk();
             Chunk testchunk2 = new Chunk();
 
@@ -43,6 +46,8 @@ namespace TudoMario.Ui
             mapBase.AddChunkAt(testchunk, 0, 0);
             mapBase.AddChunkAt(testchunk2, 1, 0);
 
+            _renderer.CurrentMap = mapBase;
+
             _renderer.RenderChunkAt(testchunk, 0, 0);
             _renderer.RenderChunkAt(testchunk2, 1, 0);
 
@@ -50,17 +55,22 @@ namespace TudoMario.Ui
             testchunk3.FillChunkWith(typeof(Tile), @"ms-appx:/Assets//GroundBase.png");
 
             _renderer.RenderChunkAt(testchunk3, -1, 0);
+            _renderer.RenderAround(new Vector2(0, 0));
+            _renderer.Render();
         }
 
+        /// <summary>
+        /// Only for UI testing;
+        /// </summary>
         public void Testf(string cont)
         {
             if (cont == "Left")
             {
-                camera.CameraX-= 20;
+                camera.CameraX -= 20;
             }
             if (cont == "Right")
             {
-                camera.CameraX+=20;
+                camera.CameraX += 20;
             }
             if (cont == "Up")
             {
@@ -68,14 +78,13 @@ namespace TudoMario.Ui
             }
             if (cont == "Down")
             {
-                camera.CameraY = camera.CameraY -20;
+                camera.CameraY = camera.CameraY - 20;
             }
 
             _renderer.RenderAtCamera();
         }
 
-        public void 
-
-
     }
 }
+    
+

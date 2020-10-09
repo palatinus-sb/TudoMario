@@ -10,7 +10,7 @@ namespace TudoMario.Rendering
     {
         private ActorBase Target;
         private Vector2 Position { get; set; }
-        public CameraObject() { }
+        public CameraObject() { Position = new Vector2(0, 0); }
         public CameraObject(ActorBase target) { Target = target; }
 
         public float CameraX 
@@ -50,11 +50,18 @@ namespace TudoMario.Rendering
             }
         }
 
+        /// <summary>
+        /// Binds the actor to the camera. The camera will render around the target each Render() tick.
+        /// </summary>
+        /// <param name="target"></param>
         public void BindActor(ActorBase target)
         {
             Target = target;
             Position = target.Position;
         }
+        /// <summary>
+        /// Unbinds the actor and lets the camera stay in position.
+        /// </summary>
         public void UnbindActor()
         {
             Target = null;
