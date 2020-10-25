@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using TudoMario.Map;
 using TudoMario.Ui;
 using TudoMario.Rendering;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -26,6 +27,10 @@ namespace TudoMario
     public sealed partial class MainPage : Page
     {
         UiController uicontroller;
+        Timer timer = new Timer(10);
+        Stopwatch stopwatch = new Stopwatch();
+        int counter = 0;
+
         public Grid MainGrid
         {
             get
@@ -33,10 +38,14 @@ namespace TudoMario
                 return UiMainGrid;
             }
         }
+
         public MainPage()
         {
             InitializeComponent();
-            new LogicController();
+
+            stopwatch.Start();
+            timer.Tick += Timer_Tick;
+            timer.Start();
 
             switch (Configuration.Dev)
             {
@@ -48,6 +57,17 @@ namespace TudoMario
                     break;
                 case Configuration.Developer.Soma:
                     break;
+            }
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            counter++;
+            if (counter % 100 == 0)
+            {
+                Debug.WriteLine("Avg tick time: " + (stopwatch.ElapsedMilliseconds / 100) + " ms");
+                counter = 0;
+                stopwatch.Restart();
             }
         }
 
