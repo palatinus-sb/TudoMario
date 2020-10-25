@@ -16,6 +16,7 @@ namespace TudoMario
         /// Relative coordinates on the map.
         /// </summary>
         public Vector2 Position { get; set; }
+
         /// <summary>
         /// The actor's speed vector.
         /// </summary>
@@ -33,6 +34,7 @@ namespace TudoMario
         /// </summary>
         public int StressLevel { get; set; }
         public bool CanMove { get; set; }
+        private ColliderBase Collider { get; set; }
 
         public int TakeDamage()
         {
@@ -43,5 +45,15 @@ namespace TudoMario
         {
             throw new NotImplementedException();
         }
+
+        public void CreateCollider(ColliderBase target)
+        {
+            Collider = target;
+        }
+
+        /*public void UnBindCollider(ColliderBase target)
+        {
+            ColliderActor = null;
+        }*/
     }
 }
