@@ -15,13 +15,16 @@ namespace TudoMario
     public class UserControlHandler
     {
         public List<KeyAction> PressedKeys { get; set; } = new List<KeyAction>();
-        public UserControlHandler() {
+        public UserControlHandler()
+        {
             Window.Current.CoreWindow.KeyDown += UserKeyDown;
             Window.Current.CoreWindow.KeyUp += UserKeyUp;
         }
 
-        private void UserKeyDown(CoreWindow sender, KeyEventArgs e) {
-            switch (e.VirtualKey) {
+        private void UserKeyDown(CoreWindow sender, KeyEventArgs e)
+        {
+            switch (e.VirtualKey)
+            {
                 case VirtualKey.W: PressedKeys.Add(KeyAction.UP); break;
                 case VirtualKey.A: PressedKeys.Add(KeyAction.LEFT); break;
                 case VirtualKey.S: PressedKeys.Add(KeyAction.DOWN); break;
@@ -33,9 +36,10 @@ namespace TudoMario
                 case VirtualKey.GamepadLeftThumbstickRight: PressedKeys.Add(KeyAction.RIGHT); break;
             }
         }
-
-        private void UserKeyUp(CoreWindow sender, KeyEventArgs e) {
-            switch (e.VirtualKey) {
+        private void UserKeyUp(CoreWindow sender, KeyEventArgs e)
+        {
+            switch (e.VirtualKey)
+            {
                 case VirtualKey.W: PressedKeys.Remove(KeyAction.UP); break;
                 case VirtualKey.A: PressedKeys.Remove(KeyAction.LEFT); break;
                 case VirtualKey.S: PressedKeys.Remove(KeyAction.DOWN); break;

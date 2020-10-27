@@ -13,5 +13,8 @@
 		<Button Content="Right" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="105,0,0,0"></Button>
 		<Button Content="Up" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="390,0,0,0"></Button>
 		<Button Content="Down" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="285,0,0,0"></Button>
+        <!--<Grid KeyControl="Grid_KeyControl">
+        
+        </Grid>-->
     </Grid>
 </Page>
