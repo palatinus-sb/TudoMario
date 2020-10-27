@@ -11,51 +11,53 @@ namespace TudoMario
 {
     public class LogicController
     {
-        Stopwatch stopwatch = new Stopwatch();
-        int desiredMilisec = 16;
-        float avg = 0;
-        int cnt = 0;
-
-        public LogicController()
-        {
-            if (desiredMilisec < 1)
-                throw new Exception();
-            stopwatch.Start();
+        UserControlHandler userControl = new UserControlHandler();
+        bool gameStarted = false;
+        bool gameEnded = false;
+        private Timer timer = new Timer(16);
+        public LogicController() {
+            timer.Tick += OnTimerTick;
         }
 
-        private void Tick(object sender, EventArgs e)
-        {
-            Tick();
+        public void OnTimerTick(object sender, EventArgs e) {
+            CheckGameState();
+            CheckCollisions();
+            AiDecideMovement();
+            //UserMovementBasedOnHandler();
+            //ApplyPhysicsOnActiveActors();
+            RenderGameState();        
         }
 
-        private void Tick()
-        {
-            float sum = avg * cnt;
-            sum += stopwatch.ElapsedMilliseconds;
-            cnt++;
-            avg = sum / cnt;
-            stopwatch.Restart();
+        private void CheckGameState() { }
 
-            if (cnt % (1000 / desiredMilisec) == 0)
-            {
-                Debug.WriteLine("Avg tick lag: " + (avg - desiredMilisec) + " ms");
-                avg = 0;
-                cnt = 0;
+        private void CheckCollisions() { }
+
+        private void AiDecideMovement() { }
+
+        private void RenderGameState() { }
+
+        private void UserMovementBasedOnHandler(ActorBase actor)
+        {
+            //Vertical movement
+            if (this.userControl.PressedKeys.Contains(KeyAction.UP)) {
+                actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, actor.MovementSpeed.Y + PhysicsController.JumpHeight);
+            }
+
+            //Horizontal movement
+            if (this.userControl.PressedKeys.Contains(KeyAction.RIGHT)) {
+                actor.MovementSpeed = new Vector2(actor.MovementSpeed.X + PhysicsController.Movement, actor.MovementSpeed.Y);
+            } else if (this.userControl.PressedKeys.Contains(KeyAction.LEFT)) {
+                actor.MovementSpeed = new Vector2(actor.MovementSpeed.X - PhysicsController.Movement, actor.MovementSpeed.Y);
+            } else {
+                actor.MovementSpeed = new Vector2(0, actor.MovementSpeed.Y);
             }
         }
 
-        public async void Start()
-        {
-            // System.Diagnostics.Stopwatch
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (stopwatch.ElapsedMilliseconds < desiredMilisec)
-                        continue;
-                    Tick();
-                }
-            });
+        private void ApplyPhysicsOnActiveActors(ActorBase actor) {
+            PhysicsController.ApplyFrictionOnGround(actor);
+            PhysicsController.ApplySpeedLimitOnGround(actor);
+            PhysicsController.ApplyGravity(actor);
+            actor.Position = new Vector2(actor.Position.X + actor.MovementSpeed.X, actor.Position.Y);
         }
     }
 }

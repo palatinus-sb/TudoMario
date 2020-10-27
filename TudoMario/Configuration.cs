@@ -8,7 +8,7 @@ namespace TudoMario
 {
     class Configuration
     {
-        public static Developer Dev { get; } = Developer.Soma;
+        public static Developer Dev { get; } = Developer.Dani;
 
         public enum Developer { Adam, Dani, Patrik, Soma }
     }
