@@ -40,63 +40,8 @@ namespace TudoMario
         public MainPage()
         {
             InitializeComponent();
-
-            bool ControlLeftPushed = false;
-            bool ControlRightPushed = false;
-            bool ControlUpPushed = false;
-            bool ControlDownPushed = false;
-
             LogicController logiccontroller = new LogicController();
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
-
-            void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
-            {
-                string KeyPressed = e.VirtualKey.ToString();
-                if ("W" == KeyPressed || "Space" == KeyPressed)
-                {
-                    ControlUpPushed = true;
-                }
-                if ("A" == KeyPressed)
-                {
-                    ControlLeftPushed = true;
-                }
-                if ("S" == KeyPressed)
-                {
-                    ControlDownPushed = true;
-                }
-                if ("D" == KeyPressed)
-                {
-                    ControlRightPushed = true;
-                }
-                if (ControlLeftPushed && ControlRightPushed)
-                {
-                    ControlLeftPushed = false;
-                    ControlRightPushed = false;
-                }
-            }
-
-            void CoreWindow_KeyUp(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
-            {
-                string KeyPressed = e.VirtualKey.ToString();
-                if ("W" == KeyPressed || "Space" == KeyPressed)
-                {
-                    ControlUpPushed = false;
-                }
-                if ("A" == KeyPressed)
-                {
-                    ControlLeftPushed = false;
-                }
-                if ("S" == KeyPressed)
-                {
-                    ControlDownPushed = false;
-                }
-                if ("D" == KeyPressed)
-                {
-                    ControlRightPushed = false;
-                }
-            }
-
+            
             switch (Configuration.Dev)
             {
                 case Configuration.Developer.Adam:
