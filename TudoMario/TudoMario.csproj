@@ -143,6 +143,7 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Ui\UiController.cs" />
+    <Compile Include="UserControlHandler.cs" />
     <Compile Include="Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
