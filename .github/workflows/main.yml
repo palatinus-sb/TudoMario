@@ -23,8 +23,8 @@ jobs:
     - name: Build and Test
       run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
  
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: published_app
-        path: bin\Release\Publish
+    #- name: Upload Artifact
+      #uses: actions/upload-artifact@v1.0.0
+      #with:
+        #name: published_app
+        #path: bin\Release\Publish
