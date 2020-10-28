@@ -24,7 +24,7 @@ jobs:
       run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
  
     - name: Run Tests
-      run: '& "$(vswhere -property installationPath)\Common7\IDE\MSTest.exe" /help'
+      run: '& "$(vswhere -property installationPath)\Common7\IDE\MSTest.exe" /testcontainer:\TudoMarioTests\bin\x86\Release\TudoMarioTests.dll'
       
     - name: Echo Directory
       run: echo %CD%
