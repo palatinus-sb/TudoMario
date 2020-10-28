@@ -21,7 +21,7 @@ jobs:
       run: nuget restore TudoMario.sln
  
     - name: Build Solution
-      run: msbuild TudoMario.sln /t:TudoMario /t:TudoMarioTests /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
+      run: msbuild TudoMario.sln /t:TudoMario /t:TudoMarioTests /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
           
     - name: Logging workdir
       run: pwd
@@ -33,7 +33,7 @@ jobs:
       uses: darenm/Setup-VSTest@v1
       
     - name: VSTest
-      run: vstest.console.exe /Platform:x64 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
     #- name: Ls of Core
       #run: ls .\TudoMarioTests\bin\x86\Debug\Core\
  
