@@ -21,7 +21,7 @@ jobs:
       run: nuget restore TudoMario.sln
  
     - name: Build Solution
-      run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: msbuild TudoMario.sln /t:TudoMario;TudoMarioTests /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
           
     - name: Logging workdir
       run: pwd
