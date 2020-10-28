@@ -34,7 +34,7 @@ jobs:
       
     - name: VSTest
       #run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests.build.appxrecipe
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe
     #- name: Ls of Core
       #run: ls .\TudoMarioTests\bin\x86\Debug\Core\
  
