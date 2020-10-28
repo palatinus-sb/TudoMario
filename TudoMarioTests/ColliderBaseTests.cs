@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TudoMarioTests
 {
     [TestClass]
-    class ColliderBaseTests
+    public class ColliderBaseTests
     {
         [TestMethod]
         public void TestIsCollidingWith()
