@@ -48,5 +48,5 @@ jobs:
       with:
         name: test-results
     
-    - name: Print out Directory Structure
-      run: ls -R
+    - name: Print out Log File
+      run: cat *.trx
