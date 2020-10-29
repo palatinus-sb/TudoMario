@@ -20,42 +20,44 @@ jobs:
     - name: Build Solution
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
 
-    - name: Upload workdir Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: workdir
-        path: |
-          *
- 
   test:
     needs: [build]
     runs-on: windows-latest
     steps:
 
-    - name: Read workdir Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: workdir
-
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
     - name: Setup MSBuild Path
       uses: warrenbuckley/Setup-MSBuild@v1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore TudoMario.sln
+ 
+    - name: Build Solution
+      run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
     
     - name: Setup VSTest
       uses: darenm/Setup-VSTest@v1
       
     - name: Run Tests
       run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
-      continue-on-error: true
+      #continue-on-error: true
     
     - name: Print out Log File
+      if: ${{ always() }}
       run: cat testresult.txt
  
     - name: Upload test-result Artifact
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: test-results
         path: testresult.txt
 
-    - name: Check if Testing Fails
-      if: failure()
-      run: exit 1
+    #- name: Check if Testing Fails
+      ##if: failure()
+      ###run: exit 1
