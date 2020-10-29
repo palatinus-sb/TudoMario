@@ -34,8 +34,18 @@ jobs:
     - name: Print out Directory Structure
       run: ls -R
  
-    #- name: Upload Artifact
-      #uses: actions/upload-artifact@v1.0.0
-      #with:
-        #name: published_app
-        #path: bin\Release\Publish
+    - uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: TestResults/*.trx
+
+  test:
+    runs-on: windows-latest
+    steps:
+    - name: Read artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: test-results
+    
+    - name: Print out Directory Structure
+      run: ls -R
