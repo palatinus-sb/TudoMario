@@ -32,6 +32,7 @@ jobs:
     - name: Run Tests
       #run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
       run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx;LogFileName=TestResults.trx
+      continue-on-error: true
       
     - name: Print out directory structure
       run: ls -R
