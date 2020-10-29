@@ -25,21 +25,16 @@ jobs:
           
     - name: Logging workdir
       run: pwd
-      
-    - name: Recursive ls
-      run: ls -R
-      
+ 
     - name: Setup VSTest Path
       uses: darenm/Setup-VSTest@v1
       
-    - name: VSTest
+    - name: Run Tests
       #run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe
-    #- name: Ls of Core
-      #run: ls .\TudoMarioTests\bin\x86\Debug\Core\
- 
-    #- name: Run Tests
-      #run: '& "$(vswhere -property installationPath)\Common7\IDE\MSTest.exe" .\TudoMarioTests\bin\x86\Debug\Core\TudoMarioTests.exe'
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx;LogFileName=TestResults.trx
+      
+    - name: Print out directory structure
+      run: ls -R
  
     #- name: Upload Artifact
       #uses: actions/upload-artifact@v1.0.0
