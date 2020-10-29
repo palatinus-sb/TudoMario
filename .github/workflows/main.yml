@@ -24,7 +24,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: workdir
-        path: /
+        path: |
+          *
  
   test:
     needs: [build]
@@ -46,7 +47,8 @@ jobs:
     - name: Print out Log File
       run: cat testresult.txt
  
-    - uses: actions/upload-artifact@v2
+    - name: Upload test-result Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: test-results
         path: testresult.txt
