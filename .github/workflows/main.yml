@@ -40,6 +40,7 @@ jobs:
         path: TestResults/*.trx
 
   test:
+    needs: [build]
     runs-on: windows-latest
     steps:
     - name: Read artifact
