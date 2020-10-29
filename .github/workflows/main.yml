@@ -21,7 +21,7 @@ jobs:
       run: nuget restore TudoMario.sln
  
     - name: Build Solution
-      run: msbuild TudoMario.sln /t:TudoMario /t:TudoMarioTests /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+      run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
           
     - name: Logging workdir
       run: pwd
@@ -31,7 +31,7 @@ jobs:
       
     - name: Run Tests
       #run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx;LogFileName=TestResults.trx
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx /logger:LogFileName=TestResults.trx
       continue-on-error: true
       
     - name: Print out directory structure
