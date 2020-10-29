@@ -22,19 +22,16 @@ jobs:
  
     - name: Build Solution
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
-          
-    - name: Logging workdir
-      run: pwd
  
     - name: Setup VSTest Path
       uses: darenm/Setup-VSTest@v1
       
     - name: Run Tests
       #run: vstest.console.exe /Platform:x86 TudoMarioTests\obj\x86\Debug\TudoMarioTests_1.0.0.0_Bundle\TudoMarioTests_1.0.0.0_x86_Debug.appx
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx /logger:LogFileName=TestResults.trx
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe /logger:trx
       continue-on-error: true
       
-    - name: Print out directory structure
+    - name: Print out Directory Structure
       run: ls -R
  
     #- name: Upload Artifact
