@@ -9,7 +9,7 @@ namespace TudoMario.Rendering
     public class CameraObject
     {
         private ActorBase Target;
-        private Vector2 Position { get; set; }
+        private Vector2 Position { get; set; } = new Vector2(0, 0);
         public CameraObject() { Position = new Vector2(0, 0); }
         public CameraObject(ActorBase target) { Target = target; }
 

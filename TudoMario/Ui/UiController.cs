@@ -22,6 +22,7 @@ namespace TudoMario.Ui
             _main = mainpage;
             _renderer = renderer;
             _renderer.Camera = camera;
+
             ShowMap();
         }
 
