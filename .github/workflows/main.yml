@@ -21,7 +21,7 @@ jobs:
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
 
   test:
-    needs: [build]
+    #needs: [build]
     runs-on: windows-latest
     steps:
 
@@ -56,10 +56,6 @@ jobs:
       with:
         name: test-results
         path: testresult.txt
-
-    - name: print folder tructure
-      if: ${{ always() }}
-      run: ls -R
 
     - name: Upload build Artifact
       if: ${{ success() }}
