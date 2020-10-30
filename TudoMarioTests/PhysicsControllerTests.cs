@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TudoMario;
 
@@ -188,4 +188,4 @@ namespace TudoMarioTests
             Assert.AreEqual(actor.MovementSpeed.X, result);
         }
     }
-}*/
+}
