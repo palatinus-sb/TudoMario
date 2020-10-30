@@ -20,15 +20,6 @@ jobs:
     - name: Build Solution
       run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
 
-    - name: print folder tructure
-      run: ls -R
-
-    - name: Upload build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: build
-        path: TudoMario\bin\x86\Release\
-
   test:
     needs: [build]
     runs-on: windows-latest
@@ -47,13 +38,13 @@ jobs:
       run: nuget restore TudoMario.sln
  
     - name: Build Solution
-      run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+      run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
     
     - name: Setup VSTest
       uses: darenm/Setup-VSTest@v1
       
     - name: Run Tests
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Release\TudoMarioTests.build.appxrecipe > testresult.txt
     
     - name: Print out Log File
       if: ${{ always() }}
@@ -65,3 +56,13 @@ jobs:
       with:
         name: test-results
         path: testresult.txt
+
+    - name: print folder tructure
+      run: ls -R
+
+    - name: Upload build Artifact
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: TudoMario\bin\x86\Release\
