@@ -10,8 +10,10 @@ namespace TudoMario
     /// <summary>
     /// 
     /// </summary>
-    public class ActorBase
+    public class ActorBase : ICollideable
     {
+        public ActorBase(Vector2 position, Vector2 size) { Position = position; Size = size; }
+
         /// <summary>
         /// Relative coordinates on the map.
         /// </summary>
@@ -35,7 +37,7 @@ namespace TudoMario
         public int StressLevel { get; set; }
         public bool CanMove { get; set; }
         private ColliderBase Collider { get; set; }
-
+        
         public int TakeDamage()
         {
             throw new NotImplementedException();
