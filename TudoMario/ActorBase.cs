@@ -12,12 +12,13 @@ namespace TudoMario
     /// </summary>
     public class ActorBase : ICollideable
     {
+        public ActorBase() { }
         public ActorBase(Vector2 position, Vector2 size) { Position = position; Size = size; }
 
         /// <summary>
         /// Relative coordinates on the map.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get; set; } = new Vector2(0, 0);
 
         /// <summary>
         /// The actor's speed vector.
@@ -30,7 +31,7 @@ namespace TudoMario
         /// <summary>
         /// The actor's size.
         /// </summary>
-        public Vector2 Size { get; set; }
+        public Vector2 Size { get; set; } = new Vector2(0, 0);
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 100 is dead.
         /// </summary>
