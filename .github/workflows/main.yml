@@ -58,6 +58,7 @@ jobs:
         path: testresult.txt
 
     - name: print folder tructure
+      if: ${{ always() }}
       run: ls -R
 
     - name: Upload build Artifact
