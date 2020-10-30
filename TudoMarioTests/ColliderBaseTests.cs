@@ -16,21 +16,11 @@ namespace TudoMarioTests
         //  ║ 7 ║ 8 ║ 9 ║  ┤
         //  ╚═══╩═══╩═══╝  ┴ -3
 
-        ActorBase actor123 = null;
-        ActorBase actor14 = null;
-        ActorBase actor258 = null;
-        ActorBase actor6 = null;
-        ActorBase actor89 = null;
-
-        [TestInitialize]
-        public void BeforEach()
-        {
-            actor123 = new ActorBase(new Vector2(0, 2), new Vector2(6, 2));
-            actor14 = new ActorBase(new Vector2(-2, 1), new Vector2(2, 4));
-            actor258 = new ActorBase(new Vector2(0, 0), new Vector2(2, 6));
-            actor6 = new ActorBase(new Vector2(2, 0), new Vector2(2, 2));
-            actor89 = new ActorBase(new Vector2(1, -2), new Vector2(4, 2));
-        }
+        ActorBase actor123 = new ActorBase(new Vector2(0, 2), new Vector2(6, 2));
+        ActorBase actor14 = new ActorBase(new Vector2(-2, 1), new Vector2(2, 4));
+        ActorBase actor258 = new ActorBase(new Vector2(0, 0), new Vector2(2, 6));
+        ActorBase actor6 = new ActorBase(new Vector2(2, 0), new Vector2(2, 2));
+        ActorBase actor89 = new ActorBase(new Vector2(1, -2), new Vector2(4, 2));
 
         [TestMethod]
         public void TestIsCollidingWith()
@@ -60,6 +50,7 @@ namespace TudoMarioTests
             Assert.IsTrue(actor123.IsCollidingWith(actor14)); // should collide
             actor123.IsCollisionEnabled = false;
             Assert.IsFalse(actor123.IsCollidingWith(actor14)); // should not collide because actor123's collision is disabled
+            actor123.IsCollisionEnabled = true;
         }
 
         [TestMethod]
@@ -73,7 +64,6 @@ namespace TudoMarioTests
             Assert.IsFalse(colliders123.Contains(actor123));
 
             var colliders6 = actor6.GetColliders();
-            Assert.AreEqual("", string.Join(' ', colliders6.Select(x => $"[{x.Position} | {x.Size}]")));
             Assert.AreEqual(0, colliders6.Count());
         }
     }
