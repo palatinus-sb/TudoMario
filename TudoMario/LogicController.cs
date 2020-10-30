@@ -11,7 +11,8 @@ namespace TudoMario
 {
     public class LogicController
     {
-        UserControlHandler userControl = new UserControlHandler();
+
+        public UserControlHandler userControl = new UserControlHandler();
         bool gameStarted = false;
         bool gameEnded = false;
         private Timer timer = new Timer(16);
@@ -36,7 +37,7 @@ namespace TudoMario
 
         private void RenderGameState() { }
 
-        private void UserMovementBasedOnHandler(ActorBase actor)
+        public void UserMovementBasedOnHandler(ActorBase actor)
         {
             //Vertical movement
             if (this.userControl.PressedKeys.Contains(KeyAction.UP)) {
@@ -57,7 +58,7 @@ namespace TudoMario
             PhysicsController.ApplyFrictionOnGround(actor);
             PhysicsController.ApplySpeedLimitOnGround(actor);
             PhysicsController.ApplyGravity(actor);
-            actor.Position = new Vector2(actor.Position.X + actor.MovementSpeed.X, actor.Position.Y);
+            actor.Position = new Vector2(actor.Position.X + actor.MovementSpeed.X, actor.Position.Y + actor.MovementSpeed.Y);
         }
     }
 }

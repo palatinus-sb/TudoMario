@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TudoMario
 {
-    static class PhysicsController
+    public static class PhysicsController
     {
         /// <summary>
         /// The friction on ground.
@@ -104,11 +104,11 @@ namespace TudoMario
         /// <summary>
         /// Apply the actor's maximum movement speeds.
         /// </summary>
-        private static void ApplySpeedLimits(ActorBase actor, float NewSpeedLimit) {
+        public static void ApplySpeedLimits(ActorBase actor, float NewSpeedLimit) {
             if (actor.MovementSpeed.X > NewSpeedLimit) actor.MovementSpeed = new Vector2(NewSpeedLimit, actor.MovementSpeed.Y);
             else if (actor.MovementSpeed.X < -NewSpeedLimit) actor.MovementSpeed = new Vector2(-NewSpeedLimit, actor.MovementSpeed.Y);
-            if (actor.MovementSpeed.Y > actor.SpeedLimits.Y) actor.MovementSpeed = new Vector2(actor.MovementSpeed.Y, actor.SpeedLimits.Y);
-            else if (actor.MovementSpeed.X < -actor.SpeedLimits.X) actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, -actor.SpeedLimits.Y);
+            if (actor.MovementSpeed.Y > actor.SpeedLimits.Y) actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, actor.SpeedLimits.Y);
+            else if (actor.MovementSpeed.Y < -actor.SpeedLimits.Y) actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, -actor.SpeedLimits.Y);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace TudoMario
         /// Apply the gravity on the actor.
         /// </summary>
         public static void ApplyGravity(ActorBase actor) {
-            if (actor.MovementSpeed.Y > -MaxMovementSpeed) actor.MovementSpeed = new Vector2(Gravity.X, (actor.MovementSpeed.Y + Gravity.Y));
+            actor.MovementSpeed = new Vector2(Gravity.X, (actor.MovementSpeed.Y + Gravity.Y));
         }
     }
 }
