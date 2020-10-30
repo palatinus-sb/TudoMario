@@ -44,7 +44,7 @@ jobs:
       uses: darenm/Setup-VSTest@v1
       
     - name: Run Tests
-      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Release\TudoMarioTests.build.appxrecipe > testresult.txt
+      run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Release\TudoMarioTests.build.appxrecipe
     
     - name: Print out Log File
       if: ${{ always() }}
