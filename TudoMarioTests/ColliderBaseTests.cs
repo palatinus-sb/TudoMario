@@ -73,10 +73,7 @@ namespace TudoMarioTests
             Assert.IsFalse(colliders123.Contains(actor123));
 
             var colliders6 = actor6.GetColliders();
-            foreach (var item in colliders6)
-            {
-                Console.WriteLine(item);
-            }
+            Assert.AreEqual("", string.Join(' ', colliders6.Select(x => x.ToString())));
             Assert.AreEqual(0, colliders6.Count());
         }
     }
