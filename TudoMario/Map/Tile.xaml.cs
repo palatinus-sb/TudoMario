@@ -31,8 +31,6 @@ namespace TudoMario.Map
             this.InitializeComponent();
             this.Width = 32;
             this.Height = 32;
-
-            this.
             
 
             ImageControl.Width = 32;

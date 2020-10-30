@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TudoMario.Rendering
 {
-    class CameraObject
+    public class CameraObject
     {
         private ActorBase Target;
         private Vector2 Position { get; set; }
