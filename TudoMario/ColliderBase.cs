@@ -10,16 +10,16 @@ namespace TudoMario
     /// <summary>
     /// Represent the base of Collider fields. Used for hitboxes.
     /// </summary>
-    public class ColliderBase
+    public abstract class ColliderBase
     {
-        private static readonly List<ColliderBase> colliders = new List<ColliderBase>();
+        private static readonly List<ColliderBase> instances = new List<ColliderBase>();
+
+        public ColliderBase() { instances.Add(this); }
 
         public virtual Vector2 Position { get; set; } = new Vector2();
         public virtual Vector2 Size { get; set; } = new Vector2();
-        public ICollideable Parent { get; private set; }
-        public bool IsActive { get; set; }
+        public bool IsCollisionEnabled { get; set; } = true;
 
-        public ColliderBase(ICollideable parent) { Parent = parent; }
         /*public ColliderBase(float CoordinateX, float CoordinateY, float Width, float Height)
         {
             Position.X = CoordinateX;
@@ -35,36 +35,15 @@ namespace TudoMario
         /// <returns> Returns true if the param and this collider are colliding. </returns>
         public bool IsCollidingWith(ColliderBase other)
         {
-            double ThisRight = this.Position.X + this.Size.X / 2;
-            double ThisTop = this.Position.Y + this.Size.Y / 2;
-            double ThisLeft = this.Position.X - this.Size.X / 2;
-            double ThisBot = this.Position.Y - this.Size.Y / 2;
-            double OtherRight = other.Position.X + other.Size.X / 2;
-            double OtherTop = other.Position.Y + other.Size.Y / 2;
-            double OtherLeft = other.Position.X - other.Size.X / 2;
-            double OtherBot = other.Position.Y - other.Size.Y / 2;
+            if (!this.IsCollisionEnabled || !other.IsCollisionEnabled || this.Equals(other))
+                return false;
 
-            if (OtherLeft <= ThisRight && OtherTop >= ThisBot && OtherRight >= ThisRight && OtherBot <= ThisBot)
-            {
-                return true;
-            }
-            if (OtherLeft <= ThisRight && OtherBot <= ThisTop && OtherRight >= ThisRight && OtherTop >= ThisTop)
-            {
-                return true;
-            }
-            if (OtherRight >= ThisLeft && OtherBot <= ThisTop && OtherLeft <= ThisLeft && OtherTop >= ThisTop)
-            {
-                return true;
-            }
-            if (OtherRight >= ThisLeft && OtherTop >= ThisBot && OtherLeft <= ThisLeft && OtherBot <= ThisBot)
-            {
-                return true;
-            }
-            if (OtherLeft >= ThisLeft && OtherRight <= ThisRight && OtherBot >= ThisBot && OtherTop <= ThisTop)
-            {
-                return true;
-            }
-            return false;
+            float centerXDistance = Math.Abs(this.Position.X - other.Position.X);
+            float actualXDistance = centerXDistance - (this.Size.X / 2 + other.Size.X / 2);
+            float centerYDistance = Math.Abs(this.Position.Y - other.Position.Y);
+            float actualYDistance = centerYDistance - (this.Size.Y / 2 + other.Size.Y / 2);
+
+            return actualXDistance < 0 && actualYDistance < 0;
         }
 
         /// <summary>
@@ -72,31 +51,17 @@ namespace TudoMario
         /// </summary>
         public IEnumerable<ColliderBase> GetColliders()
         {
+            if (!IsCollisionEnabled)
+                return new List<ColliderBase>();
+
             List<ColliderBase> CollidingColliders = new List<ColliderBase>();
-            if (this.IsActive)
+            foreach (ColliderBase collider in instances)
             {
-                foreach (ColliderBase collider in colliders)
-                {
-                    if (collider.IsActive)
-                    {
-                        if (this.IsCollidingWith(collider))
-                        {
-                            CollidingColliders.Add(collider);
-                        }
-                    }
-                }
+                if (IsCollidingWith(collider))
+                    CollidingColliders.Add(collider);
             }
+
             return CollidingColliders;
-        }
-        
-        // These methods were made for testing but maybe they will be useful later
-        public void AddToColliders(ColliderBase item)
-        {
-            colliders.Add(item);
-        }
-        public bool CollidersContains(ColliderBase item)
-        {
-            return colliders.Contains(item);
         }
     }
 }

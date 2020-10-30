@@ -120,10 +120,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ActorCollider.cs" />
     <Compile Include="ColliderBase.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="ICollideable.cs" />
     <Compile Include="LogicController.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

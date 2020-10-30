@@ -10,53 +10,51 @@ namespace TudoMario
     /// <summary>
     /// 
     /// </summary>
-    public class ActorBase : ICollideable
+    public class ActorBase : ColliderBase
     {
-        public ActorBase() { }
-        public ActorBase(Vector2 position, Vector2 size) { Position = position; Size = size; }
+        private static uint instances = 0;
+
+        public ActorBase(string id = "")
+        {
+            if (string.IsNullOrEmpty(id))
+                this.id = $"Actor-{GetType().Name}-{instances}";
+            instances++;
+        }
+
+        public ActorBase(Vector2 position, Vector2 size) : this()
+        {
+            Position = position;
+            Size = size;
+        }
+
+        public readonly string id;
+        public event EventHandler Died;
+        public bool CanMove { get; set; }
+        public Vector2 MovementSpeed { get; set; } = new Vector2(0, 0);
+        public Vector2 SpeedLimits { get; set; } = new Vector2(0, 0);
 
         /// <summary>
-        /// Relative coordinates on the map.
-        /// </summary>
-        public Vector2 Position { get; set; } = new Vector2(0, 0);
-
-        /// <summary>
-        /// The actor's speed vector.
-        /// </summary>
-        public Vector2 MovementSpeed { get; set; }
-        /// <summary>
-        /// The maximum speed vector the actor is allowed to go.
-        /// </summary>
-        public Vector2 SpeedLimits { get; set; }
-        /// <summary>
-        /// The actor's size.
-        /// </summary>
-        public Vector2 Size { get; set; } = new Vector2(0, 0);
-        /// <summary>
-        /// Actor healthpoints. 0 is perfectly fine, 100 is dead.
+        /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
         /// </summary>
         public int StressLevel { get; set; }
-        public bool CanMove { get; set; }
-        private ColliderBase Collider { get; set; }
+        public int AttackDamage { get; set; }
         
-        public int TakeDamage()
+        public void ApplyDamage(int amount)
         {
-            throw new NotImplementedException();
+            StressLevel += amount;
+            if (StressLevel >= 1000)
+                Died.Invoke(this, EventArgs.Empty);
         }
 
-        public void Attack()
+        public void Attack(ActorBase target)
         {
-            throw new NotImplementedException();
+            if (GetColliders().ToList().Contains(target))
+                target.ApplyDamage(AttackDamage);
         }
 
-        public void CreateCollider(ColliderBase target)
+        public override string ToString()
         {
-            Collider = target;
+            return id;
         }
-
-        /*public void UnBindCollider(ColliderBase target)
-        {
-            ColliderActor = null;
-        }*/
     }
 }
