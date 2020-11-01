@@ -6,25 +6,37 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using TudoMario.Map;
+using TudoMario.Rendering;
+using TudoMario.Ui;
 
 namespace TudoMario
 {
-    public class LogicController
+    class LogicController
     {
-
-        public UserControlHandler userControl = new UserControlHandler();
-        bool gameStarted = false;
-        bool gameEnded = false;
-        private Timer timer = new Timer(16);
-        public LogicController() {
+        public LogicController(Renderer renderer)
+        {
+            this.renderer = renderer;
             timer.Tick += OnTimerTick;
         }
 
-        public void OnTimerTick(object sender, EventArgs e) {
+        public UserControlHandler userControl = new UserControlHandler();
+        private Timer timer = new Timer(16);
+        Renderer renderer;
+        bool gameStarted = false;
+        bool gameEnded = false;
+
+        public void AddActorToGame(ActorBase actorBase)
+        {
+            renderer.CurrentMap.AddActor(actorBase);
+        }
+
+        public void OnTimerTick(object sender, EventArgs e) 
+        {
             CheckGameState();
             CheckCollisions();
             AiDecideMovement();
-            //UserMovementBasedOnHandler();
+            //UserMovementBasedOnHandler(); 
             //ApplyPhysicsOnActiveActors();
             RenderGameState();        
         }
@@ -35,7 +47,10 @@ namespace TudoMario
 
         private void AiDecideMovement() { }
 
-        private void RenderGameState() { }
+        private void RenderGameState() 
+        {
+            renderer.Render();
+        }
 
         public void UserMovementBasedOnHandler(ActorBase actor)
         {
@@ -54,7 +69,8 @@ namespace TudoMario
             }
         }
 
-        private void ApplyPhysicsOnActiveActors(ActorBase actor) {
+        private void ApplyPhysicsOnActiveActors(ActorBase actor) 
+        {
             PhysicsController.ApplyFrictionOnGround(actor);
             PhysicsController.ApplySpeedLimitOnGround(actor);
             PhysicsController.ApplyGravity(actor);

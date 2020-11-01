@@ -40,7 +40,7 @@ namespace TudoMario
         public MainPage()
         {
             InitializeComponent();
-            LogicController logiccontroller = new LogicController();
+            LogicController logiccontroller = new LogicController(renderer);
             
             switch (Configuration.Dev)
             {

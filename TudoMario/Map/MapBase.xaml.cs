@@ -69,9 +69,9 @@ namespace TudoMario.Map
         /// <summary>
         /// Binds the actor to the map which registers it for rendering.
         /// </summary>
-        public void AddActor()
+        public void AddActor(ActorBase actor)
         {
-
+            MapActorList.Add(actor);
         }
     }
 }
