@@ -31,6 +31,10 @@ namespace TudoMario
             renderer.CurrentMap.AddActor(actorBase);
         }
 
+        public void StartGame() {
+            timer.Start();
+        }
+
         public void OnTimerTick(object sender, EventArgs e) 
         {
             CheckGameState();
