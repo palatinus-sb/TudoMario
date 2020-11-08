@@ -7,6 +7,9 @@ using TudoMario.Map;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using TudoMario.Rendering;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario.Ui
 {
@@ -26,23 +29,32 @@ namespace TudoMario.Ui
             ShowMap();
         }
 
+        public CoreApplicationView CurrentView { get; set; }
+
         /// <summary>
         /// Only for UI testing;
         /// </summary>
         public void ShowMap()
         {
+            PlayerActor testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(0, 0));
+
             MapBase mapBase = new MapBase(new Vector2(0,0));
             Chunk testchunk = new Chunk();
             Chunk testchunk2 = new Chunk();
 
-            testchunk.FillChunkWith(typeof(Tile), @"ms-appx:/Assets//BaseBackGroung.png");
+            BitmapImage ground = _renderer.TextureHandler.GetImageByName("GroundBase");
+            BitmapImage air = _renderer.TextureHandler.GetImageByName("BaseBackGroung");
+
+            BitmapImage missing = _renderer.TextureHandler.GetImageByName("kekekekek");
+
+            testchunk.FillChunkWith(air);
 
             for (int i = 0; i < 16; i++)
             {
-                testchunk.SetTileAt(0, i, typeof(Tile), @"ms-appx:/Assets//GroundBase.png");
+                testchunk.SetTileAt(0, i, missing);
             }
 
-            testchunk2.FillChunkWith(typeof(Tile), @"ms-appx:/Assets//BaseBackGroung.png");
+            testchunk2.FillChunkWith(air);
 
             mapBase.AddChunkAt(testchunk, 0, 0);
             mapBase.AddChunkAt(testchunk2, 1, 0);
@@ -53,11 +65,12 @@ namespace TudoMario.Ui
             _renderer.RenderChunkAt(testchunk2, 1, 0);
 
             Chunk testchunk3 = new Chunk();
-            testchunk3.FillChunkWith(typeof(Tile), @"ms-appx:/Assets//GroundBase.png");
+            testchunk3.FillChunkWith(ground);
 
             _renderer.RenderChunkAt(testchunk3, -1, 0);
             _renderer.RenderAround(new Vector2(0, 0));
             _renderer.Render();
+            
         }
 
         /// <summary>
@@ -82,7 +95,7 @@ namespace TudoMario.Ui
                 camera.CameraY = camera.CameraY - 20;
             }
 
-            _renderer.RenderAtCamera();
+            //_renderer.RenderAtCamera();
         }
 
     }

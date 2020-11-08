@@ -9,20 +9,24 @@ using System.Timers;
 using TudoMario.Map;
 using TudoMario.Rendering;
 using TudoMario.Ui;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace TudoMario
 {
     class LogicController
     {
-        public LogicController(Renderer renderer)
+        public LogicController(Renderer renderer,UiController uiController)
         {
             this.renderer = renderer;
+            this.uiController = uiController;
             timer.Tick += OnTimerTick;
         }
 
         public UserControlHandler userControl = new UserControlHandler();
         private Timer timer = new Timer(16);
         Renderer renderer;
+        UiController uiController;
         bool gameStarted = false;
         bool gameEnded = false;
 
@@ -33,6 +37,7 @@ namespace TudoMario
 
         public void StartGame() {
             timer.Start();
+            gameStarted = true;
         }
 
         public void OnTimerTick(object sender, EventArgs e) 
@@ -53,7 +58,12 @@ namespace TudoMario
 
         private void RenderGameState() 
         {
-            renderer.Render();
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                renderer.Render();
+            });
+            
         }
 
         public void UserMovementBasedOnHandler(ActorBase actor)

@@ -27,8 +27,10 @@ namespace TudoMario.Rendering
         /// The current map to render at.
         /// </summary>
         private MapBase _currentMap;
+        public static TextureHandler TextureHandler;
 
-        private float ZoomLevel = 0;
+
+        private float ZoomLevel = 1;
         public CameraObject Camera {
             get
             {
@@ -54,6 +56,8 @@ namespace TudoMario.Rendering
 
         public Renderer(MainPage main)
         {
+            TextureHandler = new TextureHandler();
+
             Main = main;
             this.InitializeComponent();
         }
@@ -81,6 +85,11 @@ namespace TudoMario.Rendering
             MainCanvasTransform.Children.Add(MainCanvas);
 
             Main.MainGrid.Children.Add(MainCanvasTransform);
+        }
+
+        public void AddActorToRenderScene(ActorBase actor)
+        {
+            //MainCanvas.Children.Add(actor);
         }
 
         /// <summary>

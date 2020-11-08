@@ -19,25 +19,31 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TudoMario.Map
 {
-    public sealed partial class Tile : UserControl
+    public sealed partial class ActorRender : UserControl
     {
+        ActorBase self = new ActorBase();
+        public Vector2 Position { get => self.Position;}
+        public Vector2 Size { get => self.Size; }
+
         private BitmapImage texture;
         public BitmapImage Texture
         {
-            set 
+            set
             {
                 texture = value;
-                ImageControl.Source = value; 
+                ImageControl.Source = value;
             }
         }
-        public Tile()
+        public ActorRender(ActorBase self)
         {
-            this.InitializeComponent();
-            this.Width = 32;
-            this.Height = 32;
+            this.self = self;
 
-            ImageControl.Width = 32;
-            ImageControl.Height = 32;
+            this.InitializeComponent();
+            this.Width = Size.X;
+            this.Height = Size.Y;
+
+            ImageControl.Width = Size.X;
+            ImageControl.Height = Size.Y;
         }
     }
 }

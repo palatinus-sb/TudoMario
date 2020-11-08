@@ -18,6 +18,7 @@ using TudoMario.Rendering;
 using Windows.UI.Core;
 using Windows.Services.Store;
 using System.Diagnostics;
+using Windows.ApplicationModel.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -37,16 +38,22 @@ namespace TudoMario
                 return UiMainGrid;
             }
         }
+        public CoreApplicationView CurrentView { get; set; }
+
         public MainPage()
         {
             InitializeComponent();
-            LogicController logiccontroller = new LogicController(renderer);
+
+            renderer = new Renderer(this);
+            uicontroller = new UiController(this, renderer);
+            uicontroller.CurrentView = CoreApplication.GetCurrentView();
+
+            LogicController logiccontroller = new LogicController(renderer,uicontroller);
+            logiccontroller.StartGame();
             
             switch (Configuration.Dev)
             {
                 case Configuration.Developer.Adam:
-                    renderer = new Renderer(this);
-                    uicontroller = new UiController(this,renderer);
                     break;
                 case Configuration.Developer.Dani:
                     break;
