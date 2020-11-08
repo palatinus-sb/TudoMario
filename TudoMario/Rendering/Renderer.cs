@@ -27,7 +27,7 @@ namespace TudoMario.Rendering
         /// The current map to render at.
         /// </summary>
         private MapBase _currentMap;
-        public static TextureHandler TextureHandler;
+        public TextureHandler TextureHandler;
 
 
         private float ZoomLevel = 1;
