@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -19,14 +20,6 @@ namespace TudoMario
         public virtual Vector2 Position { get; set; } = new Vector2();
         public virtual Vector2 Size { get; set; } = new Vector2();
         public bool IsCollisionEnabled { get; set; } = true;
-
-        /*public ColliderBase(float CoordinateX, float CoordinateY, float Width, float Height)
-        {
-            Position.X = CoordinateX;
-            Position.Y = CoordinateY;
-            Size.X = Width;
-            Size.Y = Height;
-        }*/
 
         /// <summary>
         /// Checks if two colliders are colliding.
@@ -49,7 +42,7 @@ namespace TudoMario
         /// <summary>
         /// Returns the list of Colliders that collides with this class.
         /// </summary>
-        public IEnumerable<ColliderBase> GetColliders()
+        public virtual IEnumerable<ColliderBase> GetColliders()
         {
             if (!IsCollisionEnabled)
                 return new List<ColliderBase>();
@@ -62,6 +55,16 @@ namespace TudoMario
             }
 
             return CollidingColliders;
+        }
+    }
+
+    public class ColliderWithModifiers : ColliderBase
+    {
+        public ImmutableList<MovementModifier> Modifiers { get; }
+
+        public ColliderWithModifiers(ImmutableList<MovementModifier> modifiers)
+        {
+            Modifiers = modifiers;
         }
     }
 }

@@ -135,6 +135,7 @@
     <Compile Include="Map\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MovementModifier.cs" />
     <Compile Include="PhysicsController.cs" />
     <Compile Include="PlayerActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
