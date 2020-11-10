@@ -27,7 +27,14 @@ namespace TudoMario.Rendering
         /// The current map to render at.
         /// </summary>
         private MapBase _currentMap;
+
+        /// <summary>
+        /// Global texture handler.
+        /// </summary>
         public static TextureHandler TextureHandler;
+
+        private List<ActorRender> ActorRenderAll = new List<ActorRender>();
+        private List<ActorRender> ActorRenderActive = new List<ActorRender>();
 
 
         private float ZoomLevel = 1;
@@ -51,6 +58,9 @@ namespace TudoMario.Rendering
             set
             {
                 _currentMap = value;
+                CleanRendererCanvas();
+                InitActorRenderBindingList();
+                
             }
         }
 
@@ -67,7 +77,7 @@ namespace TudoMario.Rendering
         /// </summary>
         public void Render()
         {
-            if (CurrentMap != null)
+            if (_currentMap != null)
             {
                 RenderAtCamera();
             }
@@ -79,17 +89,18 @@ namespace TudoMario.Rendering
 
         private void InitializeComponent()
         {
-            MainCanvas = new Canvas();
-            MainCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Gray);
+            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
 
+            //Contains all the chunks
+            MainCanvas = new Canvas();
+           // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
+
+            //A parent canvas to make map transforms(camera movement) easier
             MainCanvasTransform.Children.Add(MainCanvas);
 
+            //At the actual xaml main page bind the drawn scene
             Main.MainGrid.Children.Add(MainCanvasTransform);
-        }
 
-        public void AddActorToRenderScene(ActorBase actor)
-        {
-            //MainCanvas.Children.Add(actor);
         }
 
         /// <summary>
@@ -123,6 +134,8 @@ namespace TudoMario.Rendering
         /// <param name="y"></param>
         public void RenderAround(Vector2 Position)
         {
+            RenderActors();
+
             float x = Position.X;
             float y = Position.Y;
 
@@ -169,6 +182,96 @@ namespace TudoMario.Rendering
         private List<Panel> GetAllUnrenderableObjects()
         {
             return new List<Panel>();
+        }
+
+        /// <summary>
+        /// Returns the actual size in which the camera can see
+        /// </summary>
+        /// <returns></returns>
+        private Vector2 GetCameraRenderSize()
+        {
+            return new Vector2((float)Main.ActualWidth,(float)Main.ActualHeight);
+        }
+
+        /// <summary>
+        /// Initialisis ActorRenderList based on CurrentMap
+        /// </summary>
+        private void InitActorRenderBindingList()
+        {
+            ActorRenderAll.Clear();
+
+            foreach (var actorbase in _currentMap.MapActorList)
+            {
+                //ActorRender ar = new ActorRender(actorbase);
+                //ar.Texture = 
+                ActorRenderAll.Add(new ActorRender(actorbase));
+            }
+        }
+
+        /// <summary>
+        /// Clears scene at request drops old references.
+        /// </summary>
+        private void CleanRendererCanvas()
+        {
+            MainCanvas = new Canvas();
+            MainCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Gray);
+
+            //A parent canvas to make map transforms(camera movement) easier
+            MainCanvasTransform.Children.Clear();
+            MainCanvasTransform.Children.Add(MainCanvas);
+        }
+
+        /// <summary>
+        /// True if actor is in camera view range
+        /// </summary>
+        /// <param name="acrender"></param>
+        /// <returns></returns>
+        private bool IsActorInRenderRange(ActorRender acrender)
+        {
+            Vector2 cameraSize = GetCameraRenderSize();
+            float xDistance = Math.Abs(acrender.Position.X - camera.CameraX);
+            float cameraXWidthWithExtraBufferRange = cameraSize.X + 150;
+
+            //Render distance is only applied on x coord
+            return xDistance <= cameraXWidthWithExtraBufferRange;
+        }
+
+        private void RenderActors()
+        {
+            foreach (var activeActorRender in ActorRenderActive)
+            {
+                var translatedPos = GetTranslatedActorPosForRender(activeActorRender);
+                Canvas.SetLeft(activeActorRender, translatedPos.X);
+                Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y));
+            }
+
+            //Remove actors that got out of render range
+            foreach (var activeAcRender in ActorRenderActive)
+            {
+                if (!IsActorInRenderRange(activeAcRender))
+                {
+                    ActorRenderActive.Remove(activeAcRender);
+                    MainCanvas.Children.Remove(activeAcRender);
+                }
+            }
+
+            //Add new actors that got in render range
+            foreach (var acRender in ActorRenderAll)
+            {
+                if (!ActorRenderActive.Contains(acRender) && IsActorInRenderRange(acRender))
+                {
+                    ActorRenderActive.Add(acRender);
+                    MainCanvas.Children.Add(acRender);
+                }
+            }
+        }
+
+        private Vector2 GetTranslatedActorPosForRender(ActorRender acRender)
+        {
+            var translatedX = acRender.Position.X - acRender.Size.X / 2;
+            var translatedY = acRender.Position.Y + acRender.Size.Y / 2;
+
+            return new Vector2(translatedX, translatedY);
         }
     }
 }

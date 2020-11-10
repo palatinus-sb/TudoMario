@@ -4,15 +4,18 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using TudoMario.Rendering;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario
 {
     /// <summary>
     /// 
     /// </summary>
-    public class ActorBase : ColliderBase
+    public class ActorBase : ColliderBase, ITextured
     {
         private static uint instances = 0;
+        private BitmapImage Texture = Renderer.TextureHandler.GetMissingTexture();
 
         public ActorBase(string id = "")
         {
@@ -55,6 +58,16 @@ namespace TudoMario
         public override string ToString()
         {
             return id;
+        }
+
+        public BitmapImage GetTexture()
+        {
+            return Texture;
+        }
+
+        public void SetTexture(BitmapImage texture)
+        {
+            Texture = texture;
         }
     }
 }

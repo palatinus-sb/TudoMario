@@ -18,6 +18,9 @@ namespace TudoMario.Ui
         MainPage _main;
         Renderer _renderer;
         CameraObject camera;
+
+        PlayerActor testPlayer;
+
         public UiController(MainPage mainpage, Renderer renderer)
         {
             camera = new CameraObject();
@@ -36,18 +39,21 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
-            PlayerActor testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(0, 0));
+            testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
+            testPlayer.SetTexture(Renderer.TextureHandler.GetImageByName("playermodel2"));
 
             MapBase mapBase = new MapBase(new Vector2(0,0));
             Chunk testchunk = new Chunk();
             Chunk testchunk2 = new Chunk();
 
-            BitmapImage ground = _renderer.TextureHandler.GetImageByName("GroundBase");
-            BitmapImage air = _renderer.TextureHandler.GetImageByName("BaseBackGroung");
+            BitmapImage ground = Renderer.TextureHandler.GetImageByName("GroundBase");
+            BitmapImage air = Renderer.TextureHandler.GetImageByName("BaseBackGroung");
 
-            BitmapImage missing = _renderer.TextureHandler.GetImageByName("kekekekek");
+            BitmapImage missing = Renderer.TextureHandler.GetImageByName("kekekekek");
 
             testchunk.FillChunkWith(air);
+
+            mapBase.AddActor(testPlayer);
 
             for (int i = 0; i < 16; i++)
             {
@@ -93,6 +99,23 @@ namespace TudoMario.Ui
             if (cont == "Down")
             {
                 camera.CameraY = camera.CameraY - 20;
+            }
+
+            if (cont == "pUp")
+            {
+                testPlayer.Position.Y += 2f;
+            }
+            if (cont == "pDown")
+            {
+                testPlayer.Position.Y -= 2f;
+            }
+            if (cont == "pLeft")
+            {
+                testPlayer.Position.X -= 2f;
+            }
+            if (cont == "pRight")
+            {
+                testPlayer.Position.X += 2f;
             }
 
             //_renderer.RenderAtCamera();

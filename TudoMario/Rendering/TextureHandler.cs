@@ -49,5 +49,9 @@ namespace TudoMario.Rendering
             var bitmap = _tuple.Item2;
             return bitmap;
         }
+        public BitmapImage GetMissingTexture()
+        {
+            return MissingTexture;
+        }
     }
 }
