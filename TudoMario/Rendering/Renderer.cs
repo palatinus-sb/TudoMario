@@ -292,31 +292,35 @@ namespace TudoMario.Rendering
 
         private void RenderChunks()
         {
-            //Remove chunks that got out of render range
-            foreach (var chunkWithCoords in ChunkRenderActive)
+            try
             {
-                if (!IsChunkInRenderRange(chunkWithCoords.Item2, chunkWithCoords.Item3))
+                //Remove chunks that got out of render range
+                foreach (var chunkWithCoords in ChunkRenderActive)
                 {
-                    ChunkRenderActive.Remove(chunkWithCoords);
-                    MainCanvas.Children.Remove(chunkWithCoords.Item1);
-                }
-            }
-
-            int x = 0;
-            //Add new actors that got in render range
-            foreach (var chunksOnLockedX in _currentMap.Map)
-            {
-                foreach (var chunkWithYCoord in chunksOnLockedX)
-                {
-                    var MatchedChunkList = ChunkRenderActive.Where(chunkWithCoords => chunkWithCoords.Item1 == chunkWithYCoord.Item1);
-                    if (!MatchedChunkList.Any() && IsChunkInRenderRange(x, chunkWithYCoord.Item2))
+                    if (!IsChunkInRenderRange(chunkWithCoords.Item2, chunkWithCoords.Item3))
                     {
-                        ChunkRenderActive.Add(new Tuple<Chunk, int, int>(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2));
-                        RenderChunkAt(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2);
+                        ChunkRenderActive.Remove(chunkWithCoords);
+                        MainCanvas.Children.Remove(chunkWithCoords.Item1);
                     }
                 }
-                x++;
+
+                int x = 0;
+                //Add new actors that got in render range
+                foreach (var chunksOnLockedX in _currentMap.Map)
+                {
+                    foreach (var chunkWithYCoord in chunksOnLockedX)
+                    {
+                        var MatchedChunkList = ChunkRenderActive.Where(chunkWithCoords => chunkWithCoords.Item1 == chunkWithYCoord.Item1);
+                        if (!MatchedChunkList.Any() && IsChunkInRenderRange(x, chunkWithYCoord.Item2))
+                        {
+                            ChunkRenderActive.Add(new Tuple<Chunk, int, int>(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2));
+                            RenderChunkAt(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2);
+                        }
+                    }
+                    x++;
+                }
             }
+            catch (Exception) { }
         }
 
         private Vector2 GetTranslatedActorPosForRender(ActorRender acRender)
