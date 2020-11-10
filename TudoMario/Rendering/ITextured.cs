@@ -10,6 +10,6 @@ namespace TudoMario.Rendering
     interface ITextured
     {
         BitmapImage GetTexture();
-        void SetTexture();
+        void SetTexture(BitmapImage texture);
     }
 }

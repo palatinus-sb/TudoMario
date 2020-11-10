@@ -47,7 +47,7 @@ namespace TudoMario.Map
             
 
             Tiles[y, x] = tile;
-            ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+            //ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (y * 32));
             Canvas.SetTop(tile, (x * 32));
@@ -65,7 +65,7 @@ namespace TudoMario.Map
             tile.Texture = texture;
 
             Tiles[y, x] = tile;
-            ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+            //ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (y * 32));
             Canvas.SetTop(tile, (x * 32));
@@ -89,7 +89,7 @@ namespace TudoMario.Map
                     _tile.Texture = texture;
 
                     Tiles[j, i] = _tile;
-                    ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    //ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
                     ChunkCanvas.Children.Add(_tile);
                     Canvas.SetLeft(_tile, (j * 32));
                     Canvas.SetTop(_tile, (i * 32));

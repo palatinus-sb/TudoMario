@@ -25,15 +25,7 @@ namespace TudoMario.Map
         public Vector2 Position { get => self.Position;}
         public Vector2 Size { get => self.Size; }
 
-        private BitmapImage texture;
-        public BitmapImage Texture
-        {
-            set
-            {
-                texture = value;
-                ImageControl.Source = value;
-            }
-        }
+        public BitmapImage Texture { get => self.GetTexture(); set => self.SetTexture(value); }
         public ActorRender(ActorBase self)
         {
             this.self = self;
@@ -44,6 +36,8 @@ namespace TudoMario.Map
 
             ImageControl.Width = Size.X;
             ImageControl.Height = Size.Y;
+
+            ImageControl.Source = self.GetTexture();
         }
     }
 }

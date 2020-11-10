@@ -38,7 +38,6 @@ namespace TudoMario
                 return UiMainGrid;
             }
         }
-        public CoreApplicationView CurrentView { get; set; }
 
         public MainPage()
         {
@@ -46,7 +45,6 @@ namespace TudoMario
 
             renderer = new Renderer(this);
             uicontroller = new UiController(this, renderer);
-            uicontroller.CurrentView = CoreApplication.GetCurrentView();
 
             LogicController logiccontroller = new LogicController(renderer,uicontroller);
             logiccontroller.StartGame();
