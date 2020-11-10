@@ -39,17 +39,23 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
+            PlayerActor player = new PlayerActor(new Vector2(200, 100), new Vector2(32, 32));
+            CameraObject CO = new CameraObject(player);
+            var asdadasd  = CO.CameraX;
+            var sadsdsdsd  = CO.CameraY;
+
+
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
-            testPlayer.SetTexture(Renderer.TextureHandler.GetImageByName("playermodel2"));
+            testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
             MapBase mapBase = new MapBase(new Vector2(0,0));
             Chunk testchunk = new Chunk();
             Chunk testchunk2 = new Chunk();
 
-            BitmapImage ground = Renderer.TextureHandler.GetImageByName("GroundBase");
-            BitmapImage air = Renderer.TextureHandler.GetImageByName("BaseBackGroung");
+            BitmapImage ground = TextureHandler.GetImageByName("GroundBase");
+            BitmapImage air = TextureHandler.GetImageByName("BaseBackGroung");
 
-            BitmapImage missing = Renderer.TextureHandler.GetImageByName("kekekekek");
+            BitmapImage missing = TextureHandler.GetImageByName("kekekekek");
 
             testchunk.FillChunkWith(air);
 

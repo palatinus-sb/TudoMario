@@ -28,11 +28,6 @@ namespace TudoMario.Rendering
         /// </summary>
         private MapBase _currentMap;
 
-        /// <summary>
-        /// Global texture handler.
-        /// </summary>
-        public static TextureHandler TextureHandler;
-
         private List<ActorRender> ActorRenderAll = new List<ActorRender>();
         private List<ActorRender> ActorRenderActive = new List<ActorRender>();
 
@@ -66,7 +61,7 @@ namespace TudoMario.Rendering
 
         public Renderer(MainPage main)
         {
-            TextureHandler = new TextureHandler();
+            TextureHandler.Init();
 
             Main = main;
             this.InitializeComponent();

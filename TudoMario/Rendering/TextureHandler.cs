@@ -9,22 +9,28 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario.Rendering
 {
-    public class TextureHandler
+    public static class TextureHandler
     {
         private static List<Tuple<string,BitmapImage>> TextureList = new List<Tuple<string, BitmapImage>>();
-        private BitmapImage MissingTexture = new BitmapImage(new Uri(@"ms-appx:/Assets//missing.png"));
+        private static BitmapImage MissingTexture;
 
-
-        public TextureHandler()
+        /// <summary>
+        /// Loads the static textures. Only RENDERER should use this method.
+        /// </summary>
+        public static void Init()
         {
+            MissingTexture = new BitmapImage(new Uri(@"ms-appx:/Assets//missing.png"));
+
             string uriName = @"ms-appx:/Assets//" + "missing.png";
             MissingTexture = new BitmapImage(new Uri(uriName));
 
             LoadTexturesFromLocal();
         }
 
-        private void LoadTexturesFromLocal()
+        private static void LoadTexturesFromLocal()
         {
+            TextureList.Clear();
+
             DirectoryInfo dir = new DirectoryInfo("Assets");
             var files = dir.GetFiles();
             foreach (var file in files)
@@ -39,7 +45,7 @@ namespace TudoMario.Rendering
             }
         }
 
-        public BitmapImage GetImageByName(string searchedName)
+        public static BitmapImage GetImageByName(string searchedName)
         {
             searchedName = searchedName.ToLower();
 
@@ -49,7 +55,7 @@ namespace TudoMario.Rendering
             var bitmap = _tuple.Item2;
             return bitmap;
         }
-        public BitmapImage GetMissingTexture()
+        public static BitmapImage GetMissingTexture()
         {
             return MissingTexture;
         }

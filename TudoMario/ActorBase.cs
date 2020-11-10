@@ -15,7 +15,7 @@ namespace TudoMario
     public class ActorBase : ColliderBase, ITextured
     {
         private static uint instances = 0;
-        private BitmapImage Texture = Renderer.TextureHandler.GetMissingTexture();
+        private BitmapImage Texture = TextureHandler.GetMissingTexture();
 
         public ActorBase(string id = "")
         {
