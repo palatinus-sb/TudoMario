@@ -39,50 +39,41 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
-            PlayerActor player = new PlayerActor(new Vector2(200, 100), new Vector2(32, 32));
-            CameraObject CO = new CameraObject(player);
-            var asdadasd  = CO.CameraX;
-            var sadsdsdsd  = CO.CameraY;
-
-
+           
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
             testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
+            camera.BindActor(testPlayer);
+
             MapBase mapBase = new MapBase(new Vector2(0,0));
-            Chunk testchunk = new Chunk();
-            Chunk testchunk2 = new Chunk();
+            Chunk airchunkMissingTexturetest = new Chunk();
+            Chunk airChunk = new Chunk();
 
             BitmapImage ground = TextureHandler.GetImageByName("GroundBase");
             BitmapImage air = TextureHandler.GetImageByName("BaseBackGroung");
 
             BitmapImage missing = TextureHandler.GetImageByName("kekekekek");
 
-            testchunk.FillChunkWith(air);
+            airchunkMissingTexturetest.FillChunkWith(air);
 
             mapBase.AddActor(testPlayer);
 
             for (int i = 0; i < 16; i++)
             {
-                testchunk.SetTileAt(0, i, missing);
+                airchunkMissingTexturetest.SetTileAt(0, i, missing);
             }
 
-            testchunk2.FillChunkWith(air);
+            airChunk.FillChunkWith(air);
 
-            mapBase.AddChunkAt(testchunk, 0, 0);
-            mapBase.AddChunkAt(testchunk2, 1, 0);
+            mapBase.AddChunkAt(airchunkMissingTexturetest, 0, 0);
+            mapBase.AddChunkAt(airChunk, 1, 0);
+
+            Chunk groundChunk = new Chunk();
+            groundChunk.FillChunkWith(ground);
+
+            mapBase.AddChunkAt(groundChunk, 0, -1);
 
             _renderer.CurrentMap = mapBase;
-
-            _renderer.RenderChunkAt(testchunk, 0, 0);
-            _renderer.RenderChunkAt(testchunk2, 1, 0);
-
-            Chunk testchunk3 = new Chunk();
-            testchunk3.FillChunkWith(ground);
-
-            _renderer.RenderChunkAt(testchunk3, -1, 0);
-            _renderer.RenderAround(new Vector2(0, 0));
-            _renderer.Render();
-            
         }
 
         /// <summary>
@@ -109,22 +100,20 @@ namespace TudoMario.Ui
 
             if (cont == "pUp")
             {
-                testPlayer.Position.Y += 2f;
+                testPlayer.Position.Y += 10f;
             }
             if (cont == "pDown")
             {
-                testPlayer.Position.Y -= 2f;
+                testPlayer.Position.Y -= 10f;
             }
             if (cont == "pLeft")
             {
-                testPlayer.Position.X -= 2f;
+                testPlayer.Position.X -= 10f;
             }
             if (cont == "pRight")
             {
-                testPlayer.Position.X += 2f;
+                testPlayer.Position.X += 10f;
             }
-
-            //_renderer.RenderAtCamera();
         }
 
     }

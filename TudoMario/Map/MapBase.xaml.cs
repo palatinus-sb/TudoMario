@@ -25,7 +25,7 @@ namespace TudoMario.Map
             StartingPoint = startingpoint;
         }
         public List<ActorBase> MapActorList = new List<ActorBase>();
-        private List<List<Tuple<Chunk, int>>> Map = new List<List<Tuple<Chunk, int>>>();
+        public List<List<Tuple<Chunk, int>>> Map = new List<List<Tuple<Chunk, int>>>();
 
         public Vector2 StartingPoint { get; set; }
 
