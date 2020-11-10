@@ -258,32 +258,36 @@ namespace TudoMario.Rendering
 
         private void RenderActors()
         {
-            foreach (var activeActorRender in ActorRenderActive)
+            try
             {
-                var translatedPos = GetTranslatedActorPosForRender(activeActorRender);
-                Canvas.SetLeft(activeActorRender, translatedPos.X);
-                Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y));
-            }
-
-            //Remove actors that got out of render range
-            foreach (var activeAcRender in ActorRenderActive)
-            {
-                if (!IsActorInRenderRange(activeAcRender))
+                foreach (var activeActorRender in ActorRenderActive)
                 {
-                    ActorRenderActive.Remove(activeAcRender);
-                    MainCanvas.Children.Remove(activeAcRender);
+                    var translatedPos = GetTranslatedActorPosForRender(activeActorRender);
+                    Canvas.SetLeft(activeActorRender, translatedPos.X);
+                    Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y));
+                }
+
+                //Remove actors that got out of render range
+                foreach (var activeAcRender in ActorRenderActive)
+                {
+                    if (!IsActorInRenderRange(activeAcRender))
+                    {
+                        ActorRenderActive.Remove(activeAcRender);
+                        MainCanvas.Children.Remove(activeAcRender);
+                    }
+                }
+
+                //Add new actors that got in render range
+                foreach (var acRender in ActorRenderAll)
+                {
+                    if (!ActorRenderActive.Contains(acRender) && IsActorInRenderRange(acRender))
+                    {
+                        ActorRenderActive.Add(acRender);
+                        MainCanvas.Children.Add(acRender);
+                    }
                 }
             }
-
-            //Add new actors that got in render range
-            foreach (var acRender in ActorRenderAll)
-            {
-                if (!ActorRenderActive.Contains(acRender) && IsActorInRenderRange(acRender))
-                {
-                    ActorRenderActive.Add(acRender);
-                    MainCanvas.Children.Add(acRender);
-                }
-            }
+            catch (Exception) { }
         }
 
         private void RenderChunks()
