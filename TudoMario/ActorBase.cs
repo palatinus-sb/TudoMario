@@ -23,7 +23,8 @@ namespace TudoMario
         public event EventHandler Died;
         private IEnumerable<ColliderBase> colliders;
 
-        public bool CanMove { get; set; }
+        public bool IsStatic { get; private set; } = false;
+        public bool IsAffectedByGravity { get; private set; } = true;
         public Vector2 MovementSpeed { get; set; } = new Vector2(0, 0);
         public Vector2 SpeedLimits { get; private set; } = new Vector2(5, 5);
         public HashSet<MovementModifier> MovementModifiers { get; private set; } = new HashSet<MovementModifier>();
@@ -32,12 +33,11 @@ namespace TudoMario
 
         public ActorBase(string id = "")
         {
-            if (string.IsNullOrEmpty(id))
-                this.id = $"Actor-{GetType().Name}-{instances}";
+            this.id = string.IsNullOrEmpty(id) ? $"Actor-{GetType().Name}-{instances}" : $"Actor-{id}";
             instances++;
         }
 
-        public ActorBase(Vector2 position, Vector2 size) : this()
+        public ActorBase(Vector2 position, Vector2 size, string id = "") : this(id)
         {
             Position = position;
             Size = size;
@@ -63,7 +63,7 @@ namespace TudoMario
         /// <param name="target">the target of the attack</param>
         public void Attack(ActorBase target)
         {
-            if (GetColliders().ToList().Contains(target))
+            if (IsCollidingWith(target))
                 target.ApplyDamage(AttackDamage);
         }
 
@@ -77,14 +77,12 @@ namespace TudoMario
 
             // applying MovementModifiers
             foreach (var collider in colliders)
-            {
                 if (collider is ColliderWithModifiers cwm)
                 {
                     MovementModifiers.Clear();
                     foreach (var modifier in cwm.Modifiers)
                         MovementModifiers.Add(modifier);
                 }
-            }
 
             // Perform type-specific Behaviour
             PerformBehaviour();
@@ -96,10 +94,7 @@ namespace TudoMario
         /// </summary>
         protected virtual void PerformBehaviour() { }
 
-        public override IEnumerable<ColliderBase> GetColliders()
-        {
-            return colliders;
-        }
+        public override IEnumerable<ColliderBase> GetColliders() => colliders;
 
         public override string ToString() => id;
     }

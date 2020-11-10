@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace TudoMario
         }
 
         public float Length() => vector.Length();
+
+        public static Vector2 operator +(Vector2 a, Vector2 b)
+        {
+            var v = a.vector + b.vector;
+            return new Vector2(v.X, v.Y);
+        }
+
+        public static Vector2 operator -(Vector2 a, Vector2 b)
+        {
+            var v = a.vector - b.vector;
+            return new Vector2(v.X, v.Y);
+        }
 
         public override string ToString()
         {
