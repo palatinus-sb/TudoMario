@@ -87,6 +87,8 @@ namespace TudoMario
 
             // Perform type-specific Behaviour
             PerformBehaviour();
+            // Move actor
+            PhysicsController.ApplyPhysics(this);
         }
 
         /// <summary>
