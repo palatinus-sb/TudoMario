@@ -10,7 +10,7 @@ namespace TudoMario
     /// <summary>
     /// 
     /// </summary>
-    public class ActorBase : ColliderBase
+    public abstract class ActorBase : ColliderBase
     {
         private static uint instances = 0;
 
@@ -23,8 +23,8 @@ namespace TudoMario
         public event EventHandler Died;
         private IEnumerable<ColliderBase> colliders;
 
-        public bool IsStatic { get; private set; } = false;
-        public bool IsAffectedByGravity { get; private set; } = true;
+        public bool IsStatic { get; set; } = false;
+        public bool IsAffectedByGravity { get; set; } = true;
         public Vector2 MovementSpeed { get; set; } = new Vector2(0, 0);
         public Vector2 SpeedLimits { get; private set; } = new Vector2(5, 5);
         public HashSet<MovementModifier> MovementModifiers { get; private set; } = new HashSet<MovementModifier>();
@@ -35,6 +35,7 @@ namespace TudoMario
         {
             this.id = string.IsNullOrEmpty(id) ? $"Actor-{GetType().Name}-{instances}" : $"Actor-{id}";
             instances++;
+            colliders = base.GetColliders();
         }
 
         public ActorBase(Vector2 position, Vector2 size, string id = "") : this(id)
@@ -92,7 +93,7 @@ namespace TudoMario
         /// Defines the unique behaviour realated to this type of Actor.
         /// Implement this function when creating a new type of Actor.
         /// </summary>
-        protected virtual void PerformBehaviour() { }
+        protected abstract void PerformBehaviour();
 
         public override IEnumerable<ColliderBase> GetColliders() => colliders;
 

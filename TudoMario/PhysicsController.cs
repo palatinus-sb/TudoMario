@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -16,17 +17,20 @@ namespace TudoMario
 
         public static float Movement = 0.1f;
 
-        private const float friction = 0.1f;
+        private const float friction = 0.5f;
         private const float gravity = 0.5f;
 
+        [Obsolete]
         public static void ApplyFrictionOnGround(ActorBase actor) {
             throw new Exception("Obsolete method");
         }
 
+        [Obsolete]
         public static void ApplySpeedLimitOnGround(ActorBase actor) {
             throw new Exception("Obsolete method");
         }
 
+        [Obsolete]
         public static void ApplyGravity(ActorBase actor) {
             throw new Exception("Obsolete method");
         }
@@ -42,19 +46,21 @@ namespace TudoMario
             Vector4 speedLimits = CalculateSpeedLimit(actor);
 
             // apply friction
-            actor.MovementSpeed.X = Math.Sign(actor.MovementSpeed.X) * (Math.Abs(actor.MovementSpeed.X) - friction);
+            actor.MovementSpeed.X = Math.Sign(actor.MovementSpeed.X) * Math.Max(Math.Abs(actor.MovementSpeed.X) - friction, 0f);
+
             // apply gravity
-            actor.MovementSpeed.Y = Math.Abs(actor.MovementSpeed.X) - gravity;
+            if (actor.IsAffectedByGravity)
+                actor.MovementSpeed.Y -= gravity;
 
             // enforce speed limits
-            if (Math.Sign(actor.MovementSpeed.Y) > 0)
-                actor.MovementSpeed.Y = Math.Min(actor.MovementSpeed.Y, speedLimits.X); // up (+y)
+            if (Math.Sign(actor.MovementSpeed.X) >= 0)
+                actor.MovementSpeed.X = 1 * Math.Min(Math.Abs(actor.MovementSpeed.X), speedLimits.W); // right (+x)
             else
-                actor.MovementSpeed.Y = Math.Max(actor.MovementSpeed.Y, speedLimits.Y); // down (-y)
-            if (Math.Sign(actor.MovementSpeed.X) > 0)
-                actor.MovementSpeed.X = Math.Min(actor.MovementSpeed.X, speedLimits.W); // right (+x)
+                actor.MovementSpeed.X = -1 * Math.Min(Math.Abs(actor.MovementSpeed.X), speedLimits.Z); // left (-x)
+            if (Math.Sign(actor.MovementSpeed.Y) >= 0)
+                actor.MovementSpeed.Y = 1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.X); // up (+y)
             else
-                actor.MovementSpeed.X = Math.Max(actor.MovementSpeed.X, speedLimits.Z); // left (-y)
+                actor.MovementSpeed.Y = -1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.Y); // down (-y)
 
             // move actor
             actor.Position += actor.MovementSpeed;
@@ -79,7 +85,7 @@ namespace TudoMario
             var newLimits = speedLimits;
             var additives = actor.MovementModifiers.Where(m => m.Mode == Mode.Additive);
             foreach (var modifier in additives)
-                newLimits = ApplyModifier(modifier, newLimits, (x, y) => x + y);
+                newLimits = ApplyModifier(modifier, newLimits);
             return newLimits;
         }
 
@@ -88,7 +94,7 @@ namespace TudoMario
             var newLimits = speedLimits;
             var multiplicatives = actor.MovementModifiers.Where(m => m.Mode == Mode.Multiplicative);
             foreach (var modifier in multiplicatives)
-                newLimits = ApplyModifier(modifier, newLimits, (x, y) => x * y);
+                newLimits = ApplyModifier(modifier, newLimits);
             return newLimits;
         }
 
@@ -97,7 +103,7 @@ namespace TudoMario
             var newLimits = speedLimits;
             var absolutes = actor.MovementModifiers.Where(m => m.Mode == Mode.Absolute);
             foreach (var modifier in absolutes)
-                newLimits = ApplyModifier(modifier, newLimits, (x, y) => y);
+                newLimits = ApplyModifier(modifier, newLimits);
             return newLimits;
         }
 
@@ -106,25 +112,24 @@ namespace TudoMario
         /// </summary>
         /// <param name="modifier">The modifier to apply</param>
         /// <param name="speedLimits">The speed limits to modify</param>
-        /// <param name="func">The arithmetic operation to perform. Param 1 is base-value, param 2 is the modifier-value.</param>
         /// <returns>The new set of speed limits in the same Vector4 representation.</returns>
-        private static Vector4 ApplyModifier(MovementModifier modifier, Vector4 speedLimits, Func<float, float, float> func)
+        private static Vector4 ApplyModifier(MovementModifier modifier, Vector4 speedLimits)
         {
             float up = speedLimits.X;
             if ((modifier.Direction & Direction.Up) != 0)
-                up = func(speedLimits.X, modifier.Value);
+                up = modifier.Function(speedLimits.X, modifier.Value);
 
             float down = speedLimits.Y;
             if ((modifier.Direction & Direction.Down) != 0)
-                down = func(speedLimits.Y, modifier.Value);
+                down = modifier.Function(speedLimits.Y, modifier.Value);
 
             float left = speedLimits.Z;
             if ((modifier.Direction & Direction.Left) != 0)
-                left = func(speedLimits.Z, modifier.Value);
+                left = modifier.Function(speedLimits.Z, modifier.Value);
 
             float right = speedLimits.W;
             if ((modifier.Direction & Direction.Right) != 0)
-                right = func(speedLimits.W, modifier.Value);
+                right = modifier.Function(speedLimits.W, modifier.Value);
 
             return new Vector4(up, down, left, right);
         }

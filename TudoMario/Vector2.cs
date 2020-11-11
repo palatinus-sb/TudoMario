@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TudoMario
 {
-    public class Vector2
+    public class Vector2 : IEquatable<Vector2>
     {
         private System.Numerics.Vector2 vector;
         public float X { get => vector.X; set => vector = new System.Numerics.Vector2(value, vector.Y); }
@@ -37,9 +37,19 @@ namespace TudoMario
             return new Vector2(v.X, v.Y);
         }
 
-        public override string ToString()
+        public override bool Equals(object obj)
         {
-            return $" {vector.X} | {vector.Y} ";
+            if (obj == null || !this.GetType().Equals(obj.GetType()))
+                return false;
+            else
+            {
+                Vector2 other = (Vector2)obj;
+                return vector.Equals(other.vector);
+            }
         }
+
+        public bool Equals(Vector2 other) => vector.Equals(other.vector);
+
+        public override string ToString() => $" {vector.X} | {vector.Y} ";
     }
 }
