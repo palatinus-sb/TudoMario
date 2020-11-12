@@ -11,29 +11,8 @@ namespace TudoMario
 {
     public static class PhysicsController
     {
-        public const float JumpHeight = 6.0f;
-
-        public static Vector2 Gravity = new Vector2(0.0f, -0.7f);
-
-        public static float Movement = 0.1f;
-
-        private const float friction = 0.5f;
-        private const float gravity = 0.5f;
-
-        [Obsolete]
-        public static void ApplyFrictionOnGround(ActorBase actor) {
-            throw new Exception("Obsolete method");
-        }
-
-        [Obsolete]
-        public static void ApplySpeedLimitOnGround(ActorBase actor) {
-            throw new Exception("Obsolete method");
-        }
-
-        [Obsolete]
-        public static void ApplyGravity(ActorBase actor) {
-            throw new Exception("Obsolete method");
-        }
+        public const float friction = 0.5f;
+        public const float gravity = 0.5f;
 
         /// <summary>
         /// Moves the actor based on it's speed and properties, factoring in gravity and friction.

@@ -15,7 +15,15 @@ namespace TudoMario
 
         protected override void PerformBehaviour()
         {
-            // TODO: User-control handling
+            // jumping
+            if ((UserControlHandler.PressedKeys & KeyAction.Up) != 0 && MovementSpeed.Y == 0)
+                MovementSpeed.Y = SpeedLimits.Y;
+
+            // walking left-right
+            if ((UserControlHandler.PressedKeys & KeyAction.Right) != 0)
+                MovementSpeed.X += PhysicsController.friction * 2;
+            if ((UserControlHandler.PressedKeys & KeyAction.Left) != 0)
+                MovementSpeed.X -= PhysicsController.friction * 2;
         }
     }
 }

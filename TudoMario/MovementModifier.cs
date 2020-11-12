@@ -27,8 +27,8 @@ namespace TudoMario
             };
         }
 
-        public static MovementModifier IceWalk = new MovementModifier(Direction.Left | Direction.Right, 1.5f, Mode.Multiplicative);
-        public static MovementModifier SwampWalk = new MovementModifier(Direction.Left | Direction.Right | Direction.Up | Direction.Down, 0.5f, Mode.Multiplicative);
+        public static MovementModifier IceWalk = new MovementModifier(Direction.Horizontal, 1.5f, Mode.Multiplicative);
+        public static MovementModifier SwampWalk = new MovementModifier(Direction.All, 0.5f, Mode.Multiplicative);
         public static MovementModifier SlowFall = new MovementModifier(Direction.Down, 0.5f, Mode.Multiplicative);
         public static MovementModifier JumpBoost = new MovementModifier(Direction.Up, 2f, Mode.Multiplicative);
 
@@ -38,7 +38,17 @@ namespace TudoMario
         public static MovementModifier BlockRight = new MovementModifier(Direction.Right, 0f, Mode.Absolute);
     }
 
-    [Flags]
-    public enum Direction { Up = 1, Down = 2, Left = 4, Right = 8 }
     public enum Mode { Absolute, Additive, Multiplicative }
+
+    [Flags]
+    public enum Direction
+    {
+        Up = 2 ^ 0,
+        Down = 2 ^ 1,
+        Left = 2 ^ 2,
+        Right = 2 ^ 3,
+        Vertical = Up | Down,
+        Horizontal = Left | Right,
+        All = Horizontal | Vertical
+    }
 }

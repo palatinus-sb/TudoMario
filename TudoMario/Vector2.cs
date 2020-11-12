@@ -10,8 +10,8 @@ namespace TudoMario
     public class Vector2 : IEquatable<Vector2>
     {
         private System.Numerics.Vector2 vector;
-        public float X { get => vector.X; set => vector = new System.Numerics.Vector2(value, vector.Y); }
-        public float Y { get => vector.Y; set => vector = new System.Numerics.Vector2(vector.X, value); }
+        public float X { get => vector.X; set => vector.X = value; }
+        public float Y { get => vector.Y; set => vector.Y = value; }
 
         public Vector2()
         {
@@ -36,6 +36,8 @@ namespace TudoMario
             var v = a.vector - b.vector;
             return new Vector2(v.X, v.Y);
         }
+
+        public override int GetHashCode() => vector.GetHashCode();
 
         public override bool Equals(object obj)
         {
