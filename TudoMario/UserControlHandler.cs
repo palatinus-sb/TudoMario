@@ -19,13 +19,13 @@ namespace TudoMario
 
         static UserControlHandler()
         {
-            Window.Current.CoreWindow.KeyDown += UserKeyDown;
-            Window.Current.CoreWindow.KeyUp += UserKeyUp;
+            //Window.Current.CoreWindow.KeyDown += UserKeyDown;
+            //Window.Current.CoreWindow.KeyUp += UserKeyUp;
         }
 
-        private static void UserKeyDown(CoreWindow sender, KeyEventArgs e)
+        public static void UserKeyDown(VirtualKey key)
         {
-            switch (e.VirtualKey)
+            switch (key)
             {
                 case VirtualKey.W: PressedKeys |= KeyAction.Up; break;
                 case VirtualKey.A: PressedKeys |= KeyAction.Left; break;
@@ -39,9 +39,9 @@ namespace TudoMario
             }
         }
 
-        private static void UserKeyUp(CoreWindow sender, KeyEventArgs e)
+        public static void UserKeyUp(VirtualKey key)
         {
-            switch (e.VirtualKey)
+            switch (key)
             {
                 case VirtualKey.W: PressedKeys &= ~KeyAction.Up; break;
                 case VirtualKey.A: PressedKeys &= ~KeyAction.Left; break;
