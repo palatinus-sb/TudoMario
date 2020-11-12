@@ -44,19 +44,28 @@ namespace TudoMario
         public void OnTimerTick(object sender, EventArgs e) 
         {
             CheckGameState();
-            CheckCollisions(); // is this needed?
             ActorsPerformBeahviour();
             RenderGameState();        
         }
 
-        private void CheckGameState() { }
-
-        private void CheckCollisions() { }
+        private void CheckGameState() 
+        {
+            if (gameEnded)
+            {
+                timer.Stop();
+            }
+        }
 
         private void ActorsPerformBeahviour()
         {
-            foreach (var actor in map.MapActorList)
+            foreach (var actor in renderer.CurrentMap.MapActorList)
+            {
                 actor.Tick();
+                if (!actor.IsAlive) 
+                {
+                    gameEnded = true;
+                }
+            }
         }
 
         private void RenderGameState() 
