@@ -21,11 +21,12 @@ namespace TudoMario.Map
 {
     public sealed partial class ActorRender : UserControl
     {
-        ActorBase self = new ActorBase();
+        ActorBase self;
         public Vector2 Position { get => self.Position;}
         public Vector2 Size { get => self.Size; }
 
         public BitmapImage Texture { get => self.GetTexture(); set => self.SetTexture(value); }
+
         public ActorRender(ActorBase self)
         {
             this.self = self;

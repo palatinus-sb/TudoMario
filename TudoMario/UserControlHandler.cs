@@ -11,7 +11,7 @@ using Windows.UI.Core;
 namespace TudoMario
 {
     [Flags]
-    public enum KeyAction { Up = 2 ^ 0, Down = 2 ^ 1, Left = 2 ^ 2, Right = 2 ^ 3 }
+    public enum KeyAction { Up = 1, Down = 2, Left = 4, Right = 8 }
 
     public static class UserControlHandler
     {

@@ -29,24 +29,21 @@ namespace TudoMario
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        UiController uicontroller;
         Renderer renderer;
-        public Grid MainGrid
-        {
-            get
-            {
-                return UiMainGrid;
-            }
-        }
+        MapBase map;
+        UiController uicontroller;
+
+        public Grid MainGrid { get => UiMainGrid; }
 
         public MainPage()
         {
             InitializeComponent();
 
             renderer = new Renderer(this);
+            map = new MapBase(new Vector2(0, 0));
             uicontroller = new UiController(this, renderer);
 
-            LogicController logiccontroller = new LogicController(renderer,uicontroller);
+            LogicController logiccontroller = new LogicController(renderer, map, uicontroller);
             logiccontroller.StartGame();
             
             switch (Configuration.Dev)

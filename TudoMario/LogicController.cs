@@ -16,18 +16,20 @@ namespace TudoMario
 {
     class LogicController
     {
-        public LogicController(Renderer renderer,UiController uiController)
+        public LogicController(Renderer renderer, MapBase map, UiController uiController)
         {
             this.renderer = renderer;
+            this.map = map;
             this.uiController = uiController;
             timer.Tick += OnTimerTick;
         }
 
         private Timer timer = new Timer(16);
-        Renderer renderer;
-        UiController uiController;
-        bool gameStarted = false;
-        bool gameEnded = false;
+        private Renderer renderer;
+        private MapBase map;
+        private UiController uiController;
+        private bool gameStarted = false;
+        private bool gameEnded = false;
 
         public void AddActorToGame(ActorBase actorBase)
         {
@@ -53,8 +55,8 @@ namespace TudoMario
 
         private void ActorsPerformBeahviour()
         {
-            //foreach (var actor in mapbase.MapActorList)
-            //    actor.Tick();
+            foreach (var actor in map.MapActorList)
+                actor.Tick();
         }
 
         private void RenderGameState() 
