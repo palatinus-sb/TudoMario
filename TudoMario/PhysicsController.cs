@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,146 +11,106 @@ namespace TudoMario
 {
     public static class PhysicsController
     {
-        /// <summary>
-        /// The friction on ground.
-        /// </summary>
-        public const float FrictionOnGround = 1.0f;
+        public const float friction = 0.5f;
+        public const float gravity = 0.5f;
 
         /// <summary>
-        /// The friction on ice.
+        /// Moves the actor based on it's speed and properties, factoring in gravity and friction.
         /// </summary>
-        public const float FrictionOnIce = 1.5f;
+        /// <param name="actor">the Actor to be moved</param>
+        public static void ApplyPhysics(ActorBase actor)
+        {
+            if (actor.IsStatic)
+                return;
+            Vector4 speedLimits = CalculateSpeedLimit(actor);
 
-        /// <summary>
-        /// The friction in the air.
-        /// </summary>
-        public const float FrictionInAir = 0.7f;
+            // apply friction
+            actor.MovementSpeed.X = Math.Sign(actor.MovementSpeed.X) * Math.Max(Math.Abs(actor.MovementSpeed.X) - friction, 0f);
 
-        /// <summary>
-        /// The friction in the swamp.
-        /// </summary>
-        public const float FrictionInSwamp = 0.5f;
+            // apply gravity
+            if (actor.IsAffectedByGravity)
+                actor.MovementSpeed.Y -= gravity;
 
-        /// <summary>
-        /// Actor's maximum speed on ground.
-        /// </summary>
-        public const float MaxSpeedMultiplierOnGround = 1.0f;
+            // enforce speed limits
+            if (Math.Sign(actor.MovementSpeed.X) >= 0)
+                actor.MovementSpeed.X = 1 * Math.Min(Math.Abs(actor.MovementSpeed.X), speedLimits.W); // right (+x)
+            else
+                actor.MovementSpeed.X = -1 * Math.Min(Math.Abs(actor.MovementSpeed.X), speedLimits.Z); // left (-x)
+            if (Math.Sign(actor.MovementSpeed.Y) >= 0)
+                actor.MovementSpeed.Y = 1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.X); // up (+y)
+            else
+                actor.MovementSpeed.Y = -1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.Y); // down (-y)
 
-        /// <summary>
-        /// Actor's maximum speed on ice.
-        /// </summary>
-        public const float MaxSpeedMultiplierOnIce = 2.0f;
-
-        /// <summary>
-        /// Actor's maximum speed in air.
-        /// </summary>
-        public const float MaxSpeedMultiplierInAir = 0.7f;
-
-        /// <summary>
-        /// Actor's maximum speed in swamp.
-        /// </summary>
-        public const float MaxSpeedMultiplierInSwamp = 0.8f;
-
-        /// <summary>
-        /// Maximum movement speed in the game.
-        /// </summary>
-        public const float MaxMovementSpeed = 5.0f;
-
-        /// <summary>
-        /// Maximum jump height in the game.
-        /// </summary>
-        public const float JumpHeight = 6.0f;
-
-        /// <summary>
-        /// Declares the gravity.
-        /// </summary>
-        public static Vector2 Gravity = new Vector2(0.0f, -0.7f);
-
-        public static float Movement = 0.1f;
-
-        /// <summary>
-        /// Apply the ground friction.
-        /// </summary>
-        public static void ApplyFrictionOnGround(ActorBase actor) {
-            if (actor.MovementSpeed.X == 0.0f) actor.MovementSpeed = new Vector2(0.0f, actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X > 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X + FrictionOnGround), actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X < 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X - FrictionOnGround), actor.MovementSpeed.Y);
+            // move actor
+            actor.Position += actor.MovementSpeed;
         }
 
         /// <summary>
-        /// Apply the ice friction.
+        /// Calculates an actor's speed limits based on it's properties and modifiers.
         /// </summary>
-        public static void ApplyFrictionOnIce(ActorBase actor) {
-            if (actor.MovementSpeed.X == 0.0f) actor.MovementSpeed = new Vector2(0.0f, actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X > 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X + FrictionOnIce), actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X < 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X - FrictionOnIce), actor.MovementSpeed.Y);
+        /// <param name="actor">the actor who's speed limits are to be calculated</param>
+        /// <returns>The speed limits in Vector4(Up, Down, Left, Right) representation.</returns>
+        private static Vector4 CalculateSpeedLimit(ActorBase actor)
+        {
+            Vector4 speedLimits = new Vector4(actor.SpeedLimits.Y, actor.SpeedLimits.Y, actor.SpeedLimits.X, actor.SpeedLimits.X);
+            speedLimits = ApplyAdditiveModifiers(actor, speedLimits);
+            speedLimits = ApplyMultiplicativeModifiers(actor, speedLimits);
+            speedLimits = ApplyAbsoluteModifiers(actor, speedLimits);
+            return speedLimits;
+        }
+
+        private static Vector4 ApplyAdditiveModifiers(ActorBase actor, Vector4 speedLimits)
+        {
+            var newLimits = speedLimits;
+            var additives = actor.MovementModifiers.Where(m => m.Mode == Mode.Additive);
+            foreach (var modifier in additives)
+                newLimits = ApplyModifier(modifier, newLimits);
+            return newLimits;
+        }
+
+        private static Vector4 ApplyMultiplicativeModifiers(ActorBase actor, Vector4 speedLimits)
+        {
+            var newLimits = speedLimits;
+            var multiplicatives = actor.MovementModifiers.Where(m => m.Mode == Mode.Multiplicative);
+            foreach (var modifier in multiplicatives)
+                newLimits = ApplyModifier(modifier, newLimits);
+            return newLimits;
+        }
+
+        private static Vector4 ApplyAbsoluteModifiers(ActorBase actor, Vector4 speedLimits)
+        {
+            var newLimits = speedLimits;
+            var absolutes = actor.MovementModifiers.Where(m => m.Mode == Mode.Absolute);
+            foreach (var modifier in absolutes)
+                newLimits = ApplyModifier(modifier, newLimits);
+            return newLimits;
         }
 
         /// <summary>
-        /// Apply the air friction.
+        /// Applies a MovementModifier to a Vector4 represented speed limit set. Vector4(Up, Down, Left, Right)
         /// </summary>
-        public static void ApplyFrictionInAir(ActorBase actor) {
-            if (actor.MovementSpeed.X == 0.0f) actor.MovementSpeed = new Vector2(0.0f, actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X > 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X + FrictionInAir), actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X < 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X - FrictionInAir), actor.MovementSpeed.Y);
-        }
+        /// <param name="modifier">The modifier to apply</param>
+        /// <param name="speedLimits">The speed limits to modify</param>
+        /// <returns>The new set of speed limits in the same Vector4 representation.</returns>
+        private static Vector4 ApplyModifier(MovementModifier modifier, Vector4 speedLimits)
+        {
+            float up = speedLimits.X;
+            if ((modifier.Direction & Direction.Up) != 0)
+                up = modifier.Function(speedLimits.X, modifier.Value);
 
-        /// <summary>
-        /// Apply the swamp friction.
-        /// </summary>
-        public static void ApplyFrictionInSwamp(ActorBase actor) {
-            if (actor.MovementSpeed.X == 0.0f) actor.MovementSpeed = new Vector2(0.0f, actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X > 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X + FrictionInSwamp), actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X < 0.0f) actor.MovementSpeed = new Vector2((actor.MovementSpeed.X - FrictionInSwamp), actor.MovementSpeed.Y);
-        }
+            float down = speedLimits.Y;
+            if ((modifier.Direction & Direction.Down) != 0)
+                down = modifier.Function(speedLimits.Y, modifier.Value);
 
-        /// <summary>
-        /// Apply the actor's maximum movement speeds.
-        /// </summary>
-        public static void ApplySpeedLimits(ActorBase actor, float NewSpeedLimit) {
-            if (actor.MovementSpeed.X > NewSpeedLimit) actor.MovementSpeed = new Vector2(NewSpeedLimit, actor.MovementSpeed.Y);
-            else if (actor.MovementSpeed.X < -NewSpeedLimit) actor.MovementSpeed = new Vector2(-NewSpeedLimit, actor.MovementSpeed.Y);
-            if (actor.MovementSpeed.Y > actor.SpeedLimits.Y) actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, actor.SpeedLimits.Y);
-            else if (actor.MovementSpeed.Y < -actor.SpeedLimits.Y) actor.MovementSpeed = new Vector2(actor.MovementSpeed.X, -actor.SpeedLimits.Y);
-        }
+            float left = speedLimits.Z;
+            if ((modifier.Direction & Direction.Left) != 0)
+                left = modifier.Function(speedLimits.Z, modifier.Value);
 
-        /// <summary>
-        /// Apply the actor's maximum movement speed on ground.
-        /// </summary>
-        public static void ApplySpeedLimitOnGround(ActorBase actor) {
-            float NewSpeedLimit = actor.SpeedLimits.X * MaxSpeedMultiplierOnGround;
-            ApplySpeedLimits(actor, NewSpeedLimit);
-        }
+            float right = speedLimits.W;
+            if ((modifier.Direction & Direction.Right) != 0)
+                right = modifier.Function(speedLimits.W, modifier.Value);
 
-        /// <summary>
-        /// Apply the actor's maximum movement speed on ice.
-        /// </summary>
-        public static void ApplySpeedLimitOnIce(ActorBase actor) {
-            float NewSpeedLimit = actor.SpeedLimits.X * MaxSpeedMultiplierOnIce;
-            ApplySpeedLimits(actor, NewSpeedLimit);
-        }
-
-        /// <summary>
-        /// Apply the actor's maximum movement speed in air.
-        /// </summary>
-        public static void ApplySpeedLimitInAir(ActorBase actor) {
-            float NewSpeedLimit = actor.SpeedLimits.X * MaxSpeedMultiplierInAir;
-            ApplySpeedLimits(actor, NewSpeedLimit);
-        }
-
-        /// <summary>
-        /// Apply the actor's maximum movement speed in swamp.
-        /// </summary>
-        public static void ApplySpeedLimitInSwamp(ActorBase actor) {
-            float NewSpeedLimit = actor.SpeedLimits.X * MaxSpeedMultiplierInSwamp;
-            ApplySpeedLimits(actor, NewSpeedLimit);
-        }
-
-        /// <summary>
-        /// Apply the gravity on the actor.
-        /// </summary>
-        public static void ApplyGravity(ActorBase actor) {
-            actor.MovementSpeed = new Vector2(Gravity.X, (actor.MovementSpeed.Y + Gravity.Y));
+            return new Vector4(up, down, left, right);
         }
     }
 }

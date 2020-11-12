@@ -16,11 +16,11 @@ namespace TudoMarioTests
         //  ║ 7 ║ 8 ║ 9 ║  ┤
         //  ╚═══╩═══╩═══╝  ┴ -3
 
-        ActorBase actor123 = new ActorBase(new Vector2(0, 2), new Vector2(6, 2));
-        ActorBase actor14 = new ActorBase(new Vector2(-2, 1), new Vector2(2, 4));
-        ActorBase actor258 = new ActorBase(new Vector2(0, 0), new Vector2(2, 6));
-        ActorBase actor6 = new ActorBase(new Vector2(2, 0), new Vector2(2, 2));
-        ActorBase actor89 = new ActorBase(new Vector2(1, -2), new Vector2(4, 2));
+        DummyActor actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
+        DummyActor actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
+        DummyActor actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
+        DummyActor actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
+        DummyActor actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
 
         [TestMethod]
         public void TestIsCollidingWith()
@@ -56,6 +56,7 @@ namespace TudoMarioTests
         [TestMethod]
         public void TestGetColliders()
         {
+            actor123.Tick(); // refresh cached value
             var colliders123 = actor123.GetColliders();
             Assert.IsTrue(colliders123.Contains(actor14));
             Assert.IsTrue(colliders123.Contains(actor258));

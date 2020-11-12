@@ -10,45 +10,48 @@ using Windows.UI.Core;
 
 namespace TudoMario
 {
-    public enum KeyAction { UP, DOWN, LEFT, RIGHT }
+    [Flags]
+    public enum KeyAction { Up = 2 ^ 0, Down = 2 ^ 1, Left = 2 ^ 2, Right = 2 ^ 3 }
 
-    public class UserControlHandler
+    public static class UserControlHandler
     {
-        public List<KeyAction> PressedKeys { get; set; } = new List<KeyAction>();
-        public UserControlHandler()
+        public static KeyAction PressedKeys { get; private set; } = 0;
+
+        static UserControlHandler()
         {
             Window.Current.CoreWindow.KeyDown += UserKeyDown;
             Window.Current.CoreWindow.KeyUp += UserKeyUp;
         }
 
-        private void UserKeyDown(CoreWindow sender, KeyEventArgs e)
+        private static void UserKeyDown(CoreWindow sender, KeyEventArgs e)
         {
             switch (e.VirtualKey)
             {
-                case VirtualKey.W: PressedKeys.Add(KeyAction.UP); break;
-                case VirtualKey.A: PressedKeys.Add(KeyAction.LEFT); break;
-                case VirtualKey.S: PressedKeys.Add(KeyAction.DOWN); break;
-                case VirtualKey.D: PressedKeys.Add(KeyAction.RIGHT); break;
-                case VirtualKey.Space: PressedKeys.Add(KeyAction.UP); break;
-                case VirtualKey.GamepadA: PressedKeys.Add(KeyAction.UP); break;
-                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys.Add(KeyAction.LEFT); break;
-                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys.Add(KeyAction.DOWN); break;
-                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys.Add(KeyAction.RIGHT); break;
+                case VirtualKey.W: PressedKeys |= KeyAction.Up; break;
+                case VirtualKey.A: PressedKeys |= KeyAction.Left; break;
+                case VirtualKey.S: PressedKeys |= KeyAction.Down; break;
+                case VirtualKey.D: PressedKeys |= KeyAction.Right; break;
+                case VirtualKey.Space: PressedKeys |= KeyAction.Up; break;
+                case VirtualKey.GamepadA: PressedKeys |= KeyAction.Up; break;
+                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys |= KeyAction.Left; break;
+                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys |= KeyAction.Down; break;
+                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys |= KeyAction.Up; break;
             }
         }
-        private void UserKeyUp(CoreWindow sender, KeyEventArgs e)
+
+        private static void UserKeyUp(CoreWindow sender, KeyEventArgs e)
         {
             switch (e.VirtualKey)
             {
-                case VirtualKey.W: PressedKeys.Remove(KeyAction.UP); break;
-                case VirtualKey.A: PressedKeys.Remove(KeyAction.LEFT); break;
-                case VirtualKey.S: PressedKeys.Remove(KeyAction.DOWN); break;
-                case VirtualKey.D: PressedKeys.Remove(KeyAction.RIGHT); break;
-                case VirtualKey.Space: PressedKeys.Remove(KeyAction.UP); break;
-                case VirtualKey.GamepadA: PressedKeys.Remove(KeyAction.UP); break;
-                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys.Remove(KeyAction.LEFT); break;
-                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys.Remove(KeyAction.DOWN); break;
-                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys.Remove(KeyAction.RIGHT); break;
+                case VirtualKey.W: PressedKeys &= ~KeyAction.Up; break;
+                case VirtualKey.A: PressedKeys &= ~KeyAction.Left; break;
+                case VirtualKey.S: PressedKeys &= ~KeyAction.Down; break;
+                case VirtualKey.D: PressedKeys &= ~KeyAction.Right; break;
+                case VirtualKey.Space: PressedKeys &= ~KeyAction.Up; break;
+                case VirtualKey.GamepadA: PressedKeys &= ~KeyAction.Up; break;
+                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys &= ~KeyAction.Left; break;
+                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys &= ~KeyAction.Down; break;
+                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys &= ~KeyAction.Right; break;
             }
         }
     }
