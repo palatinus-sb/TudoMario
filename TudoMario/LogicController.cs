@@ -46,7 +46,7 @@ namespace TudoMario
             CheckGameState();
             CheckCollisions(); // is this needed?
             ActorsPerformBeahviour();
-            RenderGameState();        
+            RenderGameState();
         }
 
         private void CheckGameState() { }
@@ -61,11 +61,9 @@ namespace TudoMario
 
         private void RenderGameState() 
         {
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                renderer.Render();
-            });
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => renderer.Render());
         }
     }
 }

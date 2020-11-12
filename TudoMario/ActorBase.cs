@@ -80,13 +80,11 @@ namespace TudoMario
             colliders = base.GetColliders();
 
             // applying MovementModifiers
+            MovementModifiers.Clear();
             foreach (var collider in colliders)
                 if (collider is ColliderWithModifiers cwm)
-                {
-                    MovementModifiers.Clear();
                     foreach (var modifier in cwm.Modifiers)
                         MovementModifiers.Add(modifier);
-                }
 
             // Perform type-specific Behaviour
             PerformBehaviour();
