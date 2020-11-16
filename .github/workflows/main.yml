@@ -31,10 +31,12 @@ jobs:
       name: Checkout Code
      
     - name: Setup MSBuild Path
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/setup-msbuild@v1.0.2
        
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: latest
      
     - name: Restore NuGet Packages
       run: nuget restore TudoMario.sln
@@ -43,10 +45,13 @@ jobs:
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
     
     - name: Setup VSTest
-      uses: darenm/Setup-VSTest@v1
+      uses: Malcolmnixon/Setup-VSTest@v4
       
     - name: Run Tests
       run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
+      
+    - name: Run Tests method2
+      run: vstest.console /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
     
     - name: Print out Log File
       if: ${{ always() }}
