@@ -50,8 +50,6 @@ jobs:
     - name: Run Tests
       run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
       
-    - name: Run Tests method2
-      run: vstest.console /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
     
     - name: Print out Log File
       if: ${{ always() }}
