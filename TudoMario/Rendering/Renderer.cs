@@ -39,7 +39,7 @@ namespace TudoMario.Rendering
         private static float ChunkSize = 512;
 
 
-        private float ZoomLevel = 1;
+        //private float ZoomLevel = 1;
         public CameraObject Camera {
             get
             {

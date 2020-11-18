@@ -70,9 +70,12 @@ namespace TudoMario
 
         private void RenderGameState() 
         {
+            //Rendering can happen async without waiting.
+            #pragma warning disable CS4014
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 () => renderer.Render());
+            #pragma warning restore CS4014
         }
     }
 }
