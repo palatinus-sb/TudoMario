@@ -14,7 +14,7 @@ using Windows.UI.Xaml;
 
 namespace TudoMario
 {
-    class LogicController
+    internal class LogicController
     {
         public LogicController(Renderer renderer, MapBase map, UiController uiController)
         {
@@ -36,19 +36,20 @@ namespace TudoMario
             renderer.CurrentMap.AddActor(actorBase);
         }
 
-        public void StartGame() {
+        public void StartGame()
+        {
             timer.Start();
             //gameStarted = true;
         }
 
-        public void OnTimerTick(object sender, EventArgs e) 
+        public void OnTimerTick(object sender, EventArgs e)
         {
             CheckGameState();
             ActorsPerformBeahviour();
             RenderGameState();
         }
 
-        private void CheckGameState() 
+        private void CheckGameState()
         {
             if (gameEnded)
             {
@@ -61,21 +62,21 @@ namespace TudoMario
             foreach (var actor in renderer.CurrentMap.MapActorList)
             {
                 actor.Tick();
-                if (!actor.IsAlive) 
+                if (!actor.IsAlive)
                 {
                     gameEnded = true;
                 }
             }
         }
 
-        private void RenderGameState() 
+        private void RenderGameState()
         {
             //Rendering can happen async without waiting.
-            #pragma warning disable CS4014
+#pragma warning disable CS4014
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 () => renderer.Render());
-            #pragma warning restore CS4014
+#pragma warning restore CS4014
         }
     }
 }

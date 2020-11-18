@@ -29,9 +29,9 @@ namespace TudoMario
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Renderer renderer;
-        MapBase map;
-        UiController uicontroller;
+        private Renderer renderer;
+        private MapBase map;
+        private UiController uicontroller;
 
         public Grid MainGrid { get => UiMainGrid; }
 
@@ -45,7 +45,7 @@ namespace TudoMario
 
             LogicController logiccontroller = new LogicController(renderer, map, uicontroller);
             logiccontroller.StartGame();
-            
+
             switch (Configuration.Dev)
             {
                 case Configuration.Developer.Adam:
