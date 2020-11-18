@@ -28,7 +28,7 @@ namespace TudoMario
         private Renderer renderer;
         private MapBase map;
         private UiController uiController;
-        private bool gameStarted = false;
+        //private bool gameStarted = false;
         private bool gameEnded = false;
 
         public void AddActorToGame(ActorBase actorBase)
@@ -38,7 +38,7 @@ namespace TudoMario
 
         public void StartGame() {
             timer.Start();
-            gameStarted = true;
+            //gameStarted = true;
         }
 
         public void OnTimerTick(object sender, EventArgs e) 
