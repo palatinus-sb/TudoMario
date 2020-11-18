@@ -23,28 +23,26 @@ namespace TudoMario.Map
         public Tile[,] Tiles = new Tile[16, 16];
         public Chunk()
         {
-            this.InitializeComponent();
-            this.Height = 512;
-            this.Width = 512;
+            InitializeComponent();
+            Height = 512;
+            Width = 512;
         }
-        
+
         /// <summary>
         /// Sets the tile at the given coordinates in this chunk to the given tile type.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="tileType"></param>
-        /// <param name="imagePath"></param>
         public void SetTileAt(int x, int y, Tile tile)
         {
             /////////////////////////////////////////////////
             ///HashSet TO UNBIND PREVIOUS CHILD INCOMPLETE
-             /////////////////////////////////////////////////
+            /////////////////////////////////////////////////
 
             //0 is the top since we go from top left so it has to be mirrored
             x = 15 - x;
 
-            
+
 
             Tiles[y, x] = tile;
             //ChunkCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Green);
@@ -56,7 +54,7 @@ namespace TudoMario.Map
         {
             /////////////////////////////////////////////////
             ///HashSet TO UNBIND PREVIOUS CHILD INCOMPLETE
-             /////////////////////////////////////////////////
+            /////////////////////////////////////////////////
 
             //0 is the top since we go from top left so it has to be mirrored
             x = 15 - x;

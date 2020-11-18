@@ -21,11 +21,14 @@ namespace TudoMario.Map
     {
         public MapBase(Vector2 startingpoint)
         {
-            this.InitializeComponent();
+            InitializeComponent();
             StartingPoint = startingpoint;
         }
+
         public List<ActorBase> MapActorList = new List<ActorBase>();
         public List<List<Tuple<Chunk, int>>> Map = new List<List<Tuple<Chunk, int>>>();
+        public SortedDictionary<int, SortedDictionary<int, Chunk>> Chunks = new SortedDictionary<int, SortedDictionary<int, Chunk>>();
+        //public SortedDictionary<int, SortedDictionary<int, Chunk>> ChunksY = new SortedDictionary<int, SortedDictionary<int, Chunk>>();
 
         public Vector2 StartingPoint { get; set; }
 
@@ -35,44 +38,86 @@ namespace TudoMario.Map
         /// <param name="chunk">Chunk to insert</param>
         /// <param name="x">X coord to insert at</param>
         /// <param name="y">Y coord to insert at</param>
+        [Obsolete]
         public void AddChunkAt(Chunk chunk, int x, int y)
         {
             if (Map.Count > x)
             {
-                Map[x].Add((new Tuple<Chunk, int>(chunk, y)));
+                Map[x].Add(new Tuple<Chunk, int>(chunk, y));
             }
             else
             {
                 Map.Add(new List<Tuple<Chunk, int>>());
-                Map[x].Add((new Tuple<Chunk, int>(chunk, y)));
+                Map[x].Add(new Tuple<Chunk, int>(chunk, y));
             }
+            throw new Exception("Obsolete method. Use SetChunkAt(int, int, Chunk) instead.");
         }
 
         /// <summary>
-        /// Returns the chunk at given x,y. Null if not exists.
+        /// Set the chunk at the specified coordinates. Previous chunk will be overwritten if one was already present at specified coordinates.
         /// </summary>
-        /// <param name="x">X coord</param>
-        /// <param name="y">Y coord</param>
+        /// <param name="x">The chunk column</param>
+        /// <param name="y">The chunk row</param>
+        /// <param name="chunk">the chunk to be set</param>
+        public void SetChunkAt(int x, int y, Chunk chunk)
+        {
+            if (!Chunks.ContainsKey(x))
+                Chunks.Add(x, new SortedDictionary<int, Chunk>());
+
+            if (!Chunks[x].ContainsKey(y))
+                Chunks[x].Add(y, chunk);
+            else
+                Chunks[x][y] = chunk;
+        }
+
+        /// <summary>
+        /// Gets the chunk at the specified coordinates. Returns null if no chunk is present at that coordinates.
+        /// </summary>
+        /// <param name="x">The chunk column</param>
+        /// <param name="y">The chunk row</param>
+        /// <returns>The chunk at the specified coordinates</returns>
         public Chunk GetChunkAt(int x, int y)
         {
-            if (Map.Count > x)
-            {
-                var ChunkAtY = Map[x].Where(ChunksAtFixedXCoord => ChunksAtFixedXCoord.Item2 == y).SingleOrDefault();
-                if (ChunkAtY != null)
-                {
-                    return ChunkAtY.Item1;
-                }
-            }
+            if (Chunks.ContainsKey(x))
+                if (Chunks[x].ContainsKey(y))
+                    return Chunks[x][y];
+
             return null;
+        }
+
+        /// <summary>
+        /// Gets all the chunks in a specified column ordered ascending.
+        /// </summary>
+        /// <param name="x">The column number</param>
+        /// <returns></returns>
+        public IEnumerable<Chunk> GetColumn(int x)
+        {
+            return Chunks[x].Values;
+        }
+
+        /// <summary>
+        /// Gets all the chunks in a specified column ordered ascending.
+        /// </summary>
+        /// <param name="y">The row number</param>
+        /// <returns></returns>
+        public IEnumerable<Chunk> GetRow(int y)
+        {
+            List<Chunk> row = new List<Chunk>();
+            foreach (var column in Chunks.Values)
+                if (column.ContainsKey(y))
+                    row.Add(column[y]);
+            return row;
         }
 
         /// <summary>
         /// Binds the actor to the map which registers it for rendering.
         /// </summary>
-        public void AddActor(ActorBase actor)
-        {
-            MapActorList.Add(actor);
-        }
+        public void AddActor(ActorBase actor) => MapActorList.Add(actor);
+
+        /// <summary>
+        /// Removes the actor to the map.
+        /// </summary>
+        public void RemoveActor(ActorBase actor) => MapActorList.Remove(actor);
     }
 }
 
