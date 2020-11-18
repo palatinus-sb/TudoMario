@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
 
-namespace TudoMario
+namespace TudoMario.Map
 {
     public class LoadMap
     {
@@ -15,40 +15,97 @@ namespace TudoMario
         {
             this.fileName = fileName;
             ReadFile();
-            /*// Get the app's installation folder.
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-
-            // Print the folder's path to the Visual Studio Output window.
-            Debug.WriteLine(appFolder.Name + " folder path: " + appFolder.Path);*/
         }
 
         private string fileName;
-        string[] mapCsv = new string[4160]; //need better solution
+        List<string> mapCsv = new List<string>();
+        public Vector2 actorStartingPoint = new Vector2();
+        private static Vector2 mapStartingPoint = new Vector2(0, 0);
+        public MapBase map = new MapBase(mapStartingPoint); // I have to make this accesible I guess
 
-        public async void ReadFile() // need filepath
+        public void ReadFile() //can be private tho
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
             var files = dir.GetFiles();
-            foreach(var item in files)
+            string[] text = new string[] {};
+            string path = "";
+            foreach (var item in files)
             {
                 if (fileName == item.Name)
                 {
-                   /* Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                    Windows.Storage.StorageFile sampleFile = await storageFolder.GetFileAsync(fileName);*/
-                    //string text = await Windows.Storage.FileIO.ReadTextAsync(@"ms-appx:/Assets//fileName");
-                    var valami = File.ReadAllLines(@"Assets\TestMap.csv");
-                    //mapCsv = text.Split(';');
+                    path = Path.Combine("Assets", fileName);
+                    text = File.ReadAllLines(path);
+                    actorStartingPoint.X = float.Parse(text[0].Split(';')[1]);
+                    actorStartingPoint.Y = float.Parse(text[0].Split(';')[2]);
                 }
             }
-            Windows.Storage.StorageFolder storageFolder2 = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile file = await storageFolder2.CreateFileAsync("teszt123.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
-            int lengthOfFile = 0;
-            for (int i = 0; i < mapCsv.Length; i++)
+            bool passedLast = false;
+            int lengthOfARow = text[0].Split(';').Count();
+            int chunksInARow = lengthOfARow / 16;
+            int chunksInAColumn = (text.Count() - 1) / 16; // had to extract(?) the config line
+            int x = 0;
+            int y = 0;
+            /*foreach (var line in text) // goes through the lines
             {
-                await Windows.Storage.FileIO.AppendTextAsync(file, mapCsv[i]);
-                lengthOfFile = i + 1;
+                foreach  (var word in line.Split(';')) // goes through the columns
+                {
+                    if (!passedLast && "last" == word)
+                    {
+                        passedLast = true;
+                    }
+                    if (passedLast)
+                    {
+                        mapCsv.Add(word); // stores the type of the tiles
+                        Tile tile = new Tile(); // this is just temporary
+                        
+                        //this should be a texture handler
+                        /*switch (word)
+                        {
+                            case "s": 
+                                tile = new Tile();
+                                break;
+                            default:
+                                break;
+                        }*/
+
+                        /*if (0 == x % 16 && 0 == y % 16) // checks if a new chunk is required
+                        {
+                            chunks.Add(new Chunk());
+                            map.AddChunkAt(chunks[y / 16], x / 16, chunksInAColumn - (y / 16)); // should use the index var here?
+                        }
+                        int index = (x / 16) * chunksInARow + y / 16;
+                        chunks[index].SetTileAt(x, y, tile);
+                    }
+                    ++y;
+                }
+                ++x;
+            }*/
+
+
+
+
+
+            using StreamReader reader = new StreamReader(path);
+            string[] config = reader.ReadLine().Split(';');
+            int column = 0;
+            List<List<Tile>> tiles = new List<List<Tile>>(); 
+            List<List<Chunk>> chunks = new List<List<Chunk>>();
+            while (!reader.EndOfStream)
+            {
+                string[] line = reader.ReadLine().Split(';');
+                for (int row = 0; row < line.Length; row++)
+                {
+                    if (row % 16 == 0 && column % 16 == 0)
+                    {
+                        map.AddChunkAt(new Chunk(), row % 16, column % 16);
+                    }
+                }
             }
-            Debug.WriteLine(lengthOfFile);
+
+
+
+
+            Debug.Write("Breakpoint");
         }
     }
 }
