@@ -97,6 +97,5 @@ namespace TudoMario
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
-        LoadMap lm = new LoadMap("TestMap.csv");
     }
 }

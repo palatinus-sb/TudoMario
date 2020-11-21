@@ -27,7 +27,7 @@ namespace TudoMario.Map
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
             var files = dir.GetFiles();
-            string[] text = new string[] {};
+            string[] text = new string[] { };
             string path = "";
             foreach (var item in files)
             {
@@ -68,18 +68,18 @@ namespace TudoMario.Map
                                 break;
                         }*/
 
-                        /*if (0 == x % 16 && 0 == y % 16) // checks if a new chunk is required
-                        {
-                            chunks.Add(new Chunk());
-                            map.AddChunkAt(chunks[y / 16], x / 16, chunksInAColumn - (y / 16)); // should use the index var here?
-                        }
-                        int index = (x / 16) * chunksInARow + y / 16;
-                        chunks[index].SetTileAt(x, y, tile);
-                    }
-                    ++y;
-                }
-                ++x;
-            }*/
+            /*if (0 == x % 16 && 0 == y % 16) // checks if a new chunk is required
+            {
+                chunks.Add(new Chunk());
+                map.AddChunkAt(chunks[y / 16], x / 16, chunksInAColumn - (y / 16)); // should use the index var here?
+            }
+            int index = (x / 16) * chunksInARow + y / 16;
+            chunks[index].SetTileAt(x, y, tile);
+        }
+        ++y;
+    }
+    ++x;
+}*/
 
 
 
@@ -88,7 +88,7 @@ namespace TudoMario.Map
             using StreamReader reader = new StreamReader(path);
             string[] config = reader.ReadLine().Split(';');
             int column = 0;
-            List<List<Tile>> tiles = new List<List<Tile>>(); 
+            List<List<Tile>> tiles = new List<List<Tile>>();
             List<List<Chunk>> chunks = new List<List<Chunk>>();
             while (!reader.EndOfStream)
             {
@@ -97,7 +97,7 @@ namespace TudoMario.Map
                 {
                     if (row % 16 == 0 && column % 16 == 0)
                     {
-                        map.AddChunkAt(new Chunk(), row % 16, column % 16);
+                        //map.AddChunkAt(new Chunk(), row % 16, column % 16);
                     }
                 }
             }

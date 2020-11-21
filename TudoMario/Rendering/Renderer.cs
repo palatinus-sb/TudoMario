@@ -21,8 +21,6 @@ namespace TudoMario.Rendering
         /// </summary>
         Canvas MainCanvasTransform = new Canvas();
 
-        CameraObject camera;
-
         /// <summary>
         /// The current map to render at.
         /// </summary>
@@ -34,22 +32,15 @@ namespace TudoMario.Rendering
         /// <summary>
         /// Represents the rendered chunks which are in view range.
         /// </summary>
-        private List<Tuple<Chunk,int,int>> ChunkRenderActive = new List<Tuple<Chunk, int, int>>();
+        //private List<Tuple<Chunk,int,int>> ChunkRenderActive = new List<Tuple<Chunk, int, int>>();
+        //private SortedDictionary<int, SortedDictionary<int, Chunk>> ChunkRenderedColumsn = new SortedDictionary<int, SortedDictionary<int, Chunk>>();
+        private List<SortedDictionary<int, Chunk>> ChunkColumnActive = new List<SortedDictionary<int, Chunk>>();
 
         private static float ChunkSize = 512;
 
 
-        private float ZoomLevel = 1;
-        public CameraObject Camera {
-            get
-            {
-                return camera;
-            }
-            set
-            {
-                camera = value;
-            } 
-        }
+        //private float ZoomLevel = 1;
+        public CameraObject Camera { get; set; }
 
         public MapBase CurrentMap
         {
@@ -62,7 +53,7 @@ namespace TudoMario.Rendering
                 _currentMap = value;
                 CleanRendererCanvas();
                 InitActorRenderBindingList();
-                
+
 
             }
         }
@@ -96,7 +87,7 @@ namespace TudoMario.Rendering
 
             //Contains all the chunks
             MainCanvas = new Canvas();
-           // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
+            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
 
             //A parent canvas to make map transforms(camera movement) easier
             MainCanvasTransform.Children.Add(MainCanvas);
@@ -113,12 +104,12 @@ namespace TudoMario.Rendering
         /// <param name="chunk"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void RenderChunkAt(Chunk chunk,int x,int y)
+        public void RenderChunkAt(Chunk chunk, int x, int y)
         {
             y = TranslateFromYToMonitorY(y);
             MainCanvas.Children.Add(chunk);
-            Canvas.SetLeft(chunk,x * 512);
-            Canvas.SetTop(chunk,y * 512);
+            Canvas.SetLeft(chunk, x * 512);
+            Canvas.SetTop(chunk, y * 512);
         }
 
         /// <summary>
@@ -126,9 +117,17 @@ namespace TudoMario.Rendering
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void UnrenderChunkAt(Chunk target)
+        public void UnrenderChunks(List<IEnumerable<Chunk>> Targets)
         {
-            MainCanvas.Children.Remove(target);
+            foreach (var chunkColumn in Targets)
+            {
+                foreach (var chunk in chunkColumn)
+                {
+                    MainCanvas.Children.Remove(chunk);
+                }
+
+            }
+
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace TudoMario.Rendering
         {
             RenderChunks();
             RenderActors();
-            
+
 
             float x = Position.X;
             float y = Position.Y;
@@ -148,7 +147,7 @@ namespace TudoMario.Rendering
             //Monitor y + is down from top left corner
             y = TranslateFromYToMonitorY(y);
 
-            var centerAtX = Main.ActualWidth/2; 
+            var centerAtX = Main.ActualWidth / 2;
             var centerAtY = Main.ActualHeight / 2;
 
             Canvas.SetLeft(MainCanvas, centerAtX - x);
@@ -160,8 +159,11 @@ namespace TudoMario.Rendering
         /// </summary>
         public void RenderAtCamera()
         {
-            Vector2 PositionToRenderAt = new Vector2(camera.CameraX, camera.CameraY);
-            RenderAround(PositionToRenderAt);
+            if (Camera != null)
+            {
+                Vector2 PositionToRenderAt = new Vector2(Camera.CameraX, Camera.CameraY);
+                RenderAround(PositionToRenderAt);
+            }
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace TudoMario.Rendering
         /// <returns></returns>
         private Vector2 GetCameraRenderSize()
         {
-            return new Vector2((float)Main.ActualWidth,(float)Main.ActualHeight);
+            return new Vector2((float)Main.ActualWidth, (float)Main.ActualHeight);
         }
 
         /// <summary>
@@ -239,7 +241,7 @@ namespace TudoMario.Rendering
         private bool IsActorInRenderRange(ActorRender acrender)
         {
             Vector2 cameraSize = GetCameraRenderSize();
-            float xDistance = Math.Abs(acrender.Position.X - camera.CameraX);
+            float xDistance = Math.Abs(acrender.Position.X - Camera.CameraX);
             float cameraXWidthWithExtraBufferRange = cameraSize.X + 150;
 
             //Render distance is only applied on x coord
@@ -249,11 +251,56 @@ namespace TudoMario.Rendering
         {
             Vector2 cameraSize = GetCameraRenderSize();
             float middleOFChunk = (x * ChunkSize) + (ChunkSize / 2);
-            float xDistance = Math.Abs(middleOFChunk - camera.CameraX);
+            float xDistance = Math.Abs(middleOFChunk - Camera.CameraX);
 
             //Add one extra chunk for prebuffering
             float cameraXWidthWithExtraBufferRange = cameraSize.X + 10000;
             return xDistance <= cameraXWidthWithExtraBufferRange;
+        }
+
+        /// <summary>
+        /// Returns x coord that is the buffered render range on the left.
+        /// </summary>
+        /// <returns></returns>
+        private float GetRenderBorderOnLeftXCoord()
+        {
+            Vector2 cameraSize = GetCameraRenderSize();
+            float RenderedDistanceOnLeft = Camera.CameraX - (cameraSize.X / 2);
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft - ChunkSize;
+
+            return RenderBorderOnLeftWithExtraBufferRange;
+        }
+        /// <summary>
+        /// Returns x coord that is the buffered render range on the right.
+        /// </summary>
+        /// <returns></returns>
+        private float GetRenderBorderOnRightXCoord()
+        {
+            Vector2 cameraSize = GetCameraRenderSize();
+            float RenderedDistanceOnLeft = Camera.CameraX + (cameraSize.X / 2);
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft + ChunkSize;
+
+            return RenderBorderOnLeftWithExtraBufferRange;
+        }
+
+        private List<Tuple<int, SortedDictionary<int, Chunk>>> GetChunkColumnListToRender()
+        {
+            List<Tuple<int, SortedDictionary<int, Chunk>>> retList = new List<Tuple<int, SortedDictionary<int, Chunk>>>();
+            int leftRenderChunk = TranslateFromRelativeCoordToChunkCoord(GetRenderBorderOnLeftXCoord());
+            int rightRenderChunk = TranslateFromRelativeCoordToChunkCoord(GetRenderBorderOnRightXCoord());
+
+            for (int i = leftRenderChunk; i <= rightRenderChunk; i++)
+            {
+                retList.Add(new Tuple<int, SortedDictionary<int, Chunk>>(i, CurrentMap.GetColumnAsDictionary(i)));
+            }
+            return retList;
+        }
+
+        private int TranslateFromRelativeCoordToChunkCoord(float relativeX)
+        {
+            float x = Math.Abs(relativeX) / ChunkSize - 1f;
+            if (relativeX < 0) return (-1) * Convert.ToInt32(Math.Ceiling(x));
+            return Convert.ToInt32(Math.Ceiling(x));
         }
 
         private void RenderActors()
@@ -292,35 +339,36 @@ namespace TudoMario.Rendering
 
         private void RenderChunks()
         {
-            try
-            {
-                //Remove chunks that got out of render range
-                foreach (var chunkWithCoords in ChunkRenderActive)
-                {
-                    if (!IsChunkInRenderRange(chunkWithCoords.Item2, chunkWithCoords.Item3))
-                    {
-                        ChunkRenderActive.Remove(chunkWithCoords);
-                        MainCanvas.Children.Remove(chunkWithCoords.Item1);
-                    }
-                }
+            List<IEnumerable<Chunk>> unRenderQueue = new List<IEnumerable<Chunk>>();
 
-                int x = 0;
-                //Add new actors that got in render range
-                foreach (var chunksOnLockedX in _currentMap.Map)
+            var ChunkColumnListToRenderWithX = GetChunkColumnListToRender();
+
+            //Determines what was rendered but got out of range
+            foreach (var renderedChunkColumn in ChunkColumnActive)
+            {
+                if (!ChunkColumnListToRenderWithX.Any(tuple => tuple.Item2 == renderedChunkColumn))
                 {
-                    foreach (var chunkWithYCoord in chunksOnLockedX)
-                    {
-                        var MatchedChunkList = ChunkRenderActive.Where(chunkWithCoords => chunkWithCoords.Item1 == chunkWithYCoord.Item1);
-                        if (!MatchedChunkList.Any() && IsChunkInRenderRange(x, chunkWithYCoord.Item2))
-                        {
-                            ChunkRenderActive.Add(new Tuple<Chunk, int, int>(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2));
-                            RenderChunkAt(chunkWithYCoord.Item1, x, chunkWithYCoord.Item2);
-                        }
-                    }
-                    x++;
+                    unRenderQueue.Add(renderedChunkColumn.Values);
                 }
             }
-            catch (Exception) { }
+
+            //Determines new chunkcolumns to render
+            foreach (var chunkColumn in ChunkColumnListToRenderWithX)
+            {
+                if (chunkColumn.Item2 != null && !ChunkColumnActive.Contains(chunkColumn.Item2))
+                {
+                    foreach (var keyAsY in chunkColumn.Item2.Keys)
+                    {
+                        var chunk = chunkColumn.Item2.GetValueOrDefault(keyAsY);
+                        int xCoord = chunkColumn.Item1;
+
+                        RenderChunkAt(chunk, xCoord, keyAsY);
+                    }
+                }
+            }
+            ChunkColumnActive = ChunkColumnListToRenderWithX.Select(elem => elem.Item2).ToList();
+            UnrenderChunks(unRenderQueue);
+
         }
 
         private Vector2 GetTranslatedActorPosForRender(ActorRender acRender)
