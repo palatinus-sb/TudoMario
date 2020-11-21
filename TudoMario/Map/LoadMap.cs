@@ -6,45 +6,49 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
+using TudoMario.Map;
 
-namespace TudoMario.Map
+namespace TudoMario
 {
-    public class LoadMap
+    public static class LoadMap
     {
-        public LoadMap(string fileName)
+
+
+        private static string fileName;
+        static List<string> mapCsv = new List<string>();
+        public static Vector2 actorStartingPoint = new Vector2();
+        private static Vector2 mapStartingPoint = new Vector2(0, 0);
+        private static MapBase map = new MapBase(mapStartingPoint); // I have to make this accesible I guess
+
+        public static MapBase Load(string FileName)
         {
-            this.fileName = fileName;
+            fileName = FileName;
             ReadFile();
+            return map;
         }
 
-        private string fileName;
-        List<string> mapCsv = new List<string>();
-        public Vector2 actorStartingPoint = new Vector2();
-        private static Vector2 mapStartingPoint = new Vector2(0, 0);
-        public MapBase map = new MapBase(mapStartingPoint); // I have to make this accesible I guess
-
-        public void ReadFile() //can be private tho
+        public static void ReadFile() //can be private tho
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
             var files = dir.GetFiles();
-            string[] text = new string[] {};
+            string[] text = new string[] { };
             string path = "";
             foreach (var item in files)
             {
                 if (fileName == item.Name)
                 {
                     path = Path.Combine("Assets", fileName);
-                    text = File.ReadAllLines(path);
-                    actorStartingPoint.X = float.Parse(text[0].Split(';')[1]);
-                    actorStartingPoint.Y = float.Parse(text[0].Split(';')[2]);
+                    text = File.ReadAllLines(path); // Have to find a better solution later / maybe size in the map
+                    /* actorStartingPoint.X = float.Parse(text[0].Split(';')[1]);
+                     actorStartingPoint.Y = float.Parse(text[0].Split(';')[2]);*/
                 }
             }
-            bool passedLast = false;
-            int lengthOfARow = text[0].Split(';').Count();
+            //bool passedLast = false;
+            /*int lengthOfARow = text[0].Split(';').Count();
             int chunksInARow = lengthOfARow / 16;
             int chunksInAColumn = (text.Count() - 1) / 16; // had to extract(?) the config line
-            int x = 0;
-            int y = 0;
+            /*int x = 0;
+            int y = 0;*/
             /*foreach (var line in text) // goes through the lines
             {
                 foreach  (var word in line.Split(';')) // goes through the columns
@@ -68,18 +72,18 @@ namespace TudoMario.Map
                                 break;
                         }*/
 
-                        /*if (0 == x % 16 && 0 == y % 16) // checks if a new chunk is required
-                        {
-                            chunks.Add(new Chunk());
-                            map.AddChunkAt(chunks[y / 16], x / 16, chunksInAColumn - (y / 16)); // should use the index var here?
-                        }
-                        int index = (x / 16) * chunksInARow + y / 16;
-                        chunks[index].SetTileAt(x, y, tile);
-                    }
-                    ++y;
-                }
-                ++x;
-            }*/
+            /*if (0 == x % 16 && 0 == y % 16) // checks if a new chunk is required
+            {
+                chunks.Add(new Chunk());
+                map.AddChunkAt(chunks[y / 16], x / 16, chunksInAColumn - (y / 16)); // should use the index var here?
+            }
+            int index = (x / 16) * chunksInARow + y / 16;
+            chunks[index].SetTileAt(x, y, tile);
+        }
+        ++y;
+    }
+    ++x;
+}*/
 
 
 
@@ -87,20 +91,32 @@ namespace TudoMario.Map
 
             using StreamReader reader = new StreamReader(path);
             string[] config = reader.ReadLine().Split(';');
+            actorStartingPoint.X = float.Parse(config[1]);
+            actorStartingPoint.Y = float.Parse(config[2]);
+            Vector2 actorSize = new Vector2(64, 64);
+            map.AddActor(new PlayerActor(actorStartingPoint, actorSize));
             int column = 0;
-            List<List<Tile>> tiles = new List<List<Tile>>(); 
-            List<List<Chunk>> chunks = new List<List<Chunk>>();
+            int numberOfRows = text.Count();
+            //int row = 0;
+            List<List<Tile>> tiles = new List<List<Tile>>();
+            //List<List<Chunk>> chunks = new List<List<Chunk>>();
             while (!reader.EndOfStream)
             {
                 string[] line = reader.ReadLine().Split(';');
                 for (int row = 0; row < line.Length; row++)
                 {
-                    if (row % 16 == 0 && column % 16 == 0)
+                    if (column + 16 < numberOfRows - 1) //had to substract 1 coz of the config line
                     {
-                        map.AddChunkAt(new Chunk(), row % 16, column % 16);
+                        if (row % 16 == 0 && column % 16 == 0)
+                        {
+                            map.SetChunkAt(row, column + 16, new Chunk());
+                        }
+                        map.GetChunkAt((row / 16) * 16, ((column / 16) + 1) * 16).SetTileAt(row % 16, (column % 16), new Tile()); // need a Tile  maybe? with type? Is the Tile position right?
                     }
                 }
+                column++;
             }
+            reader.Close();
 
 
 

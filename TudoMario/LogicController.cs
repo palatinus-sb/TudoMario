@@ -12,6 +12,7 @@ using TudoMario.Ui;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
+
 namespace TudoMario
 {
     class LogicController
@@ -36,17 +37,18 @@ namespace TudoMario
             renderer.CurrentMap.AddActor(actorBase);
         }
 
-        public void StartGame() {
+        public void StartGame()
+        {
             timer.Start();
             gameStarted = true;
         }
 
-        public void OnTimerTick(object sender, EventArgs e) 
+        public void OnTimerTick(object sender, EventArgs e)
         {
             CheckGameState();
             CheckCollisions(); // is this needed?
             ActorsPerformBeahviour();
-            RenderGameState();        
+            RenderGameState();
         }
 
         private void CheckGameState() { }
@@ -59,13 +61,18 @@ namespace TudoMario
                 actor.Tick();
         }
 
-        private void RenderGameState() 
+        private void RenderGameState()
         {
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 renderer.Render();
             });
+        }
+
+        private void LoadPickedMap(string fileName)
+        {
+            renderer.CurrentMap = LoadMap.Load(fileName);
         }
     }
 }

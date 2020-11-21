@@ -26,6 +26,7 @@ namespace TudoMario.Rendering
         /// <summary>
         /// The current map to render at.
         /// </summary>
+        //private MapBase _currentMap;
         private MapBase _currentMap;
 
         private List<ActorRender> ActorRenderAll = new List<ActorRender>();
@@ -34,13 +35,14 @@ namespace TudoMario.Rendering
         /// <summary>
         /// Represents the rendered chunks which are in view range.
         /// </summary>
-        private List<Tuple<Chunk,int,int>> ChunkRenderActive = new List<Tuple<Chunk, int, int>>();
+        private List<Tuple<Chunk, int, int>> ChunkRenderActive = new List<Tuple<Chunk, int, int>>();
 
         private static float ChunkSize = 512;
 
 
         private float ZoomLevel = 1;
-        public CameraObject Camera {
+        public CameraObject Camera
+        {
             get
             {
                 return camera;
@@ -48,7 +50,7 @@ namespace TudoMario.Rendering
             set
             {
                 camera = value;
-            } 
+            }
         }
 
         public MapBase CurrentMap
@@ -62,7 +64,7 @@ namespace TudoMario.Rendering
                 _currentMap = value;
                 CleanRendererCanvas();
                 InitActorRenderBindingList();
-                
+
 
             }
         }
@@ -96,7 +98,7 @@ namespace TudoMario.Rendering
 
             //Contains all the chunks
             MainCanvas = new Canvas();
-           // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
+            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
 
             //A parent canvas to make map transforms(camera movement) easier
             MainCanvasTransform.Children.Add(MainCanvas);
@@ -113,12 +115,12 @@ namespace TudoMario.Rendering
         /// <param name="chunk"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void RenderChunkAt(Chunk chunk,int x,int y)
+        public void RenderChunkAt(Chunk chunk, int x, int y)
         {
             y = TranslateFromYToMonitorY(y);
             MainCanvas.Children.Add(chunk);
-            Canvas.SetLeft(chunk,x * 512);
-            Canvas.SetTop(chunk,y * 512);
+            Canvas.SetLeft(chunk, x * 512);
+            Canvas.SetTop(chunk, y * 512);
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace TudoMario.Rendering
         {
             RenderChunks();
             RenderActors();
-            
+
 
             float x = Position.X;
             float y = Position.Y;
@@ -148,7 +150,7 @@ namespace TudoMario.Rendering
             //Monitor y + is down from top left corner
             y = TranslateFromYToMonitorY(y);
 
-            var centerAtX = Main.ActualWidth/2; 
+            var centerAtX = Main.ActualWidth / 2;
             var centerAtY = Main.ActualHeight / 2;
 
             Canvas.SetLeft(MainCanvas, centerAtX - x);
@@ -200,7 +202,7 @@ namespace TudoMario.Rendering
         /// <returns></returns>
         private Vector2 GetCameraRenderSize()
         {
-            return new Vector2((float)Main.ActualWidth,(float)Main.ActualHeight);
+            return new Vector2((float)Main.ActualWidth, (float)Main.ActualHeight);
         }
 
         /// <summary>
