@@ -92,7 +92,24 @@ namespace TudoMario.Map
         /// <returns></returns>
         public IEnumerable<Chunk> GetColumn(int x)
         {
+            if (x < 0) return null;
+            if (x >= Chunks.Count) return null;
             return Chunks[x].Values;
+        }
+
+        /// <summary>
+        /// Returns the whole dictionary for the given x coord.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public SortedDictionary<int, Chunk> GetColumnAsDictionary(int x)
+        {
+            if (x < 0) return null;
+            if (x >= Chunks.Count) return null;
+            SortedDictionary<int, Chunk> ret;
+            Chunks.TryGetValue(x, out ret);
+
+            return ret;
         }
 
         /// <summary>
