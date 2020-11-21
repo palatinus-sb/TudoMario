@@ -13,13 +13,15 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario.Ui
 {
-    class UiController
+    internal class UiController
     {
-        MainPage _main;
-        Renderer _renderer;
-        CameraObject camera;
+        private MainPage _main;
+        private Renderer _renderer;
+        private CameraObject camera;
 
-        PlayerActor testPlayer;
+        private PlayerActor testPlayer;
+
+        private Canvas DefaultHud = new Canvas();
 
         public UiController(MainPage mainpage, Renderer renderer)
         {
@@ -29,7 +31,18 @@ namespace TudoMario.Ui
             _renderer = renderer;
             _renderer.Camera = camera;
 
+            Init();
+
             ShowMap();
+        }
+
+        public void ShowHud()
+        {
+            _renderer.ShowHud();
+        }
+        public void HideHud()
+        {
+
         }
 
         public CoreApplicationView CurrentView { get; set; }
@@ -39,13 +52,13 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
-           
+
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
             testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
             camera.BindActor(testPlayer);
 
-            MapBase mapBase = new MapBase(new Vector2(0,0));
+            MapBase mapBase = new MapBase(new Vector2(0, 0));
             Chunk airchunkMissingTexturetest = new Chunk();
             Chunk airChunk = new Chunk();
 
@@ -116,7 +129,16 @@ namespace TudoMario.Ui
             }
         }
 
+        /// <summary>
+        /// Initialise Ui HUD.
+        /// </summary>
+        private void Init()
+        {
+            Button testb = new Button();
+            testb.Content = "asdsada";
+            DefaultHud.Children.Add(testb);
+        }
     }
 }
-    
+
 

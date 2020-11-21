@@ -9,17 +9,19 @@ using Windows.UI.Xaml.Media;
 
 namespace TudoMario.Rendering
 {
-    class Renderer : Page
+    internal class Renderer : Page
     {
-        MainPage Main;
+        private MainPage Main;
         /// <summary>
         /// Main canvas contains all the chunks can be used to set renderdistance.
         /// </summary>
-        Canvas MainCanvas;
+        private Canvas MainCanvas;
         /// <summary>
         /// This element is STRICTLY used to make/allow transforms on the main canvas.
         /// </summary>
-        Canvas MainCanvasTransform = new Canvas();
+        private Canvas MainCanvasTransform = new Canvas();
+
+        private Canvas hud = new Canvas();
 
         CameraObject camera;
 
@@ -66,12 +68,30 @@ namespace TudoMario.Rendering
             }
         }
 
+        public Canvas Hud
+        {
+            set
+            {
+                if (hud != null)
+                {
+                    Canvas current = hud;
+                    MainCanvasTransform.Children.Remove(current);
+                    MainCanvasTransform.Children.Add(value);
+                }
+                else
+                {
+                    MainCanvasTransform.Children.Add(value);
+                    hud = value;
+                }
+            }
+        }
+
         public Renderer(MainPage main)
         {
             TextureHandler.Init();
 
             Main = main;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -161,6 +181,24 @@ namespace TudoMario.Rendering
         {
             Vector2 PositionToRenderAt = new Vector2(camera.CameraX, camera.CameraY);
             RenderAround(PositionToRenderAt);
+        }
+
+        /// <summary>
+        /// Makes HUD visible.
+        /// </summary>
+        public void ShowHud()
+        {
+            if (hud != null && !MainCanvas.Children.Contains(hud))
+                MainCanvas.Children.Add(hud);
+        }
+
+        /// <summary>
+        /// Hides HUD.
+        /// </summary>
+        public void HideHud()
+        {
+            if (MainCanvas.Children.Contains(hud))
+                MainCanvas.Children.Remove(hud);
         }
 
         /// <summary>
