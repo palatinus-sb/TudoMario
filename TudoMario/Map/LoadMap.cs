@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
 using TudoMario.Map;
+using TudoMario.Rendering;
 
 namespace TudoMario
 {
@@ -27,6 +28,36 @@ namespace TudoMario
             return map;
         }
 
+        private static Tile SetTexture(string Initial)
+        {
+            Tile tile = new Tile();
+            string textureInitial = Initial;
+            var texture = TextureHandler.GetImageByName("missing");
+            switch (textureInitial)
+            {
+                case "g":
+                    texture = TextureHandler.GetImageByName("groundbase");
+                    break;
+
+                case "m":
+                    texture = TextureHandler.GetImageByName("groundbase");
+                    break;
+
+                case "s":
+                    texture = TextureHandler.GetImageByName("basebackgroung");
+                    break;
+
+                case "i":
+                    texture = TextureHandler.GetImageByName("groundbase");
+                    break;
+
+                case "t":
+                    texture = TextureHandler.GetImageByName("groundbase");
+                    break;
+            }
+            tile.Texture = texture;
+            return tile;
+        }
         public static void ReadFile() //can be private tho
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
@@ -100,6 +131,10 @@ namespace TudoMario
             //int row = 0;
             List<List<Tile>> tiles = new List<List<Tile>>();
             //List<List<Chunk>> chunks = new List<List<Chunk>>();
+            // TODO
+            // texture from the picture
+            // correct chunks indexes
+            // correct tile indexes
             while (!reader.EndOfStream)
             {
                 string[] line = reader.ReadLine().Split(';');
@@ -109,10 +144,11 @@ namespace TudoMario
                     {
                         if (row % 16 == 0 && column % 16 == 0)
                         {
-                            map.SetChunkAt(row, column + 16, new Chunk());
+                            map.SetChunkAt(row / 16, (column / 16) + 1, new Chunk());
                         }
-                        map.GetChunkAt((row / 16) * 16, ((column / 16) + 1) * 16).SetTileAt(row % 16, (column % 16), new Tile()); // need a Tile  maybe? with type? Is the Tile position right?
+                        map.GetChunkAt((row / 16), ((column / 16) + 1)).SetTileAt(row % 16, 16 - (column % 16), SetTexture(line[row])); // need a Tile  maybe? with type? Is the Tile
                     }
+
                 }
                 column++;
             }
