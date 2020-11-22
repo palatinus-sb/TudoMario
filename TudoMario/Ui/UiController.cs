@@ -39,13 +39,13 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
-           
+
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
             testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
             camera.BindActor(testPlayer);
 
-            MapBase mapBase = new MapBase(new Vector2(0,0));
+            MapBase mapBase = new MapBase(new Vector2(0, 0));
             Chunk airchunkMissingTexturetest = new Chunk();
             Chunk airChunk = new Chunk();
 
@@ -65,13 +65,13 @@ namespace TudoMario.Ui
 
             airChunk.FillChunkWith(air);
 
-            mapBase.AddChunkAt(airchunkMissingTexturetest, 0, 0);
-            mapBase.AddChunkAt(airChunk, 1, 0);
+            mapBase.SetChunkAt(0, 0, airchunkMissingTexturetest);
+            mapBase.SetChunkAt(1, 0, airChunk);
 
             Chunk groundChunk = new Chunk();
             groundChunk.FillChunkWith(ground);
 
-            mapBase.AddChunkAt(groundChunk, 0, -1);
+            mapBase.SetChunkAt(0, -1, groundChunk);
 
             _renderer.CurrentMap = mapBase;
         }
@@ -118,5 +118,5 @@ namespace TudoMario.Ui
 
     }
 }
-    
+
 

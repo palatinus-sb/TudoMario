@@ -12,6 +12,7 @@ using TudoMario.Ui;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
+
 namespace TudoMario
 {
     internal class LogicController
@@ -39,7 +40,7 @@ namespace TudoMario
         public void StartGame()
         {
             timer.Start();
-            //gameStarted = true;
+            LoadPickedMap("TestMapv2.0.csv");
         }
 
         public void OnTimerTick(object sender, EventArgs e)
@@ -77,6 +78,11 @@ namespace TudoMario
                 CoreDispatcherPriority.Normal,
                 () => renderer.Render());
 #pragma warning restore CS4014
+        }
+
+        private void LoadPickedMap(string fileName)
+        {
+            renderer.CurrentMap = LoadMap.Load(fileName);
         }
     }
 }
