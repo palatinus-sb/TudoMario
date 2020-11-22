@@ -41,6 +41,7 @@ namespace TudoMario
         {
             timer.Start();
             gameStarted = true;
+            LoadPickedMap("TestMapv2.0.csv");
         }
 
         public void OnTimerTick(object sender, EventArgs e)

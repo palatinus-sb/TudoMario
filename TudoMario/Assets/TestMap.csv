@@ -1,4 +1,4 @@
-actor starting point: ;3;47;other important data:;abc;s: sky;g: grass;i: ice;m: mud;t: terra;;;;;;;;;;;;;;;;;;;;;;last
+actor starting point(x, y): ;3;47;map size(x, y):;32;64;chunks in a(row, column);2;4;s: sky;g: grass;i: ice;m: mud;t: terra;;;;;;;;;;;;;;;;;;last
 s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s
 s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s
 s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s

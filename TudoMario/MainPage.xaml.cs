@@ -45,7 +45,7 @@ namespace TudoMario
 
             LogicController logiccontroller = new LogicController(renderer, map, uicontroller);
             logiccontroller.StartGame();
-            
+
             switch (Configuration.Dev)
             {
                 case Configuration.Developer.Adam:
