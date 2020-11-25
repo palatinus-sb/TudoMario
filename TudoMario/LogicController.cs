@@ -9,6 +9,7 @@ using System.Timers;
 using TudoMario.Map;
 using TudoMario.Rendering;
 using TudoMario.Ui;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
@@ -22,7 +23,14 @@ namespace TudoMario
             this.renderer = renderer;
             this.map = map;
             this.uiController = uiController;
+
+            uiController.NewButtonClicked += NewButtonClicked;
+            uiController.LoadButtonClicked += LoadButtonClicked;
+            uiController.ExitButtonClicked += ExitButtonClicked;
+
             timer.Tick += OnTimerTick;
+
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
 
         private Timer timer = new Timer(16);
@@ -41,6 +49,7 @@ namespace TudoMario
         {
             timer.Start();
             LoadPickedMap("TestMapv2.0.csv");
+            uiController.ShowMainMenu();
         }
 
         public void OnTimerTick(object sender, EventArgs e)
@@ -48,6 +57,30 @@ namespace TudoMario
             CheckGameState();
             ActorsPerformBeahviour();
             RenderGameState();
+        }
+
+        public void NewButtonClicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        public void LoadButtonClicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        public void ExitButtonClicked(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+        public void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
+        {
+            VirtualKey pressedKey = e.VirtualKey;
+            if (pressedKey == VirtualKey.Escape)
+            {
+                if (uiController.IsMainMenuShown)
+                    uiController.RemoveMainMenu();
+                else
+                    uiController.ShowMainMenu();
+            }
         }
 
         private void CheckGameState()

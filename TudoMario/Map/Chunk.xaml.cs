@@ -28,7 +28,7 @@ namespace TudoMario.Map
         /// <summary>
         /// X,Y coords of chunk in the registered map.
         /// </summary>
-        public Vector2 ChunkPosition { get; set; }
+        public Vector2 ChunkPosition { get; set; } = new Vector2();
         public Chunk()
         {
             InitializeComponent();
@@ -48,6 +48,8 @@ namespace TudoMario.Map
 
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
+
+            GenerateColliderForTile(tile, x, y);
 
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
@@ -90,6 +92,8 @@ namespace TudoMario.Map
 
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
+
+            GenerateColliderForTile(tile, x, y);
 
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
@@ -156,11 +160,30 @@ namespace TudoMario.Map
 
         private void GenerateColliderForTile(Tile tile, int x, int y)
         {
+            var kekeke = GetLogicalCenterOfTile(x, y);
+        }
+        private Vector2 GetLogicalCenterOfTile(int x, int y)
+        {
+            Vector2 chunkTopLeft = GetTopLeftPositionOfChunk();
+
+            float tileTopLeftX = chunkTopLeft.X + x * 32;
+            float tileTopLeftY = chunkTopLeft.Y - (15 - y) * 32;
+
+            Vector2 tileTopLeft = new Vector2(tileTopLeftX, tileTopLeftY);
+
+            return GetTileCenterFromTopLeft(tileTopLeft);
 
         }
-        private void GetLogicalCenterOfTile()
+        private Vector2 GetTopLeftPositionOfChunk()
         {
+            float x = ChunkPosition.X * 512f;
+            float y = ChunkPosition.Y * 512f;
+            return new Vector2(x, y);
+        }
 
+        private Vector2 GetTileCenterFromTopLeft(Vector2 tileTopLeft)
+        {
+            return new Vector2(tileTopLeft.X + 16, tileTopLeft.Y - 16);
         }
     }
 }
