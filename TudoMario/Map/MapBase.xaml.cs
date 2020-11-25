@@ -94,8 +94,10 @@ namespace TudoMario.Map
         /// <returns></returns>
         public IEnumerable<Chunk> GetColumn(int x)
         {
-            if (x < 0) return null;
-            if (x >= Chunks.Count) return null;
+            if (x < 0)
+                return null;
+            if (x >= Chunks.Count)
+                return null;
             return Chunks[x].Values;
         }
 
@@ -106,8 +108,10 @@ namespace TudoMario.Map
         /// <returns></returns>
         public SortedDictionary<int, Chunk> GetColumnAsDictionary(int x)
         {
-            if (x < 0) return null;
-            if (x >= Chunks.Count) return null;
+            if (x < 0)
+                return null;
+            if (x >= Chunks.Count)
+                return null;
             SortedDictionary<int, Chunk> ret;
             Chunks.TryGetValue(x, out ret);
 

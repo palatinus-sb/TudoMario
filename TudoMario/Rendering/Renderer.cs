@@ -374,7 +374,8 @@ namespace TudoMario.Rendering
         private int TranslateFromRelativeCoordToChunkCoord(float relativeX)
         {
             float x = Math.Abs(relativeX) / ChunkSize - 1f;
-            if (relativeX < 0) return (-1) * Convert.ToInt32(Math.Ceiling(x));
+            if (relativeX < 0)
+                return (-1) * Convert.ToInt32(Math.Ceiling(x));
             return Convert.ToInt32(Math.Ceiling(x));
         }
 
@@ -456,7 +457,8 @@ namespace TudoMario.Rendering
 
         private void RefreshHudValues()
         {
-            hud.SetStressLevel(_currentMap.MainPlayer.StressLevel);
+            if (_currentMap.MainPlayer != null)
+                hud.SetStressLevel(_currentMap.MainPlayer.StressLevel);
         }
     }
 }
