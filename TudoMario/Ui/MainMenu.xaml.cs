@@ -17,11 +17,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TudoMario.Ui
 {
-    public sealed partial class MainMenu : UserControl
+    internal sealed partial class MainMenu : UserControl
     {
-        public MainMenu()
+        public MainMenu(UiController uiController)
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            NewGameButton.Click += uiController.ButtonClicked;
+            LoadGameButton.Click += uiController.ButtonClicked;
+            ExitButton.Click += uiController.ButtonClicked;
         }
     }
 }

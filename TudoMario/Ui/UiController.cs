@@ -21,16 +21,46 @@ namespace TudoMario.Ui
         private PlayerActor testPlayer;
 
         private Hud CurrentHud = new Hud();
+        private MainMenu MainMenu;
+        private bool isMainMenuShown;
+
+        public bool IsMainMenuShown { get => isMainMenuShown; }
 
         public UiController(MainPage mainpage, Renderer renderer)
         {
             _main = mainpage;
             _renderer = renderer;
-            //_renderer.Camera = camera;
+            this.MainMenu = new MainMenu(this);
 
             Init();
 
             ShowMap();
+        }
+
+        public event EventHandler NewButtonClicked;
+        public event EventHandler LoadButtonClicked;
+        public event EventHandler ExitButtonClicked;
+        public void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Button button = e.OriginalSource as Button;
+            if (button.Content.ToString().ToLower().Contains("new"))
+                NewButtonClicked?.Invoke(sender, EventArgs.Empty);
+            else if (button.Content.ToString().ToLower().Contains("load"))
+                LoadButtonClicked?.Invoke(sender, EventArgs.Empty);
+            else
+                ExitButtonClicked?.Invoke(sender, EventArgs.Empty);
+
+        }
+
+        public void ShowMainMenu()
+        {
+            _renderer.ShowMenuObject(MainMenu);
+            isMainMenuShown = true;
+        }
+        public void RemoveMainMenu()
+        {
+            _renderer.RemoveMenuObject(MainMenu);
+            isMainMenuShown = false;
         }
 
         /// <summary>
@@ -46,7 +76,6 @@ namespace TudoMario.Ui
         {
             CurrentHud.RemoveDialog();
         }
-        public CoreApplicationView CurrentView { get; set; }
 
         /// <summary>
         /// Only for UI testing;

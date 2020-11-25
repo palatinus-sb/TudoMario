@@ -67,9 +67,15 @@ namespace TudoMario.Map
                 Chunks.Add(x, new SortedDictionary<int, Chunk>());
 
             if (!Chunks[x].ContainsKey(y))
+            {
                 Chunks[x].Add(y, chunk);
+                chunk.ChunkPosition = new Vector2(x, y);
+            }
             else
+            {
                 Chunks[x][y] = chunk;
+                chunk.ChunkPosition = new Vector2(x, y);
+            }
         }
 
         /// <summary>

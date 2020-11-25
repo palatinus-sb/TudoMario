@@ -242,6 +242,24 @@ namespace TudoMario.Rendering
         }
 
         /// <summary>
+        /// Shows a menu object on top of everything untill RemoveMenuObject(Usercontrol obj) is given.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ShowMenuObject(UserControl obj)
+        {
+            if (!MainCanvasTransform.Children.Contains(obj))
+                MainCanvasTransform.Children.Add(obj);
+        }
+        /// <summary>
+        /// Removes the given menu object from the screen.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void RemoveMenuObject(UserControl obj)
+        {
+            MainCanvasTransform.Children.Remove(obj);
+        }
+
+        /// <summary>
         /// Translates from top right coordinates to normal coordinate system Y.
         /// </summary>
         /// <param name="y"></param>
