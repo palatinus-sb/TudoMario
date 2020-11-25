@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+#pragma warning disable IDE0040, IDE0019
 namespace TudoMario
 {
     /// <summary>
@@ -98,3 +99,4 @@ namespace TudoMario
         }
     }
 }
+#pragma warning restore IDE0040, IDE0019

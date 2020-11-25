@@ -16,7 +16,6 @@ namespace TudoMario
 
 
         private static string fileName;
-        private static List<string> mapCsv = new List<string>();
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         private static MapBase map = new MapBase(mapStartingPoint);
