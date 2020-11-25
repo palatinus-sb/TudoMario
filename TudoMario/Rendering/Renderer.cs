@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 using TudoMario.Map;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using TudoMario.Ui;
 
 namespace TudoMario.Rendering
 {
-    class Renderer : Page
+    internal class Renderer : Page
     {
-        MainPage Main;
+        private MainPage Main;
         /// <summary>
         /// Main canvas contains all the chunks can be used to set renderdistance.
         /// </summary>
-        Canvas MainCanvas;
+        private Canvas MainCanvas;
         /// <summary>
         /// This element is STRICTLY used to make/allow transforms on the main canvas.
         /// </summary>
-        Canvas MainCanvasTransform = new Canvas();
+        private Canvas MainCanvasTransform = new Canvas();
+
+        private Hud hud;
+
+        private CameraObject Camera = new CameraObject();
 
         /// <summary>
         /// The current map to render at.
@@ -38,7 +43,6 @@ namespace TudoMario.Rendering
 
 
         //private float ZoomLevel = 1;
-        public CameraObject Camera { get; set; }
 
         public MapBase CurrentMap
         {
@@ -51,6 +55,27 @@ namespace TudoMario.Rendering
                 _currentMap = value;
                 CleanRendererCanvas();
                 InitActorRenderBindingList();
+
+                ShowHud();
+
+
+            }
+        }
+
+        public Hud Hud
+        {
+            set
+            {
+                if (hud != null)
+                {
+                    Hud current = hud;
+                    MainCanvasTransform.Children.Remove(current);
+                    hud = value;
+                }
+                else
+                {
+                    hud = value;
+                }
             }
         }
 
@@ -59,7 +84,22 @@ namespace TudoMario.Rendering
             TextureHandler.Init();
 
             Main = main;
-            this.InitializeComponent();
+            InitializeComponent();
+        }
+        private void InitializeComponent()
+        {
+            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
+
+            //Contains all the chunks
+            MainCanvas = new Canvas();
+            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
+
+            //A parent canvas to make map transforms(camera movement) easier
+            MainCanvasTransform.Children.Add(MainCanvas);
+
+            //At the actual xaml main page bind the drawn scene
+            Main.MainGrid.Children.Add(MainCanvasTransform);
+
         }
 
         /// <summary>
@@ -77,20 +117,21 @@ namespace TudoMario.Rendering
             }
         }
 
-        private void InitializeComponent()
+        /// <summary>
+        /// Binds the Camera to the given actor
+        /// </summary>
+        /// <param name="act"></param>
+        public void BindCameraAtActor(ActorBase target)
         {
-            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
+            Camera.BindActor(target);
+        }
 
-            //Contains all the chunks
-            MainCanvas = new Canvas();
-            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
-
-            //A parent canvas to make map transforms(camera movement) easier
-            MainCanvasTransform.Children.Add(MainCanvas);
-
-            //At the actual xaml main page bind the drawn scene
-            Main.MainGrid.Children.Add(MainCanvasTransform);
-
+        /// <summary>
+        /// Unbinds the camera from an actor therefore makes it possible to focus on fixed coordinates.
+        /// </summary>
+        public void UnbindCameraAtActor()
+        {
+            Camera.UnbindActor();
         }
 
         /// <summary>
@@ -136,6 +177,7 @@ namespace TudoMario.Rendering
             RenderChunks();
             RenderActors();
 
+            RefreshHudValues();
 
             float x = Position.X;
             float y = Position.Y;
@@ -160,6 +202,43 @@ namespace TudoMario.Rendering
                 Vector2 PositionToRenderAt = new Vector2(Camera.CameraX, Camera.CameraY);
                 RenderAround(PositionToRenderAt);
             }
+        }
+
+        /// <summary>
+        /// Makes HUD visible.
+        /// </summary>
+        public void ShowHud()
+        {
+            if (hud != null && !MainCanvas.Children.Contains(hud))
+            {
+                MainCanvasTransform.Children.Add(hud);
+            }
+        }
+
+        /// <summary>
+        /// Hides HUD.
+        /// </summary>
+        public void HideHud()
+        {
+            if (MainCanvas.Children.Contains(hud))
+                MainCanvas.Children.Remove(hud);
+        }
+
+        /// <summary>
+        /// Moves camera to left. Can be negative value for Right.
+        /// </summary>
+        /// <param name="x"></param>
+        public void MoveCameraLeft(int x)
+        {
+            Camera.CameraX = Camera.CameraX - x;
+        }
+        /// <summary>
+        /// Moves Camera up. Can be negative value for Down.
+        /// </summary>
+        /// <param name="y"></param>
+        public void MoveCameraUp(int y)
+        {
+            Camera.CameraY = Camera.CameraY + y;
         }
 
         /// <summary>
@@ -373,6 +452,11 @@ namespace TudoMario.Rendering
             var translatedY = acRender.Position.Y + acRender.Size.Y / 2;
 
             return new Vector2(translatedX, translatedY);
+        }
+
+        private void RefreshHudValues()
+        {
+            hud.SetStressLevel(_currentMap.MainPlayer.StressLevel);
         }
     }
 }

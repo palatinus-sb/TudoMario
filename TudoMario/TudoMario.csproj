@@ -174,6 +174,12 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\TextureHandler.cs" />
     <Compile Include="Timer.cs" />
+    <Compile Include="Ui\Hud.xaml.cs">
+      <DependentUpon>Hud.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ui\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ui\UiController.cs" />
     <Compile Include="UserControlHandler.cs" />
     <Compile Include="Vector2.cs" />
@@ -218,6 +224,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Map\Tile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ui\Hud.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ui\MainMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

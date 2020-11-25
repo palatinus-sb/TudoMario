@@ -32,6 +32,8 @@ namespace TudoMario.Map
 
         public Vector2 StartingPoint { get; set; }
 
+        public PlayerActor MainPlayer { get; set; }
+
         /// <summary>
         /// Inserts the given chunk into the given x,y coordinate in logic layer.
         /// </summary>
