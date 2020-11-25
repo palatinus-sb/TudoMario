@@ -17,34 +17,35 @@ namespace TudoMario.Ui
     {
         private MainPage _main;
         private Renderer _renderer;
-        private CameraObject camera;
 
         private PlayerActor testPlayer;
 
-        private Canvas DefaultHud = new Canvas();
+        private Hud CurrentHud = new Hud();
 
         public UiController(MainPage mainpage, Renderer renderer)
         {
-            camera = new CameraObject();
-
             _main = mainpage;
             _renderer = renderer;
-            _renderer.Camera = camera;
+            //_renderer.Camera = camera;
 
             Init();
 
             ShowMap();
         }
 
-        public void ShowHud()
+        /// <summary>
+        /// Prints the text into the Hud dialogbox. Returns false if it was not possible.
+        /// </summary>
+        /// <param name="dialog"></param>
+        public void ShowDialog(string dialog)
         {
-            _renderer.ShowHud();
+            CurrentHud.ShowDialog(dialog);
         }
-        public void HideHud()
+
+        public void RemoveDialog()
         {
-
+            CurrentHud.RemoveDialog();
         }
-
         public CoreApplicationView CurrentView { get; set; }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace TudoMario.Ui
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
             testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
-            camera.BindActor(testPlayer);
+            _renderer.BindCameraAtActor(testPlayer);
 
             MapBase mapBase = new MapBase(new Vector2(0, 0));
             Chunk airchunkMissingTexturetest = new Chunk();
@@ -73,7 +74,7 @@ namespace TudoMario.Ui
 
             for (int i = 0; i < 16; i++)
             {
-                airchunkMissingTexturetest.SetTileAt(0, i, missing);
+                airchunkMissingTexturetest.SetTileAt(i, 0, missing);
             }
 
             airChunk.FillChunkWith(air);
@@ -87,6 +88,10 @@ namespace TudoMario.Ui
             mapBase.AddChunkAt(groundChunk, 0, -1);
 
             _renderer.CurrentMap = mapBase;
+
+            ShowDialog("TEST DYNAMIC DIALOG THAT IS VERY VERY LONG TO TEST THE LENGHT OF THIS DAMN THING AND I HOPE IT WILL WORK CAUSE I AM SO DONE WITH THIS PROJECT AT FKING SATURDAY 6PM REEEEEEEEE. OK IT WORKS HF GUYS");
+
+            // RemoveDialog();
         }
 
         /// <summary>
@@ -96,19 +101,19 @@ namespace TudoMario.Ui
         {
             if (cont == "Left")
             {
-                camera.CameraX -= 20;
+                _renderer.MoveCameraLeft(20);
             }
             if (cont == "Right")
             {
-                camera.CameraX += 20;
+                _renderer.MoveCameraLeft(-20);
             }
             if (cont == "Up")
             {
-                camera.CameraY = camera.CameraY + 20;
+                _renderer.MoveCameraUp(20);
             }
             if (cont == "Down")
             {
-                camera.CameraY = camera.CameraY - 20;
+                _renderer.MoveCameraUp(-20);
             }
 
             if (cont == "pUp")
@@ -134,9 +139,9 @@ namespace TudoMario.Ui
         /// </summary>
         private void Init()
         {
-            Button testb = new Button();
-            testb.Content = "asdsada";
-            DefaultHud.Children.Add(testb);
+
+            _renderer.Hud = CurrentHud;
+
         }
     }
 }

@@ -29,6 +29,8 @@ namespace TudoMario.Map
 
         public Vector2 StartingPoint { get; set; }
 
+        public PlayerActor MainPlayer { get; set; }
+
         /// <summary>
         /// Inserts the given chunk into the given x,y coordinate in logic layer.
         /// </summary>
@@ -72,6 +74,9 @@ namespace TudoMario.Map
         public void AddActor(ActorBase actor)
         {
             MapActorList.Add(actor);
+            if (actor.GetType() == typeof(PlayerActor))
+                MainPlayer = actor as PlayerActor;
+
         }
     }
 }

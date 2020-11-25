@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TudoMario.Map;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using TudoMario.Ui;
 
 namespace TudoMario.Rendering
 {
@@ -21,9 +22,9 @@ namespace TudoMario.Rendering
         /// </summary>
         private Canvas MainCanvasTransform = new Canvas();
 
-        private Canvas hud = new Canvas();
+        private Hud hud;
 
-        CameraObject camera;
+        private CameraObject Camera = new CameraObject();
 
         /// <summary>
         /// The current map to render at.
@@ -42,17 +43,6 @@ namespace TudoMario.Rendering
 
 
         //private float ZoomLevel = 1;
-        public CameraObject Camera
-        {
-            get
-            {
-                return camera;
-            }
-            set
-            {
-                camera = value;
-            }
-        }
 
         public MapBase CurrentMap
         {
@@ -65,22 +55,25 @@ namespace TudoMario.Rendering
                 _currentMap = value;
                 CleanRendererCanvas();
                 InitActorRenderBindingList();
+
+                ShowHud();
+
+
             }
         }
 
-        public Canvas Hud
+        public Hud Hud
         {
             set
             {
                 if (hud != null)
                 {
-                    Canvas current = hud;
+                    Hud current = hud;
                     MainCanvasTransform.Children.Remove(current);
-                    MainCanvasTransform.Children.Add(value);
+                    hud = value;
                 }
                 else
                 {
-                    MainCanvasTransform.Children.Add(value);
                     hud = value;
                 }
             }
@@ -92,6 +85,21 @@ namespace TudoMario.Rendering
 
             Main = main;
             InitializeComponent();
+        }
+        private void InitializeComponent()
+        {
+            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
+
+            //Contains all the chunks
+            MainCanvas = new Canvas();
+            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
+
+            //A parent canvas to make map transforms(camera movement) easier
+            MainCanvasTransform.Children.Add(MainCanvas);
+
+            //At the actual xaml main page bind the drawn scene
+            Main.MainGrid.Children.Add(MainCanvasTransform);
+
         }
 
         /// <summary>
@@ -109,20 +117,21 @@ namespace TudoMario.Rendering
             }
         }
 
-        private void InitializeComponent()
+        /// <summary>
+        /// Binds the Camera to the given actor
+        /// </summary>
+        /// <param name="act"></param>
+        public void BindCameraAtActor(ActorBase target)
         {
-            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
+            Camera.BindActor(target);
+        }
 
-            //Contains all the chunks
-            MainCanvas = new Canvas();
-            // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
-
-            //A parent canvas to make map transforms(camera movement) easier
-            MainCanvasTransform.Children.Add(MainCanvas);
-
-            //At the actual xaml main page bind the drawn scene
-            Main.MainGrid.Children.Add(MainCanvasTransform);
-
+        /// <summary>
+        /// Unbinds the camera from an actor therefore makes it possible to focus on fixed coordinates.
+        /// </summary>
+        public void UnbindCameraAtActor()
+        {
+            Camera.UnbindActor();
         }
 
         /// <summary>
@@ -160,6 +169,7 @@ namespace TudoMario.Rendering
             RenderChunks();
             RenderActors();
 
+            RefreshHudValues();
 
             float x = Position.X;
             float y = Position.Y;
@@ -179,7 +189,7 @@ namespace TudoMario.Rendering
         /// </summary>
         public void RenderAtCamera()
         {
-            Vector2 PositionToRenderAt = new Vector2(camera.CameraX, camera.CameraY);
+            Vector2 PositionToRenderAt = new Vector2(Camera.CameraX, Camera.CameraY);
             RenderAround(PositionToRenderAt);
         }
 
@@ -189,7 +199,9 @@ namespace TudoMario.Rendering
         public void ShowHud()
         {
             if (hud != null && !MainCanvas.Children.Contains(hud))
-                MainCanvas.Children.Add(hud);
+            {
+                MainCanvasTransform.Children.Add(hud);
+            }
         }
 
         /// <summary>
@@ -199,6 +211,23 @@ namespace TudoMario.Rendering
         {
             if (MainCanvas.Children.Contains(hud))
                 MainCanvas.Children.Remove(hud);
+        }
+
+        /// <summary>
+        /// Moves camera to left. Can be negative value for Right.
+        /// </summary>
+        /// <param name="x"></param>
+        public void MoveCameraLeft(int x)
+        {
+            Camera.CameraX = Camera.CameraX - x;
+        }
+        /// <summary>
+        /// Moves Camera up. Can be negative value for Down.
+        /// </summary>
+        /// <param name="y"></param>
+        public void MoveCameraUp(int y)
+        {
+            Camera.CameraY = Camera.CameraY + y;
         }
 
         /// <summary>
@@ -276,7 +305,7 @@ namespace TudoMario.Rendering
         private bool IsActorInRenderRange(ActorRender acrender)
         {
             Vector2 cameraSize = GetCameraRenderSize();
-            float xDistance = Math.Abs(acrender.Position.X - camera.CameraX);
+            float xDistance = Math.Abs(acrender.Position.X - Camera.CameraX);
             float cameraXWidthWithExtraBufferRange = cameraSize.X + 150;
 
             //Render distance is only applied on x coord
@@ -286,7 +315,7 @@ namespace TudoMario.Rendering
         {
             Vector2 cameraSize = GetCameraRenderSize();
             float middleOFChunk = (x * ChunkSize) + (ChunkSize / 2);
-            float xDistance = Math.Abs(middleOFChunk - camera.CameraX);
+            float xDistance = Math.Abs(middleOFChunk - Camera.CameraX);
 
             //Add one extra chunk for prebuffering
             float cameraXWidthWithExtraBufferRange = cameraSize.X + 10000;
@@ -366,6 +395,11 @@ namespace TudoMario.Rendering
             var translatedY = acRender.Position.Y + acRender.Size.Y / 2;
 
             return new Vector2(translatedX, translatedY);
+        }
+
+        private void RefreshHudValues()
+        {
+            hud.SetStressLevel(_currentMap.MainPlayer.StressLevel);
         }
     }
 }
