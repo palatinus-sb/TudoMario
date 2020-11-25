@@ -95,7 +95,7 @@ namespace TudoMario
                         {
                             map.SetChunkAt(row / 16, chunksInAColumn - ((column / 16) + 1), new Chunk());
                         }
-                        map.GetChunkAt((row / 16), chunksInAColumn - ((column / 16) + 1)).SetTileAt(15 - (column % 16), row % 16, TileWithSetTexture(line[row]));
+                        map.GetChunkAt((row / 16), chunksInAColumn - ((column / 16) + 1)).SetTileAt(row % 16, 15 - (column % 16), TileWithSetTexture(line[row]));
                     }
                 }
                 column++;
