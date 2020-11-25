@@ -11,7 +11,7 @@ namespace TudoMario
     /// <summary>
     /// Represent the base of Collider fields. Used for hitboxes.
     /// </summary>
-    public abstract class ColliderBase
+    public abstract class ColliderBase : IEquatable<ColliderBase>
     {
         private static readonly List<ColliderBase> instances = new List<ColliderBase>();
 
@@ -63,6 +63,8 @@ namespace TudoMario
         public void SignalCollisionStart(ColliderBase collider) => CollisionStarted?.Invoke(this, collider);
 
         public void SignalCollisionEnd(ColliderBase collider) => CollisionEnded?.Invoke(this, collider);
+
+        public bool Equals(ColliderBase other) => ReferenceEquals(this, other);
     }
 
     public class ColliderWithModifiers : ColliderBase
