@@ -61,13 +61,7 @@ namespace TudoMario
         private void ActorsPerformBeahviour()
         {
             foreach (var actor in renderer.CurrentMap.MapActorList)
-            {
                 actor.Tick();
-                if (!actor.IsAlive)
-                {
-                    gameEnded = true;
-                }
-            }
         }
 
         private void RenderGameState()

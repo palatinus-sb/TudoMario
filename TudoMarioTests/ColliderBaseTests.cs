@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TudoMario;
@@ -16,11 +17,13 @@ namespace TudoMarioTests
         //  ║ 7 ║ 8 ║ 9 ║  ┤
         //  ╚═══╩═══╩═══╝  ┴ -3
 
-        DummyActor actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
-        DummyActor actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
-        DummyActor actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
-        DummyActor actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
-        DummyActor actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
+        private readonly DummyActor actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
+        private readonly DummyActor actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
+        private readonly DummyActor actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
+        private readonly DummyActor actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
+        private readonly DummyActor actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
+
+        private bool eventRaised = false;
 
         [TestMethod]
         public void TestIsCollidingWith()
@@ -63,6 +66,46 @@ namespace TudoMarioTests
             Assert.IsFalse(colliders123.Contains(actor6));
             Assert.IsFalse(colliders123.Contains(actor89));
             Assert.IsFalse(colliders123.Contains(actor123));
+        }
+
+        [TestMethod]
+        public void TestCCollisionStartedEvent()
+        {
+            eventRaised = false;
+            List<DummyActor> dummies = new List<DummyActor>();
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
+            dummies.Add(new DummyActor(new Vector2(0, 2), new Vector2(2, 2)));
+            dummies[0].CollisionStarted += Actor1_CollisionStarted;
+            dummies.ForEach(d => d.Tick());
+            Assert.IsFalse(eventRaised);
+            dummies[1].Position = new Vector2(0, 0); // move to same positions
+            dummies.ForEach(d => d.Tick());
+            Assert.IsTrue(eventRaised);
+        }
+
+        private void Actor1_CollisionStarted(ColliderBase sender, ColliderBase collider)
+        {
+            eventRaised = true;
+        }
+
+        [TestMethod]
+        public void TestCollisionEndedEvent()
+        {
+            eventRaised = false;
+            List<DummyActor> dummies = new List<DummyActor>();
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
+            dummies[0].CollisionEnded += ColliderBaseTests_CollisionEnded;
+            dummies.ForEach(d => d.Tick());
+            Assert.IsFalse(eventRaised);
+            dummies[1].Position = new Vector2(0, 2); // move to different positions
+            dummies.ForEach(d => d.Tick());
+            Assert.IsTrue(eventRaised);
+        }
+
+        private void ColliderBaseTests_CollisionEnded(ColliderBase sender, ColliderBase collider)
+        {
+            eventRaised = true;
         }
     }
 }

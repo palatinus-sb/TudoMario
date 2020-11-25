@@ -46,7 +46,7 @@ namespace TudoMario
             Position = position;
             Size = size;
         }
-        
+
         /// <summary>
         /// Applies damage (increases stress) to this Actor.
         /// </summary>
@@ -76,8 +76,13 @@ namespace TudoMario
         /// </summary>
         public void Tick()
         {
-            // caching Colliders
-            colliders = base.GetColliders();
+            // signaling changes to Colliders and caching new Colliders
+            IEnumerable<ColliderBase> newColliders = base.GetColliders();
+            foreach (var collider in colliders.Except(newColliders))
+                collider.SignalCollisionEnd(this);
+            foreach (var collider in newColliders.Except(colliders))
+                collider.SignalCollisionStart(this);
+            colliders = newColliders;
 
             // applying MovementModifiers
             MovementModifiers.Clear();

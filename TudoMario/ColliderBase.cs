@@ -17,6 +17,9 @@ namespace TudoMario
 
         public ColliderBase() { instances.Add(this); }
 
+        public event CollisionArgs CollisionStarted;
+        public event CollisionArgs CollisionEnded;
+
         public virtual Vector2 Position { get; set; } = new Vector2();
         public virtual Vector2 Size { get; set; } = new Vector2();
         public bool IsCollisionEnabled { get; set; } = true;
@@ -56,6 +59,10 @@ namespace TudoMario
 
             return CollidingColliders;
         }
+
+        public void SignalCollisionStart(ColliderBase collider) => CollisionStarted?.Invoke(this, collider);
+
+        public void SignalCollisionEnd(ColliderBase collider) => CollisionEnded?.Invoke(this, collider);
     }
 
     public class ColliderWithModifiers : ColliderBase
@@ -67,4 +74,6 @@ namespace TudoMario
             Modifiers = modifiers;
         }
     }
+
+    public delegate void CollisionArgs(ColliderBase sender, ColliderBase collider);
 }
