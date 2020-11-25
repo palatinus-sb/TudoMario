@@ -60,6 +60,9 @@ namespace TudoMario
 
         private void ActorsPerformBeahviour()
         {
+            if (renderer?.CurrentMap?.MapActorList is null)
+                return;
+
             foreach (var actor in renderer.CurrentMap.MapActorList)
                 actor.Tick();
         }

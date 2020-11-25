@@ -57,7 +57,7 @@ namespace TudoMario.Ui
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
             testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
 
-            _renderer.BindCameraAtActor(testPlayer);
+            //Renderer.BindCameraAtActor(testPlayer);
 
             MapBase mapBase = new MapBase(new Vector2(0, 0));
             Chunk airchunkMissingTexturetest = new Chunk();
@@ -87,7 +87,7 @@ namespace TudoMario.Ui
 
             mapBase.SetChunkAt(0, -1, groundChunk);
 
-            _renderer.CurrentMap = mapBase;
+            //_renderer.CurrentMap = mapBase;
 
             ShowDialog("TEST DYNAMIC DIALOG THAT IS VERY VERY LONG TO TEST THE LENGHT OF THIS DAMN THING AND I HOPE IT WILL WORK CAUSE I AM SO DONE WITH THIS PROJECT AT FKING SATURDAY 6PM REEEEEEEEE. OK IT WORKS HF GUYS");
 

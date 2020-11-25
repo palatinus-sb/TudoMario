@@ -16,7 +16,7 @@ namespace TudoMario
 
 
         private static string fileName;
-        static List<string> mapCsv = new List<string>();
+        private static List<string> mapCsv = new List<string>();
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         private static MapBase map = new MapBase(mapStartingPoint);
@@ -80,6 +80,7 @@ namespace TudoMario
             int chunksInAColumn = int.Parse(config[8]);
             Vector2 actorSize = new Vector2(64, 64);
             map.AddActor(new PlayerActor(actorStartingPoint, actorSize));
+            Renderer.BindCameraAtActor(map.MainPlayer);
             // TODO
             // add texture images and textures to ice, terra and mud
             int column = 0;

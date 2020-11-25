@@ -135,7 +135,13 @@ namespace TudoMario.Map
         /// <summary>
         /// Binds the actor to the map which registers it for rendering.
         /// </summary>
-        public void AddActor(ActorBase actor) => MapActorList.Add(actor);
+        public void AddActor(ActorBase actor)
+        {
+            if (actor.GetType() == typeof(PlayerActor))
+                MainPlayer = actor as PlayerActor;
+
+            MapActorList.Add(actor);
+        }
 
         /// <summary>
         /// Removes the actor to the map.

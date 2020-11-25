@@ -24,7 +24,7 @@ namespace TudoMario.Rendering
 
         private Hud hud;
 
-        private CameraObject Camera = new CameraObject();
+        private static CameraObject Camera = new CameraObject();
 
         /// <summary>
         /// The current map to render at.
@@ -121,7 +121,7 @@ namespace TudoMario.Rendering
         /// Binds the Camera to the given actor
         /// </summary>
         /// <param name="act"></param>
-        public void BindCameraAtActor(ActorBase target)
+        public static void BindCameraAtActor(ActorBase target)
         {
             Camera.BindActor(target);
         }
@@ -129,7 +129,7 @@ namespace TudoMario.Rendering
         /// <summary>
         /// Unbinds the camera from an actor therefore makes it possible to focus on fixed coordinates.
         /// </summary>
-        public void UnbindCameraAtActor()
+        public static void UnbindCameraAtActor()
         {
             Camera.UnbindActor();
         }
