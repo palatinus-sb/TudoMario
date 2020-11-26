@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TudoMario
 {
-    class Configuration
+    public class Configuration
     {
         public static Developer Dev { get; } = Developer.Adam;
 

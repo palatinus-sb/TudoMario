@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.Immutable;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -49,8 +50,6 @@ namespace TudoMario.Map
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
 
-            GenerateColliderForTile(tile, x, y);
-
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
             Canvas.SetTop(tile, (y * 32));
@@ -62,14 +61,14 @@ namespace TudoMario.Map
         /// <param name="y"></param>
         /// <param name="tileType"></param>
         /// <param name="imagePath"></param>
-        public void SetTileAt(int x, int y, Tile tile, ColliderOption opt)
+        public void SetTileAt(int x, int y, Tile tile, ImmutableList<MovementModifier> list)
         {
             //0 is the top since we go from top left so it has to be mirrored
             y = 15 - y;
 
             RemoveTileFromChunk(Tiles[x, y]);
-            if (opt == ColliderOption.GenerateCollider)
-                GenerateColliderForTile(tile, x, y);
+            if (list.Count > 0)
+                GenerateColliderForTile(x, y, list);
             Tiles[x, y] = tile;
 
             ChunkCanvas.Children.Add(tile);
@@ -93,8 +92,6 @@ namespace TudoMario.Map
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
 
-            GenerateColliderForTile(tile, x, y);
-
             ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
             Canvas.SetTop(tile, (y * 32));
@@ -106,7 +103,7 @@ namespace TudoMario.Map
         /// <param name="y"></param>
         /// <param name="texture"></param>
         /// <param name="opt"></param>
-        public void SetTileAt(int x, int y, BitmapImage texture, ColliderOption opt)
+        public void SetTileAt(int x, int y, BitmapImage texture, ImmutableList<MovementModifier> list)
         {
             //0 is the top since we go from top left so it has to be mirrored
             y = 15 - y;
@@ -115,8 +112,8 @@ namespace TudoMario.Map
             tile.Texture = texture;
 
             RemoveTileFromChunk(Tiles[x, y]);
-            if (opt == ColliderOption.GenerateCollider)
-                GenerateColliderForTile(tile, x, y);
+            if (list.Count > 0)
+                GenerateColliderForTile(x, y, list);
             Tiles[x, y] = tile;
 
             ChunkCanvas.Children.Add(tile);
@@ -158,9 +155,11 @@ namespace TudoMario.Map
                 ChunkCanvas.Children.Remove(target);
         }
 
-        private void GenerateColliderForTile(Tile tile, int x, int y)
+        private void GenerateColliderForTile(int x, int y, ImmutableList<MovementModifier> list)
         {
-            var kekeke = GetLogicalCenterOfTile(x, y);
+            Vector2 tileCenter = GetLogicalCenterOfTile(x, y);
+            ColliderWithModifiers tileCollider = new ColliderWithModifiers(list);
+            tileCollider.Position = tileCenter;
         }
         private Vector2 GetLogicalCenterOfTile(int x, int y)
         {
