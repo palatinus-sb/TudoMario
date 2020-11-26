@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Immutable;
+using TudoMario.Rendering;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -159,6 +160,7 @@ namespace TudoMario.Map
         {
             Vector2 tileCenter = GetLogicalCenterOfTile(x, y);
             ColliderWithModifiers tileCollider = new ColliderWithModifiers(list);
+            tileCollider.Size = new Vector2(32, 32);
             tileCollider.Position = tileCenter;
         }
         private Vector2 GetLogicalCenterOfTile(int x, int y)
@@ -166,7 +168,7 @@ namespace TudoMario.Map
             Vector2 chunkTopLeft = GetTopLeftPositionOfChunk();
 
             float tileTopLeftX = chunkTopLeft.X + x * 32;
-            float tileTopLeftY = chunkTopLeft.Y - (15 - y) * 32;
+            float tileTopLeftY = chunkTopLeft.Y - y * 32;
 
             Vector2 tileTopLeft = new Vector2(tileTopLeftX, tileTopLeftY);
 
