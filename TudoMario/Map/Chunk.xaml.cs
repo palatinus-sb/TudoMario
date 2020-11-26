@@ -159,8 +159,7 @@ namespace TudoMario.Map
         private void GenerateColliderForTile(int x, int y, ImmutableList<MovementModifier> list)
         {
             Vector2 tileCenter = GetLogicalCenterOfTile(x, y);
-            ColliderWithModifiers tileCollider = new ColliderWithModifiers(list);
-            tileCollider.Size = new Vector2(32, 32);
+            ColliderWithModifiers tileCollider = new ColliderWithModifiers(list, new Vector2(32, 32));
             tileCollider.Position = tileCenter;
         }
         private Vector2 GetLogicalCenterOfTile(int x, int y)

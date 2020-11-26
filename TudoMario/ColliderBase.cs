@@ -75,6 +75,10 @@ namespace TudoMario
         {
             Modifiers = modifiers;
         }
+        public ColliderWithModifiers(ImmutableList<MovementModifier> modifiers, Vector2 size) : this(modifiers)
+        {
+            Size = size;
+        }
     }
 
     public delegate void CollisionArgs(ColliderBase sender, ColliderBase collider);
