@@ -43,13 +43,11 @@ namespace TudoMario
 
             // move actor
             actor.Position.X += actor.MovementSpeed.X;
-            actor.RefreshColliders();
-            if (actor.GetColliders().Any(c => c.IsSolid))
+            if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
                 actor.Position.X -= actor.MovementSpeed.X;
 
             actor.Position.Y += actor.MovementSpeed.Y;
-            actor.RefreshColliders();
-            if (actor.GetColliders().Any(c => c.IsSolid))
+            if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
                 actor.Position.Y -= actor.MovementSpeed.Y;
         }
 

@@ -112,11 +112,6 @@ namespace TudoMario
             Texture = texture;
         }
 
-        public void RefreshColliders()
-        {
-            colliders = base.GetColliders();
-        }
-
         public override IEnumerable<ColliderBase> GetColliders() => colliders;
 
         public override string ToString() => id;

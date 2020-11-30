@@ -29,6 +29,14 @@ namespace TudoMario
         public bool IsCollisionEnabled { get; set; } = true;
         public bool IsSolid { get; protected set; } = true; // prevents actors from entering it's collision box
 
+        public static IEnumerable<ColliderBase> GetProbeColliders(ColliderBase collider)
+        {
+            ProbeCollider probe = new ProbeCollider(collider);
+            var colliders = probe.GetColliders();
+            instances.Remove(probe);
+            return colliders;
+        }
+
         /// <summary>
         /// Checks if two colliders are colliding.
         /// </summary>
@@ -70,16 +78,24 @@ namespace TudoMario
         public void SignalCollisionEnd(ColliderBase collider) => CollisionEnded?.Invoke(this, collider);
 
         public bool Equals(ColliderBase other) => ReferenceEquals(this, other);
+
+        private class ProbeCollider : ColliderBase
+        {
+            public ProbeCollider(ColliderBase collider)
+            {
+                Position = collider.Position;
+                Size = collider.Size;
+            }
+        }
     }
 
     public class ColliderWithModifier : ColliderBase
     {
         public MovementModifier Modifier { get; }
 
-        public ColliderWithModifier(MovementModifier modifier, bool solid)
+        public ColliderWithModifier(MovementModifier modifier, bool isSolid) : base(isSolid)
         {
             Modifier = modifier;
-            IsSolid = solid;
         }
     }
 

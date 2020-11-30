@@ -75,16 +75,15 @@ namespace TudoMarioTests
         public void TestCalculateSpeedLimit()
         {
             DummyActor actor = new DummyActor();
-            actor.MovementModifiers.Add(MovementModifier.BlockLeft);
+            actor.IsCollisionEnabled = false;
             actor.MovementModifiers.Add(MovementModifier.IceWalk);
             actor.MovementModifiers.Add(MovementModifier.JumpBoost);
             MethodInfo applyMultiplicative = physicsReflection.GetMethod("CalculateSpeedLimit", BindingFlags.NonPublic | BindingFlags.Static);
             Vector4 result = (Vector4)applyMultiplicative.Invoke(null, new object[] { actor });
 
-            Assert.AreEqual(MovementModifier.JumpBoost.Function(actor.SpeedLimits.X, MovementModifier.JumpBoost.Value), result.X); // modified by: JumpBoost
-            Assert.AreEqual(actor.SpeedLimits.X, result.Y); // modified by: none
-            Assert.AreEqual(MovementModifier.BlockLeft.Function(actor.SpeedLimits.Y, MovementModifier.BlockLeft.Value), result.Z); // modified by: IceWalk and BlockLeft (BlockLeft should override IceWalk)
-            Assert.AreEqual(MovementModifier.IceWalk.Function(actor.SpeedLimits.Y, MovementModifier.IceWalk.Value), result.W); // modified by: IceWalk
+            Assert.AreEqual(MovementModifier.JumpBoost.Function(actor.SpeedLimits.Y, MovementModifier.JumpBoost.Value), result.X); // modified by: JumpBoost
+            Assert.AreEqual(actor.SpeedLimits.Y, result.Y); // modified by: none
+            Assert.AreEqual(MovementModifier.IceWalk.Function(actor.SpeedLimits.X, MovementModifier.IceWalk.Value), result.W); // modified by: IceWalk
         }
 
         [TestMethod]

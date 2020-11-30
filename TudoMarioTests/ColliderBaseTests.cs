@@ -69,12 +69,12 @@ namespace TudoMarioTests
         }
 
         [TestMethod]
-        public void TestCCollisionStartedEvent()
+        public void TestCollisionStartedEvent()
         {
             eventRaised = false;
             List<DummyActor> dummies = new List<DummyActor>();
             dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
-            dummies.Add(new DummyActor(new Vector2(0, 2), new Vector2(2, 2)));
+            dummies.Add(new DummyActor(new Vector2(0, 3), new Vector2(2, 2)));
             dummies[0].CollisionStarted += Actor1_CollisionStarted;
             dummies.ForEach(d => d.Tick());
             Assert.IsFalse(eventRaised);
@@ -98,7 +98,7 @@ namespace TudoMarioTests
             dummies[0].CollisionEnded += ColliderBaseTests_CollisionEnded;
             dummies.ForEach(d => d.Tick());
             Assert.IsFalse(eventRaised);
-            dummies[1].Position = new Vector2(0, 2); // move to different positions
+            dummies[1].Position = new Vector2(0, 3); // move to different positions
             dummies.ForEach(d => d.Tick());
             Assert.IsTrue(eventRaised);
         }
