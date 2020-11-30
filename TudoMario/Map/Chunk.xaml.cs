@@ -62,14 +62,13 @@ namespace TudoMario.Map
         /// <param name="y"></param>
         /// <param name="tileType"></param>
         /// <param name="imagePath"></param>
-        public void SetTileAt(int x, int y, Tile tile, ImmutableList<MovementModifier> list)
+        public void SetTileAt(int x, int y, Tile tile, bool solid, MovementModifier modifier = null)
         {
             //0 is the top since we go from top left so it has to be mirrored
             y = 15 - y;
 
             RemoveTileFromChunk(Tiles[x, y]);
-            if (list.Count > 0)
-                GenerateColliderForTile(x, y, list);
+            GenerateColliderForTile(x, y, modifier, solid);
             Tiles[x, y] = tile;
 
             ChunkCanvas.Children.Add(tile);
@@ -94,8 +93,8 @@ namespace TudoMario.Map
             Tiles[x, y] = tile;
 
             ChunkCanvas.Children.Add(tile);
-            Canvas.SetLeft(tile, (x * 32));
-            Canvas.SetTop(tile, (y * 32));
+            Canvas.SetLeft(tile, x * 32);
+            Canvas.SetTop(tile, y * 32);
         }
         /// <summary>
         /// Creates a new tile at the given coordinates and the given textures and creates a collider for it.
@@ -104,7 +103,7 @@ namespace TudoMario.Map
         /// <param name="y"></param>
         /// <param name="texture"></param>
         /// <param name="opt"></param>
-        public void SetTileAt(int x, int y, BitmapImage texture, ImmutableList<MovementModifier> list)
+        public void SetTileAt(int x, int y, BitmapImage texture, bool solid, MovementModifier modifier = null)
         {
             //0 is the top since we go from top left so it has to be mirrored
             y = 15 - y;
@@ -113,13 +112,12 @@ namespace TudoMario.Map
             tile.Texture = texture;
 
             RemoveTileFromChunk(Tiles[x, y]);
-            if (list.Count > 0)
-                GenerateColliderForTile(x, y, list);
+            GenerateColliderForTile(x, y, modifier, solid);
             Tiles[x, y] = tile;
 
             ChunkCanvas.Children.Add(tile);
-            Canvas.SetLeft(tile, (x * 32));
-            Canvas.SetTop(tile, (y * 32));
+            Canvas.SetLeft(tile, x * 32);
+            Canvas.SetTop(tile, y * 32);
         }
 
         /// <summary>
@@ -156,11 +154,14 @@ namespace TudoMario.Map
                 ChunkCanvas.Children.Remove(target);
         }
 
-        private void GenerateColliderForTile(int x, int y, ImmutableList<MovementModifier> list)
+        private void GenerateColliderForTile(int x, int y, MovementModifier modifier, bool solid)
         {
             Vector2 tileCenter = GetLogicalCenterOfTile(x, y);
-            ColliderWithModifiers tileCollider = new ColliderWithModifiers(list, new Vector2(32, 32));
-            tileCollider.Position = tileCenter;
+            ColliderWithModifier tileCollider = new ColliderWithModifier(modifier, solid)
+            {
+                Position = tileCenter,
+                Size = new Vector2(32, 32)
+            };
         }
         private Vector2 GetLogicalCenterOfTile(int x, int y)
         {

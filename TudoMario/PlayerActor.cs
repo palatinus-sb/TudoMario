@@ -10,14 +10,14 @@ namespace TudoMario
     {
         public PlayerActor(Vector2 position, Vector2 size) : base(position, size, "Player")
         {
-            
+
         }
 
         protected override void PerformBehaviour()
         {
             // jumping
             if ((UserControlHandler.PressedKeys & KeyAction.Up) != 0 && MovementSpeed.Y == 0)
-                MovementSpeed.Y = SpeedLimits.Y;
+                MovementSpeed.Y = 10;
 
             // walking left-right
             if ((UserControlHandler.PressedKeys & KeyAction.Right) != 0)

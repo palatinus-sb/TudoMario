@@ -15,7 +15,11 @@ namespace TudoMario
     {
         private static readonly List<ColliderBase> instances = new List<ColliderBase>();
 
-        public ColliderBase() { instances.Add(this); }
+        protected ColliderBase(bool isSolid = true)
+        {
+            instances.Add(this);
+            IsSolid = isSolid;
+        }
 
         public event CollisionArgs CollisionStarted;
         public event CollisionArgs CollisionEnded;
@@ -23,6 +27,7 @@ namespace TudoMario
         public virtual Vector2 Position { get; set; } = new Vector2();
         public virtual Vector2 Size { get; set; } = new Vector2();
         public bool IsCollisionEnabled { get; set; } = true;
+        public bool IsSolid { get; protected set; } = true; // prevents actors from entering it's collision box
 
         /// <summary>
         /// Checks if two colliders are colliding.
@@ -67,17 +72,14 @@ namespace TudoMario
         public bool Equals(ColliderBase other) => ReferenceEquals(this, other);
     }
 
-    public class ColliderWithModifiers : ColliderBase
+    public class ColliderWithModifier : ColliderBase
     {
-        public ImmutableList<MovementModifier> Modifiers { get; }
+        public MovementModifier Modifier { get; }
 
-        public ColliderWithModifiers(ImmutableList<MovementModifier> modifiers)
+        public ColliderWithModifier(MovementModifier modifier, bool solid)
         {
-            Modifiers = modifiers;
-        }
-        public ColliderWithModifiers(ImmutableList<MovementModifier> modifiers, Vector2 size) : this(modifiers)
-        {
-            Size = size;
+            Modifier = modifier;
+            IsSolid = solid;
         }
     }
 

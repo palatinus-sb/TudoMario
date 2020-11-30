@@ -29,7 +29,7 @@ namespace TudoMario
         public bool IsStatic { get; set; } = false;
         public bool IsAffectedByGravity { get; set; } = true;
         public Vector2 MovementSpeed { get; set; } = new Vector2(0, 0);
-        public Vector2 SpeedLimits { get; private set; } = new Vector2(5, 5);
+        public Vector2 SpeedLimits { get; private set; } = new Vector2(20, 50);
         public HashSet<MovementModifier> MovementModifiers { get; private set; } = new HashSet<MovementModifier>();
         public int AttackDamage { get; set; } = 0;
         public bool IsAlive { get; private set; } = true;
@@ -76,7 +76,7 @@ namespace TudoMario
         /// </summary>
         public void Tick()
         {
-            // signaling changes to Colliders and caching new Colliders
+            // Signaling changes to Colliders and caching new Colliders
             IEnumerable<ColliderBase> newColliders = base.GetColliders();
             foreach (var collider in colliders.Except(newColliders))
                 collider.SignalCollisionEnd(this);
@@ -84,12 +84,11 @@ namespace TudoMario
                 collider.SignalCollisionStart(this);
             colliders = newColliders;
 
-            // applying MovementModifiers
+            // Applying MovementModifiers
             MovementModifiers.Clear();
             foreach (var collider in colliders)
-                if (collider is ColliderWithModifiers cwm)
-                    foreach (var modifier in cwm.Modifiers)
-                        MovementModifiers.Add(modifier);
+                if (collider is ColliderWithModifier cwm && cwm.Modifier != null)
+                    MovementModifiers.Add(cwm.Modifier);
 
             // Perform type-specific Behaviour
             PerformBehaviour();
@@ -111,6 +110,11 @@ namespace TudoMario
         public void SetTexture(BitmapImage texture)
         {
             Texture = texture;
+        }
+
+        public void RefreshColliders()
+        {
+            colliders = base.GetColliders();
         }
 
         public override IEnumerable<ColliderBase> GetColliders() => colliders;

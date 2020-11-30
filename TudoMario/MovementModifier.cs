@@ -32,6 +32,7 @@ namespace TudoMario
         public static MovementModifier SlowFall = new MovementModifier(Direction.Down, 0.5f, Mode.Multiplicative);
         public static MovementModifier JumpBoost = new MovementModifier(Direction.Up, 2f, Mode.Multiplicative);
 
+        public static MovementModifier SolidWall = new MovementModifier(Direction.All, 0f, Mode.Absolute);
         public static MovementModifier BlockUp = new MovementModifier(Direction.Up, 0f, Mode.Absolute);
         public static MovementModifier BlockDown = new MovementModifier(Direction.Down, 0f, Mode.Absolute);
         public static MovementModifier BlockLeft = new MovementModifier(Direction.Left, 0f, Mode.Absolute);

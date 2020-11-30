@@ -42,7 +42,15 @@ namespace TudoMario
                 actor.MovementSpeed.Y = -1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.Y); // down (-y)
 
             // move actor
-            actor.Position += actor.MovementSpeed;
+            actor.Position.X += actor.MovementSpeed.X;
+            actor.RefreshColliders();
+            if (actor.GetColliders().Any(c => c.IsSolid))
+                actor.Position.X -= actor.MovementSpeed.X;
+
+            actor.Position.Y += actor.MovementSpeed.Y;
+            actor.RefreshColliders();
+            if (actor.GetColliders().Any(c => c.IsSolid))
+                actor.Position.Y -= actor.MovementSpeed.Y;
         }
 
         /// <summary>
