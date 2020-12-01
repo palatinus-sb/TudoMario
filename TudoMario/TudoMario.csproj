@@ -191,9 +191,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BaseBackGroung.png" />
+    <Content Include="Assets\Ground.png" />
     <Content Include="Assets\GroundBase.png" />
+    <Content Include="Assets\Ice.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\missing.png" />
+    <Content Include="Assets\Mud.png" />
     <Content Include="Assets\playerModel2.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />

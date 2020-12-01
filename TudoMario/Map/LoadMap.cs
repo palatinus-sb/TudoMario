@@ -20,9 +20,6 @@ namespace TudoMario
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         private static MapBase map = new MapBase(mapStartingPoint);
-        private static ImmutableList<MovementModifier> ColliderTile = ImmutableList.Create<MovementModifier>(MovementModifier.BlockDown, MovementModifier.BlockUp, MovementModifier.BlockRight, MovementModifier.BlockLeft);
-        private static ImmutableList<MovementModifier> IceTile = ImmutableList.Create<MovementModifier>(MovementModifier.IceWalk, MovementModifier.BlockDown, MovementModifier.BlockUp, MovementModifier.BlockRight, MovementModifier.BlockLeft);
-        private static ImmutableList<MovementModifier> SwampTile = ImmutableList.Create<MovementModifier>(MovementModifier.SwampWalk, MovementModifier.BlockDown, MovementModifier.BlockUp, MovementModifier.BlockRight, MovementModifier.BlockLeft);
 
         public static MapBase Load(string FileName)
         {
@@ -38,12 +35,14 @@ namespace TudoMario
             switch (textureInitial)
             {
                 case "g":
+                    texture = TextureHandler.GetImageByName("ground");
+                    break;
                 case "g1":
                     texture = TextureHandler.GetImageByName("groundbase");
                     break;
 
                 case "m":
-                    texture = TextureHandler.GetImageByName("groundbase");
+                    texture = TextureHandler.GetImageByName("mud");
                     break;
 
                 case "s":
@@ -51,12 +50,12 @@ namespace TudoMario
                     break;
 
                 case "i":
-                    texture = TextureHandler.GetImageByName("groundbase");
+                    texture = TextureHandler.GetImageByName("ice");
                     break;
 
                 case "t":
                 case "t1":
-                    texture = TextureHandler.GetImageByName("groundbase");
+                    texture = TextureHandler.GetImageByName("ground");
                     break;
             }
             return texture;
@@ -116,8 +115,10 @@ namespace TudoMario
             //int chunksInARow = int.Parse(config[7]);
             int chunksInAColumn = int.Parse(config[8]);
             Vector2 actorSize = new Vector2(64, 64);
-            map.AddActor(new PlayerActor(actorStartingPoint, actorSize));
-            Renderer.BindCameraAtActor(map.MainPlayer);
+            PlayerActor player = new PlayerActor(actorStartingPoint, actorSize);
+            player.SetTexture(TextureHandler.GetImageByName("playermodel2"));
+            map.AddActor(player);
+            Renderer.BindCameraAtActor(player);
             // TODO
             // add texture images and textures to ice, terra and mud
             int column = 0;

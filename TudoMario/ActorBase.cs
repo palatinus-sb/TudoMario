@@ -29,10 +29,11 @@ namespace TudoMario
         public bool IsStatic { get; set; } = false;
         public bool IsAffectedByGravity { get; set; } = true;
         public Vector2 MovementSpeed { get; set; } = new Vector2(0, 0);
-        public Vector2 SpeedLimits { get; private set; } = new Vector2(20, 50);
+        public Vector2 SpeedLimits { get; private set; } = new Vector2(10, 20);
         public HashSet<MovementModifier> MovementModifiers { get; private set; } = new HashSet<MovementModifier>();
         public int AttackDamage { get; set; } = 0;
         public bool IsAlive { get; private set; } = true;
+        public bool CanJump { get; set; }
 
         public ActorBase(string id = "")
         {

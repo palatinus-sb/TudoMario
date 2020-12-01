@@ -16,8 +16,11 @@ namespace TudoMario
         protected override void PerformBehaviour()
         {
             // jumping
-            if ((UserControlHandler.PressedKeys & KeyAction.Up) != 0 && MovementSpeed.Y == 0)
-                MovementSpeed.Y = 10;
+            if ((UserControlHandler.PressedKeys & KeyAction.Up) != 0 && MovementSpeed.Y == 0 && CanJump)
+            {
+                MovementSpeed.Y = 20;
+                CanJump = false;
+            }
 
             // walking left-right
             if ((UserControlHandler.PressedKeys & KeyAction.Right) != 0)

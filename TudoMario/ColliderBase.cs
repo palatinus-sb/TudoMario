@@ -32,7 +32,8 @@ namespace TudoMario
         public static IEnumerable<ColliderBase> GetProbeColliders(ColliderBase collider)
         {
             ProbeCollider probe = new ProbeCollider(collider);
-            var colliders = probe.GetColliders();
+            List<ColliderBase> colliders = probe.GetColliders().ToList();
+            colliders.Remove(collider);
             instances.Remove(probe);
             return colliders;
         }

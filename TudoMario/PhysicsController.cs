@@ -11,8 +11,8 @@ namespace TudoMario
 {
     public static class PhysicsController
     {
-        public const float friction = 0.5f;
-        public const float gravity = 0.5f;
+        public const float friction = 2f;
+        public const float gravity = 2.5f;
 
         /// <summary>
         /// Moves the actor based on it's speed and properties, factoring in gravity and friction.
@@ -44,11 +44,18 @@ namespace TudoMario
             // move actor
             actor.Position.X += actor.MovementSpeed.X;
             if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
+            {
                 actor.Position.X -= actor.MovementSpeed.X;
+                actor.MovementSpeed.X = 0;
+            }
 
             actor.Position.Y += actor.MovementSpeed.Y;
             if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
+            {
                 actor.Position.Y -= actor.MovementSpeed.Y;
+                actor.MovementSpeed.Y = 0;
+                actor.CanJump = true;
+            }
         }
 
         /// <summary>
