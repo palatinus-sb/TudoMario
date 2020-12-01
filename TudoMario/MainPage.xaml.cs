@@ -60,6 +60,9 @@ namespace TudoMario
                 case Configuration.Developer.Soma:
                     break;
             }
+
+            Window.Current.CoreWindow.KeyDown += Page_KeyDown;
+            Window.Current.CoreWindow.KeyUp += Page_KeyUp;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -68,14 +71,14 @@ namespace TudoMario
             uicontroller.Testf(cont);
         }
 
-        private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            UserControlHandler.UserKeyDown(e.Key);
+            UserControlHandler.UserKeyDown(e.VirtualKey);
         }
 
-        private void Page_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void Page_KeyUp(object sender, KeyEventArgs e)
         {
-            UserControlHandler.UserKeyUp(e.Key);
+            UserControlHandler.UserKeyUp(e.VirtualKey);
         }
     }
 }

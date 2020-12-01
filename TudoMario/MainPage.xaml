@@ -6,21 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    KeyDown="Page_KeyDown"
-    KeyUp="Page_KeyUp">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-	<Grid x:Name="UiMainGrid">
-		<Button Content="Left" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom"></Button>
-		<Button Content="Right" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="105,0,0,0"></Button>
-		<Button Content="Up" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="390,0,0,0"></Button>
-		<Button Content="Down" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="285,0,0,0"></Button>
-		<Button Content="pUp" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="390,0,0,68"></Button>
-		<Button Content="pDown" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="285,0,0,68"></Button>
-		<Button Content="pLeft" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="0,0,0,68"></Button>
-		<Button Content="pRight" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="105,0,0,68"></Button>
-		<!--<Grid KeyControl="Grid_KeyControl">
+    <Grid x:Name="UiMainGrid">
+        <Button Content="Left" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom"></Button>
+        <Button Content="Right" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="105,0,0,0"></Button>
+        <Button Content="Up" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="390,0,0,0"></Button>
+        <Button Content="Down" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="285,0,0,0"></Button>
+        <Button Content="pUp" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="390,0,0,68"></Button>
+        <Button Content="pDown" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="285,0,0,68"></Button>
+        <Button Content="pLeft" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="0,0,0,68"></Button>
+        <Button Content="pRight" Width="100" Height="50" Click="Button_Click" VerticalAlignment="Bottom" Margin="105,0,0,68"></Button>
+        <!--<Grid KeyControl="Grid_KeyControl">
         
         </Grid>-->
-	</Grid>
+    </Grid>
 </Page>
