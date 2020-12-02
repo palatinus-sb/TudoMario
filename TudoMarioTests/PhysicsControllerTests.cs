@@ -33,38 +33,21 @@ namespace TudoMarioTests
             MethodInfo applyModifier = physicsReflection.GetMethod("ApplyModifier", BindingFlags.NonPublic | BindingFlags.Static);
             Vector4 result = (Vector4)applyModifier.Invoke(null, new object[] { modifier, speedLimits });
 
-            Assert.AreEqual(modifier.Function(speedLimits.X, modifier.Value), result.X);
+            Assert.AreEqual(speedLimits.X, result.X);
             Assert.AreEqual(modifier.Function(speedLimits.Y, modifier.Value), result.Y);
             Assert.AreEqual(modifier.Function(speedLimits.Z, modifier.Value), result.Z);
             Assert.AreEqual(modifier.Function(speedLimits.W, modifier.Value), result.W);
         }
 
         [TestMethod]
-        public void TestApplyModifier_BlockDown()
-        {
-            MovementModifier modifier = MovementModifier.BlockDown;
-            Vector4 speedLimits = new Vector4(1f, 1f, 1f, 1f);
-            MethodInfo applyModifier = physicsReflection.GetMethod("ApplyModifier", BindingFlags.NonPublic | BindingFlags.Static);
-            Vector4 result = (Vector4)applyModifier.Invoke(null, new object[] { modifier, speedLimits });
-
-            Assert.AreEqual(speedLimits.X, result.X);
-            Assert.AreEqual(modifier.Function(speedLimits.Y, modifier.Value), result.Y);
-            Assert.AreEqual(speedLimits.Z, result.Z);
-            Assert.AreEqual(speedLimits.W, result.W);
-        }
-
-        [TestMethod]
         public void TestApplyMultiplicativeModifiers()
         {
             DummyActor actor = new DummyActor();
-            actor.MovementModifiers.Add(MovementModifier.BlockLeft);
-            actor.MovementModifiers.Add(MovementModifier.BlockRight);
             actor.MovementModifiers.Add(MovementModifier.IceWalk);
             Vector4 speedLimits = new Vector4(actor.SpeedLimits.Y, actor.SpeedLimits.Y, actor.SpeedLimits.X, actor.SpeedLimits.X);
             MethodInfo applyMultiplicative = physicsReflection.GetMethod("ApplyMultiplicativeModifiers", BindingFlags.NonPublic | BindingFlags.Static);
             Vector4 result = (Vector4)applyMultiplicative.Invoke(null, new object[] { actor, speedLimits });
 
-            // Absolute modifiers (BlockLeft, BlockRight) should not be applied
             Assert.AreEqual(speedLimits.X, result.X);
             Assert.AreEqual(speedLimits.Y, result.Y);
             Assert.AreEqual(MovementModifier.IceWalk.Function(speedLimits.Z, MovementModifier.IceWalk.Value), result.Z);
