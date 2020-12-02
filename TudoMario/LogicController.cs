@@ -29,7 +29,6 @@ namespace TudoMario
             uiController.ExitButtonClicked += ExitButtonClicked;
 
             timer.Tick += OnTimerTick;
-
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
 
@@ -39,6 +38,7 @@ namespace TudoMario
         private UiController uiController;
         //private bool gameStarted = false;
         private bool gameEnded = false;
+        private Stopwatch watch = new Stopwatch();
 
         public void AddActorToGame(ActorBase actorBase)
         {
@@ -50,10 +50,13 @@ namespace TudoMario
             timer.Start();
             LoadPickedMap("TestMapv2.0.csv");
             uiController.ShowMainMenu();
+            watch.Start();
         }
 
         public void OnTimerTick(object sender, EventArgs e)
         {
+            Debug.WriteLine(watch.ElapsedMilliseconds);
+            watch.Restart();
             CheckGameState();
             ActorsPerformBeahviour();
             RenderGameState();
