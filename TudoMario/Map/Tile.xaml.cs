@@ -21,23 +21,34 @@ namespace TudoMario.Map
 {
     public sealed partial class Tile : UserControl
     {
+        public Vector2 TilePosition { get; set; }
+        public Chunk ChunkParent { get; set; }
         private BitmapImage texture;
         public BitmapImage Texture
         {
-            set 
+            set
             {
                 texture = value;
-                ImageControl.Source = value; 
+                ImageControl.Source = value;
             }
         }
         public Tile()
         {
-            this.InitializeComponent();
-            this.Width = 32;
-            this.Height = 32;
+            InitializeComponent();
+            Width = 32;
+            Height = 32;
 
-            ImageControl.Width = 32;
-            ImageControl.Height = 32;
+
+            //ImageControl.Width = 200;
+            //ImageControl.Height = 200;
+        }
+        public Tile(Vector2 Position) : this()
+        {
+            TilePosition = Position;
+        }
+        public Tile(Vector2 Position, Chunk Parent) : this(Position)
+        {
+            ChunkParent = Parent;
         }
     }
 }

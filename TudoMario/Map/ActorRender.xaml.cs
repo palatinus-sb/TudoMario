@@ -21,8 +21,8 @@ namespace TudoMario.Map
 {
     public sealed partial class ActorRender : UserControl
     {
-        ActorBase self;
-        public Vector2 Position { get => self.Position;}
+        private ActorBase self;
+        public Vector2 Position { get => self.Position; }
         public Vector2 Size { get => self.Size; }
 
         public BitmapImage Texture { get => self.GetTexture(); set => self.SetTexture(value); }
@@ -39,6 +39,14 @@ namespace TudoMario.Map
             ImageControl.Height = Size.Y;
 
             ImageControl.Source = self.GetTexture();
+        }
+        public ActorRender(ActorBase self, double sizeMultiply) : this(self)
+        {
+            this.Width = Size.X * sizeMultiply;
+            this.Height = Size.Y * sizeMultiply;
+
+            ImageControl.Width = Size.X * sizeMultiply;
+            ImageControl.Height = Size.Y * sizeMultiply;
         }
     }
 }

@@ -97,7 +97,7 @@ namespace TudoMario.Ui
 
             BitmapImage missing = TextureHandler.GetImageByName("kekekekek");
 
-            airchunkMissingTexturetest.FillChunkWith(air);
+            //airchunkMissingTexturetest.FillChunkWith(air);
 
             mapBase.AddActor(testPlayer);
 
@@ -106,13 +106,13 @@ namespace TudoMario.Ui
                 airchunkMissingTexturetest.SetTileAt(i, 0, missing);
             }
 
-            airChunk.FillChunkWith(air);
+            //airChunk.FillChunkWith(air);
 
             mapBase.SetChunkAt(0, 0, airchunkMissingTexturetest);
             mapBase.SetChunkAt(1, 0, airChunk);
 
             Chunk groundChunk = new Chunk();
-            groundChunk.FillChunkWith(ground);
+            //groundChunk.FillChunkWith(ground);
 
             mapBase.SetChunkAt(0, -1, groundChunk);
 
