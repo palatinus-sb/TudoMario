@@ -50,8 +50,10 @@ namespace TudoMario.Map
 
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
+            tile.TilePosition = new Vector2(x, y);
+            tile.ChunkParent = this;
 
-            ChunkCanvas.Children.Add(tile);
+            //ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
             Canvas.SetTop(tile, (y * 32));
         }
@@ -70,8 +72,10 @@ namespace TudoMario.Map
             RemoveTileFromChunk(Tiles[x, y]);
             GenerateColliderForTile(x, y, modifier, solid);
             Tiles[x, y] = tile;
+            tile.TilePosition = new Vector2(x, y);
+            tile.ChunkParent = this;
 
-            ChunkCanvas.Children.Add(tile);
+            //ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, (x * 32));
             Canvas.SetTop(tile, (y * 32));
         }
@@ -91,8 +95,10 @@ namespace TudoMario.Map
 
             RemoveTileFromChunk(Tiles[x, y]);
             Tiles[x, y] = tile;
+            tile.TilePosition = new Vector2(x, y);
+            tile.ChunkParent = this;
 
-            ChunkCanvas.Children.Add(tile);
+            //ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, x * 32);
             Canvas.SetTop(tile, y * 32);
         }
@@ -114,14 +120,17 @@ namespace TudoMario.Map
             RemoveTileFromChunk(Tiles[x, y]);
             GenerateColliderForTile(x, y, modifier, solid);
             Tiles[x, y] = tile;
+            tile.TilePosition = new Vector2(x, y);
+            tile.ChunkParent = this;
 
-            ChunkCanvas.Children.Add(tile);
+            //ChunkCanvas.Children.Add(tile);
             Canvas.SetLeft(tile, x * 32);
             Canvas.SetTop(tile, y * 32);
         }
 
+        [Obsolete]
         /// <summary>
-        /// Fills this chunk with the given tiletype
+        /// NOT IMPLEMENTED NEW REPRESENTATION Fills this chunk with the given tiletype
         /// </summary>
         /// <param name="tileType"></param>
         /// <param name="imagePath"></param>
@@ -138,7 +147,7 @@ namespace TudoMario.Map
                     _tile.Texture = texture;
 
                     Tiles[j, i] = _tile;
-                    ChunkCanvas.Children.Add(_tile);
+                    //ChunkCanvas.Children.Add(_tile);
                     Canvas.SetLeft(_tile, (j * 32));
                     Canvas.SetTop(_tile, (i * 32));
                 }

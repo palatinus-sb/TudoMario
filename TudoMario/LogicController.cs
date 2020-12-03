@@ -48,7 +48,7 @@ namespace TudoMario
         public void StartGame()
         {
             timer.Start();
-            LoadPickedMap("TestMapv2.0.csv");
+            LoadPickedMap("map04.csv");
             uiController.ShowMainMenu();
             watch.Start();
         }

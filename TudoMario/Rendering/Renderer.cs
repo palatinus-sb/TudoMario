@@ -38,8 +38,15 @@ namespace TudoMario.Rendering
         /// Represents the rendered chunks which are in view range.
         /// </summary>
         private List<SortedDictionary<int, Chunk>> ChunkColumnActive = new List<SortedDictionary<int, Chunk>>();
+        private List<Tile> RenderedTiles = new List<Tile>();
+
+        private double ZoomLevel = 1;
+
+        //Changes the render distance. If minus you can see the unrendering
+        private double RenderDistance = 50;
 
         private static float ChunkSize = 512;
+        private static float TileSize = 32;
 
 
         //private float ZoomLevel = 1;
@@ -55,6 +62,7 @@ namespace TudoMario.Rendering
                 _currentMap = value;
                 CleanRendererCanvas();
                 InitActorRenderBindingList();
+                ResizeTilesForZoomLevel();
 
                 ShowHud();
 
@@ -88,8 +96,10 @@ namespace TudoMario.Rendering
         }
         private void InitializeComponent()
         {
-            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
+            ChunkSize = ChunkSize * (float)ZoomLevel;
+            TileSize = TileSize * (float)ZoomLevel;
 
+            /// MAINPAGE->MainGrid->MainCanvasTransform->MainCanvas(contains chunks)->Chunks->Tiles
             //Contains all the chunks
             MainCanvas = new Canvas();
             // MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
@@ -134,37 +144,21 @@ namespace TudoMario.Rendering
             Camera.UnbindActor();
         }
 
-        /// <summary>
-        /// Renders the chunk at the desired position.
-        /// NOT MAP COORDINATES THIS TRANSLATES TO CHUNK POSITIONS
-        /// </summary>
-        /// <param name="chunk"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void RenderChunkAt(Chunk chunk, int x, int y)
+        public void RenderTileAt(Tile tile, int x, int y)
         {
             y = TranslateFromYToMonitorY(y);
-            MainCanvas.Children.Add(chunk);
-            Canvas.SetLeft(chunk, x * 512);
-            Canvas.SetTop(chunk, y * 512);
+
+            MainCanvas.Children.Add(tile);
+            Canvas.SetLeft(tile, x);
+            Canvas.SetTop(tile, y);
         }
 
-        /// <summary>
-        /// Unrenders the given chunks for performance.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void UnrenderChunks(List<IEnumerable<Chunk>> Targets)
+        private void UnrenderTiles(List<Tile> Targets)
         {
-            foreach (var chunkColumn in Targets)
+            foreach (var target in Targets)
             {
-                foreach (var chunk in chunkColumn)
-                {
-                    MainCanvas.Children.Remove(chunk);
-                }
-
+                MainCanvas.Children.Remove(target);
             }
-
         }
 
         /// <summary>
@@ -174,7 +168,8 @@ namespace TudoMario.Rendering
         /// <param name="y"></param>
         public void RenderAround(Vector2 Position)
         {
-            RenderChunks();
+            //RenderChunks();
+            RenderTiles();
             RenderActors();
 
             RefreshHudValues();
@@ -188,8 +183,8 @@ namespace TudoMario.Rendering
             var centerAtX = Main.ActualWidth / 2;
             var centerAtY = Main.ActualHeight / 2;
 
-            Canvas.SetLeft(MainCanvas, centerAtX - x);
-            Canvas.SetTop(MainCanvas, centerAtY - y);
+            Canvas.SetLeft(MainCanvas, (centerAtX - x));
+            Canvas.SetTop(MainCanvas, (centerAtY - y));
         }
 
         /// <summary>
@@ -199,7 +194,7 @@ namespace TudoMario.Rendering
         {
             if (Camera != null)
             {
-                Vector2 PositionToRenderAt = new Vector2(Camera.CameraX, Camera.CameraY);
+                Vector2 PositionToRenderAt = new Vector2(Camera.CameraX * (float)ZoomLevel, Camera.CameraY * (float)ZoomLevel);
                 RenderAround(PositionToRenderAt);
             }
         }
@@ -273,14 +268,6 @@ namespace TudoMario.Rendering
             return (-1 * y);
         }
         /// <summary>
-        /// Tells the actual render width in pixels
-        /// </summary>
-        /// <returns></returns>
-        private float DetermineRenderWidth()
-        {
-            return 0f;
-        }
-        /// <summary>
         /// Returns the objects that are out of render distance therefore have to be unrendered.
         /// </summary>
         /// <returns></returns>
@@ -307,9 +294,31 @@ namespace TudoMario.Rendering
 
             foreach (var actorbase in _currentMap.MapActorList)
             {
-                //ActorRender ar = new ActorRender(actorbase);
-                //ar.Texture = 
-                ActorRenderAll.Add(new ActorRender(actorbase));
+                ActorRenderAll.Add(new ActorRender(actorbase, ZoomLevel));
+            }
+        }
+
+        private void ResizeTilesForZoomLevel()
+        {
+            var map = _currentMap.Chunks.Values;
+            foreach (var column in map)
+            {
+                foreach (var chunk in column)
+                {
+                    //chunk.Value.Tiles
+                    for (int x = 0; x < 16; x++)
+                    {
+                        for (int y = 0; y < 16; y++)
+                        {
+                            Tile t = chunk.Value.Tiles[x, y];
+                            if (t != null)
+                            {
+                                t.Height = TileSize;
+                                t.Width = TileSize;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -340,16 +349,6 @@ namespace TudoMario.Rendering
             //Render distance is only applied on x coord
             return xDistance <= cameraXWidthWithExtraBufferRange;
         }
-        private bool IsChunkInRenderRange(int x, int y)
-        {
-            Vector2 cameraSize = GetCameraRenderSize();
-            float middleOFChunk = (x * ChunkSize) + (ChunkSize / 2);
-            float xDistance = Math.Abs(middleOFChunk - Camera.CameraX);
-
-            //Add one extra chunk for prebuffering
-            float cameraXWidthWithExtraBufferRange = cameraSize.X + 10000;
-            return xDistance <= cameraXWidthWithExtraBufferRange;
-        }
 
         /// <summary>
         /// Returns x coord that is the buffered render range on the left.
@@ -358,8 +357,10 @@ namespace TudoMario.Rendering
         private float GetRenderBorderOnLeftXCoord()
         {
             Vector2 cameraSize = GetCameraRenderSize();
-            float RenderedDistanceOnLeft = Camera.CameraX - (cameraSize.X / 2);
-            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft + 500; //- ChunkSize + 500;
+            float RenderedDistanceOnLeft = Camera.CameraX * (float)ZoomLevel - (cameraSize.X / 2);
+
+            //- makes the range bigger
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft - (float)RenderDistance;
 
             return RenderBorderOnLeftWithExtraBufferRange;
         }
@@ -370,31 +371,50 @@ namespace TudoMario.Rendering
         private float GetRenderBorderOnRightXCoord()
         {
             Vector2 cameraSize = GetCameraRenderSize();
-            float RenderedDistanceOnLeft = Camera.CameraX + (cameraSize.X / 2);
-            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft - 500; //+ ChunkSize;
+            float RenderedDistanceOnLeft = Camera.CameraX * (float)ZoomLevel + (cameraSize.X / 2);
+
+            //+ makes the range bigger
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft + (float)RenderDistance;
 
             return RenderBorderOnLeftWithExtraBufferRange;
         }
 
-        private List<Tuple<int, SortedDictionary<int, Chunk>>> GetChunkColumnListToRender()
+        private List<Tile> GetTilesToRender()
         {
-            List<Tuple<int, SortedDictionary<int, Chunk>>> retList = new List<Tuple<int, SortedDictionary<int, Chunk>>>();
-            int leftRenderChunk = TranslateFromRelativeCoordToChunkCoord(GetRenderBorderOnLeftXCoord());
-            int rightRenderChunk = TranslateFromRelativeCoordToChunkCoord(GetRenderBorderOnRightXCoord());
+            List<Tile> retList = new List<Tile>();
 
-            for (int i = leftRenderChunk; i <= rightRenderChunk; i++)
+            var LeftTileEdge = (int)Math.Round(GetRenderBorderOnLeftXCoord() / TileSize);
+            if (LeftTileEdge < 0)
+                LeftTileEdge = 0;
+            var RightTileEdge = (int)Math.Round(GetRenderBorderOnRightXCoord() / TileSize);
+
+            for (int i = LeftTileEdge; i <= RightTileEdge; i++)
             {
-                retList.Add(new Tuple<int, SortedDictionary<int, Chunk>>(i, CurrentMap.GetColumnAsDictionary(i)));
+                int rowInChunk = i % 16;
+                int chunkFromI = i / 16;
+
+                var TileColumn = GetTilesFromChunkColumnAt(CurrentMap.GetColumnAsDictionary(chunkFromI), rowInChunk);
+                if (TileColumn != null)
+                    retList.AddRange(TileColumn);
             }
+
             return retList;
         }
 
-        private int TranslateFromRelativeCoordToChunkCoord(float relativeX)
+        private IEnumerable<Tile> GetTilesFromChunkColumnAt(SortedDictionary<int, Chunk> column, int row)
         {
-            float x = Math.Abs(relativeX) / ChunkSize - 1f;
-            if (relativeX < 0)
-                return (-1) * Convert.ToInt32(Math.Ceiling(x));
-            return Convert.ToInt32(Math.Ceiling(x));
+            if (column == null)
+                return null;
+            List<Tile> retList = new List<Tile>();
+            foreach (var chunk in column)
+            {
+                for (int y = 0; y < 16; y++)
+                {
+                    if (chunk.Value != null)
+                        retList.Add(chunk.Value.Tiles[row, y]);
+                }
+            }
+            return retList;
         }
 
         public void RenderActors()
@@ -404,8 +424,8 @@ namespace TudoMario.Rendering
                 foreach (var activeActorRender in ActorRenderActive)
                 {
                     var translatedPos = GetTranslatedActorPosForRender(activeActorRender);
-                    Canvas.SetLeft(activeActorRender, translatedPos.X);
-                    Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y));
+                    Canvas.SetLeft(activeActorRender, translatedPos.X * (float)ZoomLevel);
+                    Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y * (float)ZoomLevel));
                     Canvas.SetZIndex(activeActorRender, 1000);
                 }
 
@@ -431,39 +451,32 @@ namespace TudoMario.Rendering
             }
             catch (Exception) { }
         }
-
-        public void RenderChunks()
+        private void RenderTiles()
         {
-            List<IEnumerable<Chunk>> unRenderQueue = new List<IEnumerable<Chunk>>();
+            List<Tile> unRenderQueue = new List<Tile>();
+            var TileListToRenderWithX = GetTilesToRender();
 
-            var ChunkColumnListToRenderWithX = GetChunkColumnListToRender();
-
-            //Determines what was rendered but got out of range
-            foreach (var renderedChunkColumn in ChunkColumnActive)
+            //Get all the tiles that are rendered but not in the newly calculated DesiredRenderedTiles
+            foreach (var renderedTile in RenderedTiles)
             {
-                if (renderedChunkColumn != null && !ChunkColumnListToRenderWithX.Any(tuple => tuple.Item2 == renderedChunkColumn))
+                if (renderedTile != null && !TileListToRenderWithX.Contains(renderedTile))
+                    unRenderQueue.Add(renderedTile);
+            }
+            int tmpcounter = 0;
+            //Get all the tiles that needs to be rendered but are not yet rendered
+            foreach (var toRenderTile in TileListToRenderWithX)
+            {
+                if (toRenderTile != null && !RenderedTiles.Contains(toRenderTile))
                 {
-                    unRenderQueue.Add(renderedChunkColumn.Values);
+                    tmpcounter++;
+                    int relativeX = (int)Math.Round(toRenderTile.ChunkParent.ChunkPosition.X * ChunkSize + toRenderTile.TilePosition.X * TileSize);
+                    int relativeY = (int)Math.Round(toRenderTile.ChunkParent.ChunkPosition.Y * ChunkSize + (ChunkSize - toRenderTile.TilePosition.Y * TileSize)) - (int)Math.Round(ChunkSize);
+                    RenderTileAt(toRenderTile, relativeX, relativeY);
+
                 }
             }
-
-            //Determines new chunkcolumns to render
-            foreach (var chunkColumn in ChunkColumnListToRenderWithX)
-            {
-                if (chunkColumn.Item2 != null && !ChunkColumnActive.Contains(chunkColumn.Item2))
-                {
-                    foreach (var keyAsY in chunkColumn.Item2.Keys)
-                    {
-                        var chunk = chunkColumn.Item2.GetValueOrDefault(keyAsY);
-                        int xCoord = chunkColumn.Item1;
-
-                        RenderChunkAt(chunk, xCoord, keyAsY);
-                    }
-                }
-            }
-            ChunkColumnActive = ChunkColumnListToRenderWithX.Select(elem => elem.Item2).ToList();
-            UnrenderChunks(unRenderQueue);
-
+            RenderedTiles = TileListToRenderWithX;
+            UnrenderTiles(unRenderQueue);
         }
 
         private Vector2 GetTranslatedActorPosForRender(ActorRender acRender)
