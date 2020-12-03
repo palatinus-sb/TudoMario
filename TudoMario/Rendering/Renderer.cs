@@ -319,7 +319,7 @@ namespace TudoMario.Rendering
         private void CleanRendererCanvas()
         {
             MainCanvas = new Canvas();
-            //MainCanvas.Background = new SolidColorBrush(Windows.UI.Colors.Gray);
+            MainCanvasTransform.Background = new SolidColorBrush(Windows.UI.Colors.LightBlue);
 
             //A parent canvas to make map transforms(camera movement) easier
             MainCanvasTransform.Children.Clear();
@@ -359,7 +359,7 @@ namespace TudoMario.Rendering
         {
             Vector2 cameraSize = GetCameraRenderSize();
             float RenderedDistanceOnLeft = Camera.CameraX - (cameraSize.X / 2);
-            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft - ChunkSize;
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft + 500; //- ChunkSize + 500;
 
             return RenderBorderOnLeftWithExtraBufferRange;
         }
@@ -371,7 +371,7 @@ namespace TudoMario.Rendering
         {
             Vector2 cameraSize = GetCameraRenderSize();
             float RenderedDistanceOnLeft = Camera.CameraX + (cameraSize.X / 2);
-            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft + ChunkSize;
+            float RenderBorderOnLeftWithExtraBufferRange = RenderedDistanceOnLeft - 500; //+ ChunkSize;
 
             return RenderBorderOnLeftWithExtraBufferRange;
         }
@@ -397,7 +397,7 @@ namespace TudoMario.Rendering
             return Convert.ToInt32(Math.Ceiling(x));
         }
 
-        private void RenderActors()
+        public void RenderActors()
         {
             try
             {
@@ -406,6 +406,7 @@ namespace TudoMario.Rendering
                     var translatedPos = GetTranslatedActorPosForRender(activeActorRender);
                     Canvas.SetLeft(activeActorRender, translatedPos.X);
                     Canvas.SetTop(activeActorRender, TranslateFromYToMonitorY(translatedPos.Y));
+                    Canvas.SetZIndex(activeActorRender, 1000);
                 }
 
                 //Remove actors that got out of render range
@@ -431,7 +432,7 @@ namespace TudoMario.Rendering
             catch (Exception) { }
         }
 
-        private void RenderChunks()
+        public void RenderChunks()
         {
             List<IEnumerable<Chunk>> unRenderQueue = new List<IEnumerable<Chunk>>();
 
@@ -440,7 +441,7 @@ namespace TudoMario.Rendering
             //Determines what was rendered but got out of range
             foreach (var renderedChunkColumn in ChunkColumnActive)
             {
-                if (!ChunkColumnListToRenderWithX.Any(tuple => tuple.Item2 == renderedChunkColumn))
+                if (renderedChunkColumn != null && !ChunkColumnListToRenderWithX.Any(tuple => tuple.Item2 == renderedChunkColumn))
                 {
                     unRenderQueue.Add(renderedChunkColumn.Values);
                 }
