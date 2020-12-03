@@ -194,9 +194,17 @@
     <Content Include="Assets\Ground.png" />
     <Content Include="Assets\GroundBase.png" />
     <Content Include="Assets\Ice.png" />
+    <Content Include="Assets\ice01.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\missing.png" />
     <Content Include="Assets\Mud.png" />
+    <Content Include="Assets\mud01.png" />
+    <Content Include="Assets\player1-l.png" />
+    <Content Include="Assets\player1-move0-l.png" />
+    <Content Include="Assets\player1-move0-r.png" />
+    <Content Include="Assets\player1-move1-l.png" />
+    <Content Include="Assets\player1-move1-r.png" />
+    <Content Include="Assets\player1-r.png" />
     <Content Include="Assets\playerModel2.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
