@@ -16,7 +16,7 @@ namespace TudoMario
     {
         private static uint instances = 0;
         private BitmapImage Texture = TextureHandler.GetMissingTexture();
-        private string[] StandingSprites = { "player1-l", "player1-r" };
+        private BitmapImage[] StandingSprites = new BitmapImage[2];
         private BitmapImage[][] MovementSprites = new BitmapImage[2][];
         private bool FacingDirection = true;
 
@@ -37,6 +37,7 @@ namespace TudoMario
         public int AttackDamage { get; set; } = 0;
         public bool IsAlive { get; private set; } = true;
         public bool CanJump { get; set; }
+        public bool HasMovementSprites { get; private set; } = false;
 
         public ActorBase(string id = "")
         {
@@ -98,19 +99,21 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
-            SetMovementTexture();
+            if (HasMovementSprites)
+                SetMovementTexture();
         }
+
         public void SetMovementTexture()
         {
-
             if (MovementSpeed.X == 0)
-                SetTexture(TextureHandler.GetImageByName(StandingSprites[GetFacingDirection()]));
+                SetTexture(StandingSprites[GetFacingDirection()]);
             else if (MovementSpeed.X > 0)
             {
                 int index = Array.FindIndex(MovementSprites[1], row => row.Equals(Texture)) + 1;
                 if (index >= MovementSprites[1].Length)
                     index = 0;
                 SetTexture(MovementSprites[1][index]);
+                FacingDirection = true;
             }
             else if (MovementSpeed.X < 0)
             {
@@ -118,8 +121,8 @@ namespace TudoMario
                 if (index >= MovementSprites[0].Length)
                     index = 0;
                 SetTexture(MovementSprites[0][index]);
+                FacingDirection = false;
             }
-
         }
 
         /// <summary>
@@ -136,10 +139,12 @@ namespace TudoMario
         public void SetTexture(BitmapImage texture)
         {
             Texture = texture;
+            StandingSprites = new BitmapImage[] { texture, texture };
         }
 
         public void AddMovingTexture(string data, int x)
         {
+            HasMovementSprites = true;
             string[] datas = data.Split(",");
             BitmapImage[] sprites = new BitmapImage[datas.Length];
             for (int i = 0; i < datas.Length; i++)
