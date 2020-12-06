@@ -42,7 +42,7 @@ namespace TudoMario
                     break;
 
                 case "m":
-                    texture = TextureHandler.GetImageByName("mud");
+                    texture = TextureHandler.GetImageByName("mud01");
                     break;
 
                 case "s":
@@ -50,7 +50,7 @@ namespace TudoMario
                     break;
 
                 case "i":
-                    texture = TextureHandler.GetImageByName("ice");
+                    texture = TextureHandler.GetImageByName("ice01");
                     break;
 
                 case "t":
@@ -116,7 +116,7 @@ namespace TudoMario
             int chunksInAColumn = int.Parse(config[8]);
             Vector2 actorSize = new Vector2(64, 64);
             PlayerActor player = new PlayerActor(actorStartingPoint, actorSize);
-            player.SetTexture(TextureHandler.GetImageByName("playermodel2"));
+            player.SetTexture(TextureHandler.GetImageByName("player1-r"));
             map.AddActor(player);
             Renderer.BindCameraAtActor(player);
             // TODO

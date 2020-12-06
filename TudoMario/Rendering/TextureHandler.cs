@@ -11,7 +11,7 @@ namespace TudoMario.Rendering
 {
     public static class TextureHandler
     {
-        private static List<Tuple<string,BitmapImage>> TextureList = new List<Tuple<string, BitmapImage>>();
+        private static List<Tuple<string, BitmapImage>> TextureList = new List<Tuple<string, BitmapImage>>();
         private static BitmapImage MissingTexture;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TudoMario.Rendering
 
                 string uriName = @"ms-appx:/Assets//" + file.Name;
 
-                Tuple<string, BitmapImage> toAdd = new Tuple<string, BitmapImage>(name,new BitmapImage(new Uri(uriName)));
+                Tuple<string, BitmapImage> toAdd = new Tuple<string, BitmapImage>(name, new BitmapImage(new Uri(uriName)));
                 TextureList.Add(toAdd);
             }
         }
@@ -50,8 +50,9 @@ namespace TudoMario.Rendering
             searchedName = searchedName.ToLower();
 
             var _tuple = TextureList.Where(tuple => tuple.Item1 == searchedName).SingleOrDefault();
-            if (_tuple == null) return MissingTexture;
-            
+            if (_tuple == null)
+                return MissingTexture;
+
             var bitmap = _tuple.Item2;
             return bitmap;
         }

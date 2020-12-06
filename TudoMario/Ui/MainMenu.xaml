@@ -9,15 +9,15 @@
     d:DesignHeight="1080"
     d:DesignWidth="1920" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="300" Padding="0,50,0,0" RequestedTheme="Default">
-		<Canvas Background="#4C4B3A3C" MinWidth="1920" MinHeight="1200" HorizontalAlignment="Center" VerticalAlignment="Top" Height="1392" Margin="0,-142,0,0">
-			<StackPanel Spacing="15" Height="340" Canvas.Left="850" Canvas.Top="500" Width="200">
-				<Button x:Name="NewGameButton" Content="New Game" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
-				<Button x:Name="LoadGameButton" Content="Load Game" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
-				<Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
-			</StackPanel>
-		</Canvas>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="300" Padding="0,50,0,0" RequestedTheme="Default">
+        <Canvas Background="#4C4B3A3C" MinWidth="1920" MinHeight="1200" HorizontalAlignment="Center" VerticalAlignment="Top" Height="1392" Margin="0,-142,0,0">
+            <StackPanel Spacing="15" Height="340" Canvas.Left="850" Canvas.Top="500" Width="200">
+                <Button x:Name="NewGameButton" Content="New Game" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
+                <Button x:Name="LoadGameButton" Content="Load Game" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
+                <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Center" Height="50" Width="150" Background="#FF6E6363"></Button>
+            </StackPanel>
+        </Canvas>
 
 
-	</Grid>
+    </Grid>
 </UserControl>

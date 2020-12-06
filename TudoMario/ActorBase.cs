@@ -16,6 +16,9 @@ namespace TudoMario
     {
         private static uint instances = 0;
         private BitmapImage Texture = TextureHandler.GetMissingTexture();
+        private string[] StandingSprites = { "player1-l", "player1-r" };
+        private string[,] MovementSprites = { { "player1-move0-l.png", "player1-move1-l.png" }, { "player1-move0-r.png", "player1-move1-r.png" } };
+        private bool FacingDirection = true;
 
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
@@ -95,6 +98,16 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
+            SetMovementTexture();
+        }
+        public void SetMovementTexture()
+        {
+            if (MovementSpeed.X == 0)
+                SetTexture(TextureHandler.GetImageByName(StandingSprites[GetFacingDirection()]));
+            else if (MovementSpeed.X > 0)
+                SetTexture(TextureHandler.GetImageByName("player1-move0-r"));
+            else if (MovementSpeed.X < 0)
+                SetTexture(TextureHandler.GetImageByName("player1-move0-l"));
         }
 
         /// <summary>
@@ -111,6 +124,11 @@ namespace TudoMario
         public void SetTexture(BitmapImage texture)
         {
             Texture = texture;
+        }
+
+        public int GetFacingDirection()
+        {
+            return FacingDirection ? 1 : 0;
         }
 
         public override IEnumerable<ColliderBase> GetColliders() => colliders;

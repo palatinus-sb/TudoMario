@@ -100,7 +100,9 @@ namespace TudoMario
                 return;
 
             foreach (var actor in renderer.CurrentMap.MapActorList)
+            {
                 actor.Tick();
+            }
         }
 
         private void RenderGameState()
