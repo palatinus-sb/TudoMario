@@ -117,6 +117,8 @@ namespace TudoMario
             Vector2 actorSize = new Vector2(64, 64);
             PlayerActor player = new PlayerActor(actorStartingPoint, actorSize);
             player.SetTexture(TextureHandler.GetImageByName("player1-r"));
+            player.AddMovingTexture("player1-move0-l,player1-move1-l", 0);
+            player.AddMovingTexture("player1-move0-r,player1-move1-r", 1);
             map.AddActor(player);
             Renderer.BindCameraAtActor(player);
             // TODO

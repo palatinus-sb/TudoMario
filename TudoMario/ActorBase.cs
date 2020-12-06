@@ -17,7 +17,7 @@ namespace TudoMario
         private static uint instances = 0;
         private BitmapImage Texture = TextureHandler.GetMissingTexture();
         private string[] StandingSprites = { "player1-l", "player1-r" };
-        private string[,] MovementSprites = { { "player1-move0-l.png", "player1-move1-l.png" }, { "player1-move0-r.png", "player1-move1-r.png" } };
+        private BitmapImage[][] MovementSprites = new BitmapImage[2][];
         private bool FacingDirection = true;
 
         /// <summary>
@@ -102,12 +102,24 @@ namespace TudoMario
         }
         public void SetMovementTexture()
         {
+
             if (MovementSpeed.X == 0)
                 SetTexture(TextureHandler.GetImageByName(StandingSprites[GetFacingDirection()]));
             else if (MovementSpeed.X > 0)
-                SetTexture(TextureHandler.GetImageByName("player1-move0-r"));
+            {
+                int index = Array.FindIndex(MovementSprites[1], row => row.Equals(Texture)) + 1;
+                if (index >= MovementSprites[1].Length)
+                    index = 0;
+                SetTexture(MovementSprites[1][index]);
+            }
             else if (MovementSpeed.X < 0)
-                SetTexture(TextureHandler.GetImageByName("player1-move0-l"));
+            {
+                int index = Array.FindIndex(MovementSprites[0], row => row.Equals(Texture)) + 1;
+                if (index >= MovementSprites[0].Length)
+                    index = 0;
+                SetTexture(MovementSprites[0][index]);
+            }
+
         }
 
         /// <summary>
@@ -124,6 +136,15 @@ namespace TudoMario
         public void SetTexture(BitmapImage texture)
         {
             Texture = texture;
+        }
+
+        public void AddMovingTexture(string data, int x)
+        {
+            string[] datas = data.Split(",");
+            BitmapImage[] sprites = new BitmapImage[datas.Length];
+            for (int i = 0; i < datas.Length; i++)
+                sprites[i] = TextureHandler.GetImageByName(datas[i]);
+            MovementSprites[x] = sprites;
         }
 
         public int GetFacingDirection()
