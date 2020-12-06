@@ -16,6 +16,9 @@ namespace TudoMario
     {
         private static uint instances = 0;
         private BitmapImage texture = TextureHandler.GetMissingTexture();
+        private BitmapImage[] StandingSprites = new BitmapImage[2];
+        private BitmapImage[][] MovementSprites = new BitmapImage[2][];
+        private bool FacingDirection = true;
 
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
@@ -27,6 +30,7 @@ namespace TudoMario
             set
             {
                 texture = value;
+                StandingSprites = new BitmapImage[] { texture, texture };
                 OnTextureChanged();
             }
         }
@@ -45,7 +49,7 @@ namespace TudoMario
         public int AttackDamage { get; set; } = 0;
         public bool IsAlive { get; private set; } = true;
         public bool CanJump { get; set; }
-
+        public bool HasMovementSprites { get; private set; } = false;
 
         public ActorBase(string id = "")
         {
@@ -107,6 +111,30 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
+            if (HasMovementSprites)
+                SetMovementTexture();
+        }
+
+        public void SetMovementTexture()
+        {
+            if (MovementSpeed.X == 0)
+                Texture = StandingSprites[GetFacingDirection()];
+            else if (MovementSpeed.X > 0)
+            {
+                int index = Array.FindIndex(MovementSprites[1], row => row.Equals(Texture)) + 1;
+                if (index >= MovementSprites[1].Length)
+                    index = 0;
+                Texture = MovementSprites[1][index];
+                FacingDirection = true;
+            }
+            else if (MovementSpeed.X < 0)
+            {
+                int index = Array.FindIndex(MovementSprites[0], row => row.Equals(Texture)) + 1;
+                if (index >= MovementSprites[0].Length)
+                    index = 0;
+                Texture = MovementSprites[0][index];
+                FacingDirection = false;
+            }
         }
 
         /// <summary>
@@ -122,6 +150,21 @@ namespace TudoMario
         public void OnTextureChanged()
         {
             TextureChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void AddMovingTexture(string data, int x)
+        {
+            HasMovementSprites = true;
+            string[] datas = data.Split(",");
+            BitmapImage[] sprites = new BitmapImage[datas.Length];
+            for (int i = 0; i < datas.Length; i++)
+                sprites[i] = TextureHandler.GetImageByName(datas[i]);
+            MovementSprites[x] = sprites;
+        }
+
+        public int GetFacingDirection()
+        {
+            return FacingDirection ? 1 : 0;
         }
     }
 }
