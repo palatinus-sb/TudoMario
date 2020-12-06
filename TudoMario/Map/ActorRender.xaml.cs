@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using TudoMario.Rendering;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -53,7 +54,11 @@ namespace TudoMario.Map
 
         public void TextureChanged(object sender, EventArgs e)
         {
-            ImageControl.Source = self.Texture;
+#pragma warning disable CS4014
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => ImageControl.Source = self.Texture);
+#pragma warning restore CS4014
         }
 
     }

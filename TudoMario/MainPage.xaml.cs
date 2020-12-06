@@ -38,7 +38,7 @@ namespace TudoMario
 
         public MainPage()
         {
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             InitializeComponent();
 

@@ -40,7 +40,7 @@ namespace TudoMario.Rendering
         private List<SortedDictionary<int, Chunk>> ChunkColumnActive = new List<SortedDictionary<int, Chunk>>();
         private List<Tile> RenderedTiles = new List<Tile>();
 
-        private double ZoomLevel = 1;
+        private double ZoomLevel = 1.5;
 
         //Changes the render distance. If minus you can see the unrendering
         private double RenderDistance = 50;
