@@ -116,7 +116,7 @@ namespace TudoMario
             int chunksInAColumn = int.Parse(config[8]);
             Vector2 actorSize = new Vector2(64, 64);
             PlayerActor player = new PlayerActor(actorStartingPoint, actorSize);
-            player.SetTexture(TextureHandler.GetImageByName("playermodel2"));
+            player.Texture = TextureHandler.GetImageByName("playermodel2");
             map.AddActor(player);
             Renderer.BindCameraAtActor(player);
             // TODO

@@ -25,28 +25,36 @@ namespace TudoMario.Map
         public Vector2 Position { get => self.Position; }
         public Vector2 Size { get => self.Size; }
 
-        public BitmapImage Texture { get => self.GetTexture(); set => self.SetTexture(value); }
+        public BitmapImage Texture { get => self.Texture; set => self.Texture = value; }
 
         public ActorRender(ActorBase self)
         {
             this.self = self;
 
-            this.InitializeComponent();
-            this.Width = Size.X;
-            this.Height = Size.Y;
+            InitializeComponent();
+            Width = Size.X;
+            Height = Size.Y;
 
             ImageControl.Width = Size.X;
             ImageControl.Height = Size.Y;
 
-            ImageControl.Source = self.GetTexture();
+            ImageControl.Source = self.Texture;
+
+            self.TextureChanged += TextureChanged;
         }
         public ActorRender(ActorBase self, double sizeMultiply) : this(self)
         {
-            this.Width = Size.X * sizeMultiply;
-            this.Height = Size.Y * sizeMultiply;
+            Width = Size.X * sizeMultiply;
+            Height = Size.Y * sizeMultiply;
 
             ImageControl.Width = Size.X * sizeMultiply;
             ImageControl.Height = Size.Y * sizeMultiply;
         }
+
+        public void TextureChanged(object sender, EventArgs e)
+        {
+            ImageControl.Source = self.Texture;
+        }
+
     }
 }

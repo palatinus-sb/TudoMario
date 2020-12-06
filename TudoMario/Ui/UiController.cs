@@ -84,7 +84,7 @@ namespace TudoMario.Ui
         {
 
             testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
-            testPlayer.SetTexture(TextureHandler.GetImageByName("playermodel2"));
+            testPlayer.Texture = TextureHandler.GetImageByName("playermodel2");
 
             //Renderer.BindCameraAtActor(testPlayer);
 

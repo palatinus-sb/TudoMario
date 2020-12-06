@@ -15,15 +15,26 @@ namespace TudoMario
     public abstract class ActorBase : ColliderBase, ITextured
     {
         private static uint instances = 0;
-        private BitmapImage Texture = TextureHandler.GetMissingTexture();
+        private BitmapImage texture = TextureHandler.GetMissingTexture();
 
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
         /// </summary>
         public int StressLevel { get; set; }
+        public BitmapImage Texture
+        {
+            get => texture;
+            set
+            {
+                texture = value;
+                OnTextureChanged();
+            }
+        }
 
         public readonly string id;
         public event EventHandler Died;
+        public event EventHandler TextureChanged;
+
         private IEnumerable<ColliderBase> colliders;
 
         public bool IsStatic { get; set; } = false;
@@ -34,6 +45,7 @@ namespace TudoMario
         public int AttackDamage { get; set; } = 0;
         public bool IsAlive { get; private set; } = true;
         public bool CanJump { get; set; }
+
 
         public ActorBase(string id = "")
         {
@@ -103,18 +115,13 @@ namespace TudoMario
         /// </summary>
         protected abstract void PerformBehaviour();
 
-        public BitmapImage GetTexture()
-        {
-            return Texture;
-        }
-
-        public void SetTexture(BitmapImage texture)
-        {
-            Texture = texture;
-        }
-
         public override IEnumerable<ColliderBase> GetColliders() => colliders;
 
         public override string ToString() => id;
+
+        public void OnTextureChanged()
+        {
+            TextureChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

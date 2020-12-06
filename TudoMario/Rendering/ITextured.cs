@@ -7,9 +7,14 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario.Rendering
 {
-    interface ITextured
+    public interface ITextured
     {
-        BitmapImage GetTexture();
-        void SetTexture(BitmapImage texture);
+        public event EventHandler TextureChanged;
+        public BitmapImage Texture { get; set; }
+
+        /// <summary>
+        /// Fires TextureChanged event when SetTexture is performed.
+        /// </summary>
+        public void OnTextureChanged();
     }
 }
