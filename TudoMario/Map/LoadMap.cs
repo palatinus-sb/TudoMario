@@ -32,7 +32,7 @@ namespace TudoMario
         public static MapBase PreLoad(string FileName)
         {
 
-            //fileName = FileName;
+            fileName = FileName;
             ReadFile();
             return map;
         }
