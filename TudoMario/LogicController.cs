@@ -48,7 +48,7 @@ namespace TudoMario
         public void StartGame()
         {
             timer.Start();
-            LoadPickedMap("map04.csv");
+            LoadPickedMap(LoadMap.currentLevel);
             uiController.ShowMainMenu();
             watch.Start();
         }
@@ -115,9 +115,9 @@ namespace TudoMario
 #pragma warning restore CS4014
         }
 
-        private void LoadPickedMap(string fileName)
+        private void LoadPickedMap(int level)
         {
-            renderer.CurrentMap = LoadMap.PreLoad(fileName);
+            renderer.CurrentMap = LoadMap.PreLoad(level);
         }
     }
 }

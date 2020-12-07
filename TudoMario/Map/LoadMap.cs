@@ -29,12 +29,51 @@ namespace TudoMario
         public static readonly IList<string> levels = new ReadOnlyCollection<string>
         (new List<string> { "TestMap.csv", "TestMapv2.0.csv", "map02.csv", "map03.csv", "map04.csv" });
 
-        public static MapBase PreLoad(string FileName)
+        public static MapBase PreLoad(int level)
         {
-
-            //fileName = FileName;
+            if (0 > level)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            if (level > levels.Count - 1)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            fileName = levels[level];
             ReadFile();
             return map;
+        }
+
+        public static void ModifyMap1() { }
+        public static void ModifyMap2() { }
+        public static void ModifyMap3() { }
+        public static void ModifyMap4() { }
+        public static void ModifyMap5() { }
+        public static void ModifyMap6() { }
+
+        public static void PostLoad()
+        {
+            switch (levels[currentLevel])
+            {
+                case "TestMap.csv":
+                    ModifyMap1();
+                    break;
+                case "TestMapv2.0.csv":
+                    ModifyMap2();
+                    break;
+                case "map02.csv":
+                    ModifyMap3();
+                    break;
+                case "map03.csv":
+                    ModifyMap4();
+                    break;
+                case "map04.csv":
+                    ModifyMap5();
+                    break;
+                case "placeholder":
+                    ModifyMap6();
+                    break;
+            }
         }
 
         private static Windows.UI.Xaml.Media.Imaging.BitmapImage Texture(string Initial)
@@ -103,6 +142,9 @@ namespace TudoMario
                     break;
             }
         }
+        /// <summary>
+        /// Reads the file and fills the map with content
+        /// </summary>
         private static void ReadFile()
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
