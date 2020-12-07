@@ -117,7 +117,7 @@ namespace TudoMario
 
         private void LoadPickedMap(string fileName)
         {
-            renderer.CurrentMap = LoadMap.Load(fileName);
+            renderer.CurrentMap = LoadMap.PreLoad(fileName);
         }
     }
 }

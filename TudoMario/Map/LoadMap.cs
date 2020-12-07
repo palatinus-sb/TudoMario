@@ -9,6 +9,7 @@ using System.IO;
 using TudoMario.Map;
 using TudoMario.Rendering;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 
 namespace TudoMario
 {
@@ -20,10 +21,18 @@ namespace TudoMario
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         private static MapBase map = new MapBase(mapStartingPoint);
+        public static int currentLevel = 0;
 
-        public static MapBase Load(string FileName)
+        /// <summary>
+        /// Contains the maps for the game in order
+        /// </summary>
+        public static readonly IList<string> levels = new ReadOnlyCollection<string>
+        (new List<string> { "TestMap.csv", "TestMapv2.0.csv", "map02.csv", "map03.csv", "map04.csv" });
+
+        public static MapBase PreLoad(string FileName)
         {
-            fileName = FileName;
+
+            //fileName = FileName;
             ReadFile();
             return map;
         }
@@ -121,8 +130,6 @@ namespace TudoMario
             player.AddMovingTexture("player1-move0-r,player1-move1-r", 1);
             map.AddActor(player);
             Renderer.BindCameraAtActor(player);
-            // TODO
-            // add texture images and textures to ice, terra and mud
             int column = 0;
             while (!reader.EndOfStream)
             {
