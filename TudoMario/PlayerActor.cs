@@ -8,7 +8,7 @@ namespace TudoMario
 {
     public class PlayerActor : ActorBase
     {
-        public PlayerActor(Vector2 position, Vector2 size) : base(position, size, "Player")
+        public PlayerActor(Vector2 position, Vector2 size) : base(position, size, "Player", false)
         {
 
         }

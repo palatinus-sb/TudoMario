@@ -10,6 +10,8 @@ using TudoMario.Map;
 using TudoMario.Rendering;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using TudoMario.Ui;
+using Windows.UI.Core;
 
 namespace TudoMario
 {
@@ -17,17 +19,19 @@ namespace TudoMario
     {
 
 
-        private static string fileName;
+        //private static string fileName;
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
-        private static MapBase map = new MapBase(mapStartingPoint);
-        public static int currentLevel = 0;
+        public static MapBase map = new MapBase(mapStartingPoint);
+        //public static int currentLevel = 0;
+        public static int CurrentLevel { get; set; } = 0;
+        internal static UiController UiControl { get; set; }
 
         /// <summary>
         /// Contains the maps for the game in order
         /// </summary>
         public static readonly IList<string> levels = new ReadOnlyCollection<string>
-        (new List<string> { "TestMap.csv", "TestMapv2.0.csv", "map01.csv", "map02.csv", "map03.csv", "map06.csv" });
+        (new List<string> { "map01.csv", "map02.csv", "map03.csv", "map06.csv" });
 
         public static MapBase PreLoad(int level)
         {
@@ -39,8 +43,8 @@ namespace TudoMario
             {
                 throw new IndexOutOfRangeException();
             }
-            fileName = levels[level];
-            ReadFile();
+            var fileName = levels[level];
+            ReadFile(fileName);
             return map;
         }
 
@@ -49,28 +53,46 @@ namespace TudoMario
         public static void ModifyMap3() { }
         public static void ModifyMap4() { }
         public static void ModifyMap5() { }
-        public static void ModifyMap6() { }
+        public static void ModifyMap6()
+        {
+            ///Defining collision mechanics for maps
+            ///MAP 6 Deadline
+            static void OnDeadlineCollison(ColliderBase sender, ColliderBase collidor)
+            {
+                ShowDialog("Deadline of Tools of software projects caught you! You failed!");
+            }
+            static void OnRandomText(ColliderBase sender, ColliderBase collidor)
+            {
+                ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
+            }
+
+
+            EnemyTestActor Testenemy = new EnemyTestActor(new Vector2(2100, 200), new Vector2(64, 64));
+            Testenemy.IsVisible = false;
+            Testenemy.Texture = TextureHandler.GetMissingTexture();
+
+            StaticCollider RandomTextPopupHitbox = new StaticCollider(new Vector2(50, 500), new Vector2(1920, -127), false);
+
+            RandomTextPopupHitbox.CollisionStarted += OnRandomText;
+            Testenemy.CollisionStarted += OnDeadlineCollison;
+
+            map.AddActor(Testenemy);
+        }
 
         public static void PostLoad()
         {
-            switch (levels[currentLevel])
+            switch (levels[CurrentLevel])
             {
-                case "TestMap.csv":
+                case "map01.csv":
                     ModifyMap1();
                     break;
-                case "TestMapv2.0.csv":
+                case "map02.csv":
                     ModifyMap2();
                     break;
-                case "map02.csv":
+                case "map03.csv":
                     ModifyMap3();
                     break;
-                case "map03.csv":
-                    ModifyMap4();
-                    break;
-                case "map04.csv":
-                    ModifyMap5();
-                    break;
-                case "placeholder":
+                case "map06.csv":
                     ModifyMap6();
                     break;
             }
@@ -145,7 +167,7 @@ namespace TudoMario
         /// <summary>
         /// Reads the file and fills the map with content
         /// </summary>
-        private static void ReadFile()
+        private static void ReadFile(string fileName)
         {
             DirectoryInfo dir = new DirectoryInfo("Assets");
             var files = dir.GetFiles();
@@ -190,6 +212,16 @@ namespace TudoMario
                 column++;
             }
             reader.Close();
+        }
+
+
+        private static void ShowDialog(string Text)
+        {
+#pragma warning disable CS4014
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => UiControl.ShowDialog(Text));
+#pragma warning restore CS4014
         }
     }
 }

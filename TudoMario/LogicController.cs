@@ -28,6 +28,8 @@ namespace TudoMario
             uiController.LoadButtonClicked += LoadButtonClicked;
             uiController.ExitButtonClicked += ExitButtonClicked;
 
+            LoadMap.UiControl = uiController;
+
             timer.Tick += OnTimerTick;
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
@@ -48,14 +50,18 @@ namespace TudoMario
         public void StartGame()
         {
             timer.Start();
-            LoadPickedMap(LoadMap.currentLevel);
+
+            /// 3 = 6 HUH
+            LoadMap.CurrentLevel = 3;
+            LoadPickedMap(LoadMap.CurrentLevel);
+
             uiController.ShowMainMenu();
             watch.Start();
         }
 
         public void OnTimerTick(object sender, EventArgs e)
         {
-            Debug.WriteLine(watch.ElapsedMilliseconds);
+            //Debug.WriteLine(watch.ElapsedMilliseconds);
             watch.Restart();
             CheckGameState();
             ActorsPerformBeahviour();
@@ -64,7 +70,8 @@ namespace TudoMario
 
         public void NewButtonClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("Player x: " + renderer.CurrentMap.MainPlayer.Position.X);
+            Debug.WriteLine("Player y: " + renderer.CurrentMap.MainPlayer.Position.Y);
         }
         public void LoadButtonClicked(object sender, EventArgs e)
         {
@@ -81,7 +88,9 @@ namespace TudoMario
             {
                 if (uiController.IsMainMenuShown)
                     uiController.RemoveMainMenu();
-                else
+                else if (uiController.IsDialogShown)
+                    uiController.RemoveDialog();
+                else if (!uiController.IsMainMenuShown)
                     uiController.ShowMainMenu();
             }
         }
@@ -117,7 +126,10 @@ namespace TudoMario
 
         private void LoadPickedMap(int level)
         {
-            renderer.CurrentMap = LoadMap.PreLoad(level);
+            LoadMap.PreLoad(level);
+            LoadMap.PostLoad();
+
+            renderer.CurrentMap = LoadMap.map;
         }
     }
 }

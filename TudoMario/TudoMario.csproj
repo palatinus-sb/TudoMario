@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="ColliderBase.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="EnemyTestActor.cs" />
     <Compile Include="Map\LoadMap.cs" />
     <Compile Include="LogicController.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -173,6 +174,7 @@
     <Compile Include="Rendering\ITextured.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\TextureHandler.cs" />
+    <Compile Include="StaticCollider.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Ui\Hud.xaml.cs">
       <DependentUpon>Hud.xaml</DependentUpon>
@@ -262,7 +264,7 @@
     <None Include="Assets\map01.csv" />
     <None Include="Assets\map02.csv" />
     <None Include="Assets\map03.csv" />
-    <None Include="Assets\map06.csv" />
+    <Content Include="Assets\map06.csv" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

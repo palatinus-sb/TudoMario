@@ -47,6 +47,7 @@ namespace TudoMario.Ui
             }
             else
             {
+                DialogTextBox.Text = text;
                 return false;
             }
         }
