@@ -37,10 +37,6 @@ namespace TudoMario.Map
             InitializeComponent();
             Width = 32;
             Height = 32;
-
-
-            //ImageControl.Width = 200;
-            //ImageControl.Height = 200;
         }
         public Tile(Vector2 Position) : this()
         {
