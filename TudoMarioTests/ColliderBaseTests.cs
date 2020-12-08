@@ -17,13 +17,24 @@ namespace TudoMarioTests
         //  ║ 7 ║ 8 ║ 9 ║  ┤
         //  ╚═══╩═══╩═══╝  ┴ -3
 
-        private readonly DummyActor actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
-        private readonly DummyActor actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
-        private readonly DummyActor actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
-        private readonly DummyActor actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
-        private readonly DummyActor actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
+        private DummyActor actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
+        private DummyActor actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
+        private DummyActor actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
+        private DummyActor actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
+        private DummyActor actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
 
         private bool eventRaised = false;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            ColliderBase.ClearAllColliders();
+            actor123 = new DummyActor(new Vector2(0, 2), new Vector2(6, 2));
+            actor14 = new DummyActor(new Vector2(-2, 1), new Vector2(2, 4));
+            actor258 = new DummyActor(new Vector2(0, 0), new Vector2(2, 6));
+            actor6 = new DummyActor(new Vector2(2, 0), new Vector2(2, 2));
+            actor89 = new DummyActor(new Vector2(1, -2), new Vector2(4, 2));
+        }
 
         [TestMethod]
         public void TestIsCollidingWith()
@@ -73,8 +84,8 @@ namespace TudoMarioTests
         {
             eventRaised = false;
             List<DummyActor> dummies = new List<DummyActor>();
-            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
-            dummies.Add(new DummyActor(new Vector2(0, 3), new Vector2(2, 2)));
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)) { IsStatic = true });
+            dummies.Add(new DummyActor(new Vector2(0, 3), new Vector2(2, 2)) { IsStatic = true });
             dummies[0].CollisionStarted += Actor1_CollisionStarted;
             dummies.ForEach(d => d.Tick());
             Assert.IsFalse(eventRaised);
@@ -93,8 +104,8 @@ namespace TudoMarioTests
         {
             eventRaised = false;
             List<DummyActor> dummies = new List<DummyActor>();
-            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
-            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)));
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)) { IsStatic = true });
+            dummies.Add(new DummyActor(new Vector2(0, 0), new Vector2(2, 2)) { IsStatic = true });
             dummies[0].CollisionEnded += ColliderBaseTests_CollisionEnded;
             dummies.ForEach(d => d.Tick());
             Assert.IsFalse(eventRaised);

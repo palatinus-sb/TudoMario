@@ -29,12 +29,12 @@ namespace TudoMario
         public bool IsCollisionEnabled { get; set; } = true;
         public bool IsSolid { get; protected set; } = true; // prevents actors from entering it's collision box
 
-        public static IEnumerable<ColliderBase> GetProbeColliders(ColliderBase collider)
+        /// <summary>
+        /// Force remove all previously created Colliders. This will prevent collision checks with previously created Colliders.
+        /// </summary>
+        public static void ClearAllColliders()
         {
-            Probe probe = new Probe(collider);
-            List<ColliderBase> colliders = probe.GetColliders().ToList();
-            colliders.Remove(collider);
-            return colliders;
+            instances.Clear();
         }
 
         /// <summary>

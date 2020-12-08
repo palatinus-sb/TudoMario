@@ -11,6 +11,12 @@ namespace TudoMarioTests
     {
         private readonly Type physicsReflection = typeof(PhysicsController);
 
+        [TestInitialize]
+        public void Setup()
+        {
+            ColliderBase.ClearAllColliders();
+        }
+
         [TestMethod]
         public void TestApplyModifier_IceWalk()
         {
@@ -109,7 +115,7 @@ namespace TudoMarioTests
         [TestMethod]
         public void TestApplyPhysics_Gravity()
         {
-            DummyActor actor = new DummyActor();
+            DummyActor actor = new DummyActor() { IsCollisionEnabled = false };
 
             actor.MovementSpeed.Y = 1f;
             var initialSpeed = actor.MovementSpeed.Y;
