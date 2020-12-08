@@ -143,6 +143,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActorBase.cs" />
+    <Compile Include="AiActors\DeadlineEnemy.cs" />
+    <Compile Include="AiActors\DumbEnemy.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
