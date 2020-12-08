@@ -259,9 +259,10 @@
     <Content Include="Assets\TestMapv2.0.csv" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\map01.csv" />
     <None Include="Assets\map02.csv" />
     <None Include="Assets\map03.csv" />
-    <Content Include="Assets\map04.csv" />
+    <None Include="Assets\map06.csv" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
