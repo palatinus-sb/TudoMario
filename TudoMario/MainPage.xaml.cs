@@ -68,7 +68,6 @@ namespace TudoMario
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var cont = ((Button)sender).Content.ToString();
-            uicontroller.Testf(cont);
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)

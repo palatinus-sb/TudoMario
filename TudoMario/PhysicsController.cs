@@ -22,7 +22,6 @@ namespace TudoMario
         {
             if (actor.IsStatic)
                 return;
-            Vector4 speedLimits = CalculateSpeedLimit(actor);
 
             // apply friction
             actor.MovementSpeed.X = Math.Sign(actor.MovementSpeed.X) * Math.Max(Math.Abs(actor.MovementSpeed.X) - friction, 0f);
@@ -32,6 +31,7 @@ namespace TudoMario
                 actor.MovementSpeed.Y -= gravity;
 
             // enforce speed limits
+            Vector4 speedLimits = CalculateSpeedLimit(actor);
             if (Math.Sign(actor.MovementSpeed.X) >= 0)
                 actor.MovementSpeed.X = 1 * Math.Min(Math.Abs(actor.MovementSpeed.X), speedLimits.W); // right (+x)
             else
@@ -42,19 +42,40 @@ namespace TudoMario
                 actor.MovementSpeed.Y = -1 * Math.Min(Math.Abs(actor.MovementSpeed.Y), speedLimits.Y); // down (-y)
 
             // move actor
-            actor.Position.X += actor.MovementSpeed.X;
-            if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
             {
-                actor.Position.X -= actor.MovementSpeed.X;
-                actor.MovementSpeed.X = 0;
+                Probe probe = new Probe(actor);
+                probe.Position.X += actor.MovementSpeed.X;
+                IEnumerable<ColliderBase> colliders = probe.GetColliders().Where(c => c.IsSolid);
+                if (colliders.Count() > 0)
+                {
+                    probe.Position.X -= actor.MovementSpeed.X;
+                    ColliderBase closest = GetClosestCollider(probe, colliders, DistanceX);
+                    if (closest is null)
+                        actor.Position.X += actor.MovementSpeed.X;
+                    else
+                    {
+                        actor.Position.X += Math.Sign(actor.MovementSpeed.X) * (DistanceX(actor, closest) - 1);
+                        actor.MovementSpeed.X = 0;
+                    }
+                }
             }
-
-            actor.Position.Y += actor.MovementSpeed.Y;
-            if (ColliderBase.GetProbeColliders(actor).Any(c => c.IsSolid))
             {
-                actor.Position.Y -= actor.MovementSpeed.Y;
-                actor.MovementSpeed.Y = 0;
-                actor.CanJump = true;
+                Probe probe = new Probe(actor);
+                probe.Position.Y += actor.MovementSpeed.Y;
+                IEnumerable<ColliderBase> colliders = probe.GetColliders().Where(c => c.IsSolid);
+                if (colliders.Count() > 0)
+                {
+                    probe.Position.Y -= actor.MovementSpeed.Y;
+                    ColliderBase closest = GetClosestCollider(probe, colliders, DistanceY);
+                    if (closest is null)
+                        actor.Position.Y += actor.MovementSpeed.Y;
+                    else
+                    {
+                        actor.Position.Y += Math.Sign(actor.MovementSpeed.Y) * (DistanceY(actor, closest) - 1);
+                        actor.MovementSpeed.Y = 0;
+                        actor.CanJump = true;
+                    }
+                }
             }
         }
 
@@ -124,6 +145,35 @@ namespace TudoMario
                 right = modifier.Function(speedLimits.W, modifier.Value);
 
             return new Vector4(up, down, left, right);
+        }
+
+        private static float DistanceX(ColliderBase first, ColliderBase second)
+        {
+            return Math.Abs(first.Position.X - second.Position.X) - (first.Size.X + second.Size.X) / 2;
+        }
+
+        private static float DistanceY(ColliderBase first, ColliderBase second)
+        {
+            return Math.Abs(first.Position.Y - second.Position.Y) - (first.Size.Y + second.Size.Y) / 2;
+        }
+
+        private static ColliderBase GetClosestCollider(ColliderBase collider, IEnumerable<ColliderBase> colliders, Func<ColliderBase, ColliderBase, float> distance)
+        {
+            if (colliders.Count() == 0)
+                return null;
+
+            ColliderBase closest = colliders.First();
+            float min = distance(collider, closest);
+            foreach (var other in colliders)
+            {
+                float dist = distance(collider, other);
+                if (dist < min)
+                {
+                    closest = other;
+                    min = dist;
+                }
+            }
+            return closest;
         }
     }
 }
