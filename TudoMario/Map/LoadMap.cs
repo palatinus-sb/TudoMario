@@ -48,9 +48,42 @@ namespace TudoMario
             return map;
         }
 
-        public static void ModifyMap1() { }
-        public static void ModifyMap2() { }
-        public static void ModifyMap3() { }
+        private static void OnTouchKillZone(ColliderBase sender, ColliderBase collider)
+        {
+            map.MainPlayer.ApplyDamage(1000);
+            ShowDialog("You died!");
+        }
+
+        private static void OnFinishLevel(ColliderBase sender, ColliderBase collider)
+        {
+            CurrentLevel++;
+            ShowDialog("ASD");
+        }
+
+        public static void ModifyMap1()
+        {
+            StaticCollider KillZone = new StaticCollider(new Vector2(10000, 10), new Vector2(280, -500), false);
+            KillZone.CollisionStarted += OnTouchKillZone;
+
+            StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(1983, 1), false);
+            NextMapTrigger.CollisionStarted += OnFinishLevel;
+        }
+        public static void ModifyMap2()
+        {
+            StaticCollider KillZone = new StaticCollider(new Vector2(10000, 10), new Vector2(280, -500), false);
+            KillZone.CollisionStarted += OnTouchKillZone;
+
+            StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(3007, -160), false);
+            NextMapTrigger.CollisionStarted += OnFinishLevel;
+        }
+        public static void ModifyMap3()
+        {
+            StaticCollider KillZone = new StaticCollider(new Vector2(10000, 10), new Vector2(280, -500), false);
+            KillZone.CollisionStarted += OnTouchKillZone;
+
+            StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(4031, 321), false);
+            NextMapTrigger.CollisionStarted += OnFinishLevel;
+        }
         public static void ModifyMap4() { }
         public static void ModifyMap5() { }
         public static void ModifyMap6()
@@ -66,6 +99,9 @@ namespace TudoMario
                 ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
             }
 
+            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(64, 64));
+            DeadLineEnemy.IsVisible = true;
+            DeadLineEnemy.Texture = TextureHandler.GetMissingTexture();
 
             EnemyTestActor Testenemy = new EnemyTestActor(new Vector2(2100, 200), new Vector2(64, 64));
             Testenemy.IsVisible = false;
@@ -77,6 +113,7 @@ namespace TudoMario
             Testenemy.CollisionStarted += OnDeadlineCollison;
 
             map.AddActor(Testenemy);
+            map.AddActor(DeadLineEnemy);
         }
 
         public static void PostLoad()

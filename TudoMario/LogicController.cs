@@ -38,9 +38,10 @@ namespace TudoMario
         private Renderer renderer;
         private MapBase map;
         private UiController uiController;
-        //private bool gameStarted = false;
+        private bool gameStarted = false;
         private bool gameEnded = false;
         private Stopwatch watch = new Stopwatch();
+        private int currentLevel = 3;
 
         public void AddActorToGame(ActorBase actorBase)
         {
@@ -52,11 +53,12 @@ namespace TudoMario
             timer.Start();
 
             /// 3 = 6 HUH
-            LoadMap.CurrentLevel = 3;
+            LoadMap.CurrentLevel = currentLevel;
             LoadPickedMap(LoadMap.CurrentLevel);
 
             uiController.ShowMainMenu();
             watch.Start();
+            gameStarted = true;
         }
 
         public void OnTimerTick(object sender, EventArgs e)
@@ -97,10 +99,24 @@ namespace TudoMario
 
         private void CheckGameState()
         {
-            if (gameEnded)
+            if (!gameStarted)
+                return;
+            if (gameEnded || !renderer.CurrentMap.MainPlayer.IsAlive)
             {
                 timer.Stop();
             }
+            if (currentLevel != LoadMap.CurrentLevel)
+            {
+                currentLevel = LoadMap.CurrentLevel;
+                LoadPickedMap(LoadMap.CurrentLevel);
+            }
+        }
+
+        private void LastLevelScript()
+        {
+            foreach (var actor in renderer.CurrentMap.MapActorList)
+                if (actor.GetType() != typeof(PlayerActor) && actor.Position.X < 3900)
+                    actor.Position.X += 3;
         }
 
         private void ActorsPerformBeahviour()
@@ -111,6 +127,8 @@ namespace TudoMario
             foreach (var actor in renderer.CurrentMap.MapActorList)
             {
                 actor.Tick();
+                if (currentLevel == 3)
+                    LastLevelScript();
             }
         }
 

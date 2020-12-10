@@ -19,6 +19,7 @@ namespace TudoMario
         private BitmapImage[] StandingSprites = new BitmapImage[2];
         private BitmapImage[][] MovementSprites = new BitmapImage[2][];
         private bool FacingDirection = true;
+        private int TickCounter = 0;
 
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
@@ -113,8 +114,13 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
-            if (HasMovementSprites)
+            if (HasMovementSprites && TickCounter == 4)
+            {
                 SetMovementTexture();
+                TickCounter = 0;
+            }
+            else
+                TickCounter++;
         }
 
         public void SetMovementTexture()
