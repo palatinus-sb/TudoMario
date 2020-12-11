@@ -56,7 +56,7 @@ jobs:
       
     - name: Build a Release
       if: ${{ success() }}
-      run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+      run: msbuild TudoMario.sln /p:Configuration=Release /t:Rebuild /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
     
     - name: Print out Log File
       if: ${{ always() }}
