@@ -22,6 +22,7 @@ namespace TudoMario
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         private static MapBase map = new MapBase(mapStartingPoint);
         public static int currentLevel = 0;
+        public static string path = @"Assets//gameSave.txt";
 
         /// <summary>
         /// Contains the maps for the game in order
@@ -74,6 +75,29 @@ namespace TudoMario
                     ModifyMap6();
                     break;
             }
+        }
+
+        public static void SaveCurrentLevel()
+        {
+            /*using (StreamWriter gameSave = new StreamWriter(path))
+                 gameSave.WriteLine(currentLevel.ToString());*/
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values["mapSave"] = currentLevel.ToString();
+        }
+
+        public static void LevelCompleted()
+        {
+            currentLevel++;
+            SaveCurrentLevel();
+        }
+
+        public static void LoadCurrentLevel()
+        {
+            /*using (StreamReader reader = new StreamReader(path))
+                int.TryParse(reader.ReadLine(), out currentLevel);*/
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            currentLevel = 0;
+            int.TryParse((string)localSettings.Values["mapSave"], out currentLevel);
         }
 
         private static Windows.UI.Xaml.Media.Imaging.BitmapImage Texture(string Initial)
@@ -142,6 +166,7 @@ namespace TudoMario
                     break;
             }
         }
+
         /// <summary>
         /// Reads the file and fills the map with content
         /// </summary>

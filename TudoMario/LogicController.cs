@@ -68,7 +68,7 @@ namespace TudoMario
         }
         public void LoadButtonClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            LoadMap.SaveCurrentLevel();
         }
         public void ExitButtonClicked(object sender, EventArgs e)
         {
