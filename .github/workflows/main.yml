@@ -1,7 +1,7 @@
 name: Build and Test 
 on: [push]
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
     steps:
 
@@ -19,9 +19,13 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore TudoMario.sln
  
-    - name: Build Solution
-      run: msbuild TudoMario.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
-
+    - name: Build Debug Solution
+      run: msbuild TudoMario.sln /p:Configuration=Debug /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+   
+    - name: Build And Deploy
+      run: msbuild.exe TudoMario.sln /t:Build /p:Configuration=Release /p:TargetFrameworkVersion=v4.0 /p:DeployOnBuild=true
+  
+  
   test:
     #needs: [build]
     runs-on: windows-latest
