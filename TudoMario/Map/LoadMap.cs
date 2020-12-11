@@ -92,16 +92,18 @@ namespace TudoMario
             ///MAP 6 Deadline
             static void OnDeadlineCollison(ColliderBase sender, ColliderBase collidor)
             {
-                ShowDialog("Deadline of Tools of software projects caught you! You failed!");
+                if (collidor == map.MainPlayer)
+                    ShowDialog("Deadline of Tools of software projects caught you! You failed!");
             }
             static void OnRandomText(ColliderBase sender, ColliderBase collidor)
             {
-                ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
+                if (collidor == map.MainPlayer)
+                    ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
             }
 
-            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(200, 200));
+            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(100, 500));
             DeadLineEnemy.IsVisible = true;
-            DeadLineEnemy.Texture = TextureHandler.GetMissingTexture();
+            DeadLineEnemy.Texture = TextureHandler.GetImageByName("dl");
 
             EnemyTestActor Testenemy = new EnemyTestActor(new Vector2(2100, 200), new Vector2(64, 64));
             Testenemy.IsVisible = false;
@@ -149,7 +151,7 @@ namespace TudoMario
                     break;
 
                 case "m":
-                    texture = TextureHandler.GetImageByName("mud01");
+                    texture = TextureHandler.GetImageByName("mud02");
                     break;
 
                 case "s":
@@ -157,7 +159,7 @@ namespace TudoMario
                     break;
 
                 case "i":
-                    texture = TextureHandler.GetImageByName("ice01");
+                    texture = TextureHandler.GetImageByName("ice02");
                     break;
 
                 case "t":
