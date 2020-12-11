@@ -22,8 +22,7 @@ jobs:
     - name: Build Debug Solution
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
    
-    - name: Build And Deploy
-      run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+    
       
   
   
@@ -55,6 +54,9 @@ jobs:
     - name: Run Tests
       run: vstest.console.exe /Platform:x86 TudoMarioTests\bin\x86\Debug\TudoMarioTests.build.appxrecipe > testresult.txt
       
+    - name: Build a Release
+      if: ${{ success() }}
+      run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
     
     - name: Print out Log File
       if: ${{ always() }}
@@ -71,5 +73,5 @@ jobs:
       if: ${{ success() }}
       uses: actions/upload-artifact@v2
       with:
-        name: build
+        name: Release
         path: TudoMario\bin\x86\Release\
