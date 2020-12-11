@@ -11,32 +11,32 @@ namespace TudoMario.AiActors
         private int stationaryTickCount = 0;
         private int direction = 1;
         private float lastPostionX = 0;
+        public bool canMove = true;
 
-        public DumbEnemy(Vector2 position, Vector2 size)
-        {
-            Position = position;
-            Size = size;
-        }
+        public DumbEnemy(Vector2 position, Vector2 size, string id = "") : base(position, size, id, false) { }
 
         protected override void PerformBehaviour()
         {
-            MovementSpeed.X += direction * PhysicsController.friction * 1.25f;
-            lastPostionX = Position.X;
-
-            if (lastPostionX == Position.X)
-                stationaryTickCount++;
-            else
-                stationaryTickCount = 0;
-
-            if (stationaryTickCount == 3)
+            if (canMove)
             {
-                MovementSpeed.Y = 12.5f;
-                CanJump = false;
-            }
-            else if (stationaryTickCount > 9)
-            {
-                stationaryTickCount = 0;
-                direction = -1 * direction;
+                MovementSpeed.X += direction * PhysicsController.friction * 1.25f;
+
+                if (lastPostionX == Position.X)
+                    stationaryTickCount++;
+                else
+                    stationaryTickCount = 0;
+
+                if (stationaryTickCount == 3)
+                {
+                    MovementSpeed.Y = 12.5f;
+                    CanJump = false;
+                }
+                else if (stationaryTickCount > 9)
+                {
+                    stationaryTickCount = 0;
+                    direction = -1 * direction;
+                }
+                lastPostionX = Position.X;
             }
         }
     }

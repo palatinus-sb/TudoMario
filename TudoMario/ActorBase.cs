@@ -81,6 +81,13 @@ namespace TudoMario
             }
         }
 
+        public void ResetStats()
+        {
+            IsAlive = true;
+            StressLevel = 0;
+            MovementSpeed = new Vector2(0, 0);
+        }
+
         /// <summary>
         /// Deals damage (increases stress) to an Actor.
         /// </summary>

@@ -12,6 +12,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using TudoMario.Ui;
 using Windows.UI.Core;
+using TudoMario.AiActors;
 
 namespace TudoMario
 {
@@ -19,7 +20,7 @@ namespace TudoMario
     {
 
 
-        private static string fileName;
+        //private static string fileName;
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         public static MapBase map = new MapBase(mapStartingPoint);
@@ -33,6 +34,10 @@ namespace TudoMario
         /// </summary>
         public static readonly IList<string> levels = new ReadOnlyCollection<string>
         (new List<string> { "map01.csv", "map02.csv", "map03.csv", "map06.csv" });
+
+        #region map6 variables
+        internal static DumbEnemy de = new DumbEnemy(new Vector2(450, 200), new Vector2(100, 500));
+        #endregion
 
         public static MapBase PreLoad(int level)
         {
@@ -91,32 +96,51 @@ namespace TudoMario
         {
             ///Defining collision mechanics for maps
             ///MAP 6 Deadline
+
             static void OnDeadlineCollison(ColliderBase sender, ColliderBase collidor)
             {
                 if (collidor == map.MainPlayer)
-                    ShowDialog("Deadline of Tools of software projects caught you! You failed!");
+                    ShowDialog("Deadline of Tools of software projects caught you! You failed!\nPress Esc to close!");
             }
             static void OnRandomText(ColliderBase sender, ColliderBase collidor)
             {
                 if (collidor == map.MainPlayer)
                     ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
             }
+            static void OnDialogClose(object sender, DialogEndedEventArgs e)
+            {
+                if (e.Dialog == "The end of the semester is coming! Quick run before the deadlines are catching up")
+                {
+                    de.canMove = true;
+                    de.IsVisible = true;
+                }
+                else if (e.Dialog == "Deadline of Tools of software projects caught you! You failed!\nPress Esc to close!")
+                {
 
-            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(100, 500));
+                }
+            }
+
+            /*EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(100, 500));
             DeadLineEnemy.IsVisible = true;
             DeadLineEnemy.Texture = TextureHandler.GetImageByName("dl");
 
             EnemyTestActor Testenemy = new EnemyTestActor(new Vector2(2100, 200), new Vector2(64, 64));
             Testenemy.IsVisible = false;
-            Testenemy.Texture = TextureHandler.GetMissingTexture();
+            Testenemy.Texture = TextureHandler.GetMissingTexture();*/
 
             StaticCollider RandomTextPopupHitbox = new StaticCollider(new Vector2(50, 500), new Vector2(1920, -127), false);
 
             RandomTextPopupHitbox.CollisionStarted += OnRandomText;
-            Testenemy.CollisionStarted += OnDeadlineCollison;
+            /*Testenemy.CollisionStarted += OnDeadlineCollison;
 
             map.AddActor(Testenemy);
-            map.AddActor(DeadLineEnemy);
+            map.AddActor(DeadLineEnemy);*/
+            de.Texture = TextureHandler.GetImageByName("dl");
+            de.CollisionStarted += OnDeadlineCollison;
+            UiControl.DialogClosed += OnDialogClose;
+            de.canMove = false;
+            //de.IsVisible = false;
+            map.AddActor(de);
         }
 
         public static void PostLoad()
@@ -143,12 +167,12 @@ namespace TudoMario
             /*using (StreamWriter gameSave = new StreamWriter(path))
                  gameSave.WriteLine(currentLevel.ToString());*/
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["mapSave"] = currentLevel.ToString();
+            localSettings.Values["mapSave"] = CurrentLevel.ToString();
         }
 
         public static void LevelCompleted()
         {
-            currentLevel++;
+            CurrentLevel++;
             SaveCurrentLevel();
         }
 
@@ -157,8 +181,9 @@ namespace TudoMario
             /*using (StreamReader reader = new StreamReader(path))
                 int.TryParse(reader.ReadLine(), out currentLevel);*/
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            currentLevel = 0;
+            int currentLevel = 0;
             int.TryParse((string)localSettings.Values["mapSave"], out currentLevel);
+            CurrentLevel = currentLevel;
         }
 
         private static Windows.UI.Xaml.Media.Imaging.BitmapImage Texture(string Initial)

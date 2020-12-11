@@ -31,6 +31,7 @@ namespace TudoMario
             LoadMap.UiControl = uiController;
 
             timer.Tick += OnTimerTick;
+            renderer.MapFinishedLoading += OnMapFinishedLoading;
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
 
@@ -41,20 +42,19 @@ namespace TudoMario
         private bool gameStarted = false;
         private bool gameEnded = false;
         private Stopwatch watch = new Stopwatch();
-        private int currentLevel = 3;
+        private int currentLevel = 0;
 
         public void AddActorToGame(ActorBase actorBase)
         {
-            renderer.CurrentMap.AddActor(actorBase);
+            map.AddActor(actorBase);
         }
 
         public void StartGame()
         {
-            timer.Start();
 
             /// 3 = 6 HUH
             LoadMap.CurrentLevel = currentLevel;
-            LoadPickedMap(LoadMap.CurrentLevel);
+            LoadPickedMap(LoadMap.CurrentLevel).Wait();
 
             uiController.ShowMainMenu();
             watch.Start();
@@ -68,6 +68,12 @@ namespace TudoMario
             CheckGameState();
             ActorsPerformBeahviour();
             RenderGameState();
+
+        }
+
+        public void OnMapFinishedLoading(object sender, EventArgs e)
+        {
+            timer.Start();
         }
 
         public void NewButtonClicked(object sender, EventArgs e)
@@ -101,34 +107,31 @@ namespace TudoMario
         {
             if (!gameStarted)
                 return;
-            if (gameEnded || !renderer.CurrentMap.MainPlayer.IsAlive)
+            if (gameEnded)
             {
                 timer.Stop();
             }
-            if (currentLevel != LoadMap.CurrentLevel)
+            else if (!map.MainPlayer.IsAlive)
+            {
+                timer.Stop();
+                LoadPickedMap(LoadMap.CurrentLevel).Wait();
+
+            }
+            /*if (currentLevel != LoadMap.CurrentLevel)
             {
                 currentLevel = LoadMap.CurrentLevel;
-                LoadPickedMap(LoadMap.CurrentLevel);
-            }
-        }
-
-        private void LastLevelScript()
-        {
-            foreach (var actor in renderer.CurrentMap.MapActorList)
-                if (actor.GetType() != typeof(PlayerActor) && actor.Position.X < 3900)
-                    actor.Position.X += 3;
+                LoadPickedMap(LoadMap.CurrentLevel).Wait();
+            }*/
         }
 
         private void ActorsPerformBeahviour()
         {
-            if (renderer?.CurrentMap?.MapActorList is null)
+            if (map?.MapActorList is null)
                 return;
 
-            foreach (var actor in renderer.CurrentMap.MapActorList)
+            foreach (var actor in map.MapActorList)
             {
                 actor.Tick();
-                if (currentLevel == 3)
-                    LastLevelScript();
             }
         }
 
@@ -142,12 +145,38 @@ namespace TudoMario
 #pragma warning restore CS4014
         }
 
-        private void LoadPickedMap(int level)
+        /* private async Task LoadPickedMap(int level)
+         {
+
+             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                 CoreDispatcherPriority.Normal,
+                 () =>
+                 {
+                     LoadMap.PreLoad(level);
+                     LoadMap.PostLoad();
+
+                     this.map = LoadMap.map;
+                     renderer.CurrentMap = LoadMap.map;
+                 });
+             /*LoadMap.PreLoad(level);
+             LoadMap.PostLoad();
+
+             this.map = LoadMap.map;
+             renderer.CurrentMap = LoadMap.map;
+         }*/
+
+#pragma warning disable CS1998
+#pragma warning disable CS4014
+        private async Task LoadPickedMap(int level)
         {
             LoadMap.PreLoad(level);
             LoadMap.PostLoad();
 
-            renderer.CurrentMap = LoadMap.map;
+            this.map = LoadMap.map;
+            var tempMap = LoadMap.map;
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => renderer.CurrentMap = tempMap);
         }
     }
 }

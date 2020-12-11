@@ -115,8 +115,12 @@ namespace TudoMario
         {
             var newLimits = speedLimits;
             var absolutes = actor.MovementModifiers.Where(m => m.Mode == Mode.Absolute);
-            foreach (var modifier in absolutes)
-                newLimits = ApplyModifier(modifier, newLimits);
+            try
+            {
+                foreach (var modifier in absolutes)
+                    newLimits = ApplyModifier(modifier, newLimits);
+            }
+            catch (Exception) { }
             return newLimits;
         }
 

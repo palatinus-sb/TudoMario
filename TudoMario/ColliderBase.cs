@@ -64,11 +64,15 @@ namespace TudoMario
                 return new List<ColliderBase>();
 
             List<ColliderBase> CollidingColliders = new List<ColliderBase>();
-            foreach (ColliderBase collider in instances)
+            try
             {
-                if (IsCollidingWith(collider))
-                    CollidingColliders.Add(collider);
+                foreach (ColliderBase collider in instances)
+                {
+                    if (IsCollidingWith(collider))
+                        CollidingColliders.Add(collider);
+                }
             }
+            catch (Exception) { }
 
             return CollidingColliders;
             //return instances.Where(other => IsCollidingWith(other));

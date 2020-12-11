@@ -37,7 +37,7 @@ namespace TudoMario.Rendering
         /// <summary>
         /// Represents the rendered chunks which are in view range.
         /// </summary>
-        private List<SortedDictionary<int, Chunk>> ChunkColumnActive = new List<SortedDictionary<int, Chunk>>();
+        //private List<SortedDictionary<int, Chunk>> ChunkColumnActive = new List<SortedDictionary<int, Chunk>>();
         private List<Tile> RenderedTiles = new List<Tile>();
 
         private double ZoomLevel = 1.5;
@@ -48,8 +48,7 @@ namespace TudoMario.Rendering
         private static float ChunkSize = 512;
         private static float TileSize = 32;
 
-
-        //private float ZoomLevel = 1;
+        public event EventHandler MapFinishedLoading;
 
         public MapBase CurrentMap
         {
@@ -65,8 +64,7 @@ namespace TudoMario.Rendering
                 ResizeTilesForZoomLevel();
 
                 ShowHud();
-
-
+                OnMapFinishedLoading();
             }
         }
 
@@ -85,6 +83,11 @@ namespace TudoMario.Rendering
                     hud = value;
                 }
             }
+        }
+
+        public void OnMapFinishedLoading()
+        {
+            MapFinishedLoading?.Invoke(this, EventArgs.Empty);
         }
 
         public Renderer(MainPage main)

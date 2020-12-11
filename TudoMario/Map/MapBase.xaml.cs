@@ -23,37 +23,19 @@ namespace TudoMario.Map
         {
             InitializeComponent();
             StartingPoint = startingpoint;
+            MapActorList.Clear();
+            Chunks.Clear();
+            StartingPoint = new Vector2(0, 0);
+            MainPlayer = null;
         }
 
         public List<ActorBase> MapActorList = new List<ActorBase>();
-        public List<List<Tuple<Chunk, int>>> Map = new List<List<Tuple<Chunk, int>>>();
         public SortedDictionary<int, SortedDictionary<int, Chunk>> Chunks = new SortedDictionary<int, SortedDictionary<int, Chunk>>();
         //public SortedDictionary<int, SortedDictionary<int, Chunk>> ChunksY = new SortedDictionary<int, SortedDictionary<int, Chunk>>();
 
         public Vector2 StartingPoint { get; set; }
 
         public PlayerActor MainPlayer { get; set; }
-
-        /// <summary>
-        /// Inserts the given chunk into the given x,y coordinate in logic layer.
-        /// </summary>
-        /// <param name="chunk">Chunk to insert</param>
-        /// <param name="x">X coord to insert at</param>
-        /// <param name="y">Y coord to insert at</param>
-        [Obsolete]
-        public void AddChunkAt(Chunk chunk, int x, int y)
-        {
-            if (Map.Count > x)
-            {
-                Map[x].Add(new Tuple<Chunk, int>(chunk, y));
-            }
-            else
-            {
-                Map.Add(new List<Tuple<Chunk, int>>());
-                Map[x].Add(new Tuple<Chunk, int>(chunk, y));
-            }
-            throw new Exception("Obsolete method. Use SetChunkAt(int, int, Chunk) instead.");
-        }
 
         /// <summary>
         /// Set the chunk at the specified coordinates. Previous chunk will be overwritten if one was already present at specified coordinates.

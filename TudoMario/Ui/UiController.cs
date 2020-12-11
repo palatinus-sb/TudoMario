@@ -13,6 +13,15 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace TudoMario.Ui
 {
+    internal class DialogEndedEventArgs : EventArgs
+    {
+        public string Dialog { get; set; }
+
+        public DialogEndedEventArgs(string dialog)
+        {
+            Dialog = dialog;
+        }
+    }
     internal class UiController
     {
         private MainPage _main;
@@ -22,6 +31,7 @@ namespace TudoMario.Ui
         private MainMenu MainMenu;
         private bool isMainMenuShown;
         private bool isDialogShown;
+        private string currentDialog;
 
         public bool IsMainMenuShown { get => isMainMenuShown; }
         public bool IsDialogShown { get => isDialogShown; private set => isDialogShown = value; }
@@ -40,6 +50,7 @@ namespace TudoMario.Ui
         public event EventHandler NewButtonClicked;
         public event EventHandler LoadButtonClicked;
         public event EventHandler ExitButtonClicked;
+        public event EventHandler<DialogEndedEventArgs> DialogClosed;
         public void ButtonClicked(object sender, RoutedEventArgs e)
         {
             Button button = e.OriginalSource as Button;
@@ -69,6 +80,7 @@ namespace TudoMario.Ui
         /// <param name="dialog"></param>
         public void ShowDialog(string dialog)
         {
+            currentDialog = dialog;
             CurrentHud.ShowDialog(dialog);
             IsDialogShown = true;
         }
@@ -77,6 +89,7 @@ namespace TudoMario.Ui
         {
             CurrentHud.RemoveDialog();
             IsDialogShown = false;
+            OnDialogClose();
         }
 
         /// <summary>
@@ -125,6 +138,11 @@ namespace TudoMario.Ui
 
             _renderer.Hud = CurrentHud;
 
+        }
+
+        private void OnDialogClose()
+        {
+            DialogClosed?.Invoke(this, new DialogEndedEventArgs(currentDialog));
         }
     }
 }

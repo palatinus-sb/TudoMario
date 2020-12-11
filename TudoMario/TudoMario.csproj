@@ -143,7 +143,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActorBase.cs" />
-    <Compile Include="AiActors\DeadlineEnemy.cs" />
     <Compile Include="AiActors\DumbEnemy.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -151,6 +150,7 @@
     <Compile Include="ColliderBase.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="EnemyTestActor.cs" />
+    <Compile Include="Map\Chunk.cs" />
     <Compile Include="Map\LoadMap.cs" />
     <Compile Include="LogicController.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -158,9 +158,6 @@
     </Compile>
     <Compile Include="Map\ActorRender.xaml.cs">
       <DependentUpon>ActorRender.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Map\Chunk.xaml.cs">
-      <DependentUpon>Chunk.xaml</DependentUpon>
     </Compile>
     <Compile Include="Map\MapBase.xaml.cs">
       <DependentUpon>MapBase.xaml</DependentUpon>
@@ -239,10 +236,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Map\ActorRender.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Map\Chunk.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
