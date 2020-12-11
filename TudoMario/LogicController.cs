@@ -43,7 +43,7 @@ namespace TudoMario
         private bool gameStarted = false;
         private bool gameEnded = false;
         private Stopwatch watch = new Stopwatch();
-        private int currentLevel = 2;
+        private int currentLevel = 0;
 
         public void AddActorToGame(ActorBase actorBase)
         {
