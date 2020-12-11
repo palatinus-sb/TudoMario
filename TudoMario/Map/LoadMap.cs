@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using TudoMario.Ui;
 using Windows.UI.Core;
 using TudoMario.AiActors;
+using Windows.ApplicationModel.Core;
 
 namespace TudoMario
 {
@@ -57,13 +58,18 @@ namespace TudoMario
         private static void OnTouchKillZone(ColliderBase sender, ColliderBase collider)
         {
             map.MainPlayer.ApplyDamage(1000);
-            ShowDialog("You died!");
+            //ShowDialog("You died!");
         }
 
         private static void OnFinishLevel(ColliderBase sender, ColliderBase collider)
         {
             CurrentLevel++;
             SwitchMap?.Invoke(null, EventArgs.Empty);
+        }
+
+        private static void OnEnemyTouch(ColliderBase sender, ColliderBase collider)
+        {
+            map.MainPlayer.ApplyDamage(10);
         }
 
         public static void ModifyMap1()
@@ -78,6 +84,7 @@ namespace TudoMario
             de.Texture = TextureHandler.GetImageByName("enemy1-r");
             de.canMove = true;
             de.IsVisible = true;
+            de.CollisionStarted += OnEnemyTouch;
             map.AddActor(de);
         }
         public static void ModifyMap2()
@@ -87,6 +94,13 @@ namespace TudoMario
 
             StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(3007, -160), false);
             NextMapTrigger.CollisionStarted += OnFinishLevel;
+
+            DumbEnemy de = new DumbEnemy(new Vector2(2338, -159), new Vector2(64, 64));
+            de.Texture = TextureHandler.GetImageByName("enemy1-r");
+            de.canMove = true;
+            de.IsVisible = true;
+            de.CollisionStarted += OnEnemyTouch;
+            map.AddActor(de);
         }
         public static void ModifyMap3()
         {
@@ -95,6 +109,13 @@ namespace TudoMario
 
             StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(4031, 321), false);
             NextMapTrigger.CollisionStarted += OnFinishLevel;
+
+            DumbEnemy de = new DumbEnemy(new Vector2(1645, 65), new Vector2(64, 64));
+            de.Texture = TextureHandler.GetImageByName("enemy1-r");
+            de.canMove = true;
+            de.IsVisible = true;
+            de.CollisionStarted += OnEnemyTouch;
+            map.AddActor(de);
         }
         public static void ModifyMap4() { }
         public static void ModifyMap5() { }
@@ -132,7 +153,7 @@ namespace TudoMario
                 }
                 else if (e.Dialog == "Deadline of Tools of software projects caught you! You failed!\nPress Esc to close!")
                 {
-                    Environment.Exit(1);
+                    CoreApplication.Exit();
                 }
             }
 
@@ -150,6 +171,7 @@ namespace TudoMario
             de.CollisionStarted += OnDeadlineCollison;
             de.canMove = false;
             de.IsVisible = false;
+            de.SpeedLimits.X = 10;
             enemy = de;
             map.AddActor(narrator);
             map.AddActor(enemy);

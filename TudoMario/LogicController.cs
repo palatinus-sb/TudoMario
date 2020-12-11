@@ -9,6 +9,7 @@ using System.Timers;
 using TudoMario.Map;
 using TudoMario.Rendering;
 using TudoMario.Ui;
+using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -81,18 +82,20 @@ namespace TudoMario
             timer.Tick += OnTimerTick;
         }
 
-        public void NewButtonClicked(object sender, EventArgs e)
+        public async void NewButtonClicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("Player x: " + renderer.CurrentMap.MainPlayer.Position.X);
-            Debug.WriteLine("Player y: " + renderer.CurrentMap.MainPlayer.Position.Y);
+            Debug.WriteLine(map.MainPlayer.Position.X + " : " + map.MainPlayer.Position.Y);
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => LoadPickedMap(0));
         }
-        public void LoadButtonClicked(object sender, EventArgs e)
+        public async void LoadButtonClicked(object sender, EventArgs e)
         {
-            LoadMap.SaveCurrentLevel();
+            await TmpOnSwitchMap();
         }
         public void ExitButtonClicked(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            CoreApplication.Exit();
         }
         public void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
         {
