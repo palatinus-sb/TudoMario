@@ -28,7 +28,7 @@ namespace TudoMario
         /// Contains the maps for the game in order
         /// </summary>
         public static readonly IList<string> levels = new ReadOnlyCollection<string>
-        (new List<string> { "TestMap.csv", "TestMapv2.0.csv", "map02.csv", "map03.csv", "map04.csv" });
+        (new List<string> { "TestMap.csv", "TestMapv2.0.csv", "map01.csv", "map02.csv", "map03.csv", "map06.csv" });
 
         public static MapBase PreLoad(int level)
         {

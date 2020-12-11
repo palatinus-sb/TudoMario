@@ -18,8 +18,6 @@ namespace TudoMario.Ui
         private MainPage _main;
         private Renderer _renderer;
 
-        private PlayerActor testPlayer;
-
         private Hud CurrentHud = new Hud();
         private MainMenu MainMenu;
         private bool isMainMenuShown;
@@ -82,12 +80,6 @@ namespace TudoMario.Ui
         /// </summary>
         public void ShowMap()
         {
-
-            testPlayer = new PlayerActor(new Vector2(0, 0), new Vector2(64, 64));
-            testPlayer.Texture = TextureHandler.GetImageByName("playermodel2");
-
-            //Renderer.BindCameraAtActor(testPlayer);
-
             MapBase mapBase = new MapBase(new Vector2(0, 0));
             Chunk airchunkMissingTexturetest = new Chunk();
             Chunk airChunk = new Chunk();
@@ -98,8 +90,6 @@ namespace TudoMario.Ui
             BitmapImage missing = TextureHandler.GetImageByName("kekekekek");
 
             //airchunkMissingTexturetest.FillChunkWith(air);
-
-            mapBase.AddActor(testPlayer);
 
             for (int i = 0; i < 16; i++)
             {
@@ -121,46 +111,6 @@ namespace TudoMario.Ui
             ShowDialog("TEST DYNAMIC DIALOG THAT IS VERY VERY LONG TO TEST THE LENGHT OF THIS DAMN THING AND I HOPE IT WILL WORK CAUSE I AM SO DONE WITH THIS PROJECT AT FKING SATURDAY 6PM REEEEEEEEE. OK IT WORKS HF GUYS");
 
             // RemoveDialog();
-        }
-
-        /// <summary>
-        /// Only for UI testing;
-        /// </summary>
-        public void Testf(string cont)
-        {
-            if (cont == "Left")
-            {
-                _renderer.MoveCameraLeft(20);
-            }
-            if (cont == "Right")
-            {
-                _renderer.MoveCameraLeft(-20);
-            }
-            if (cont == "Up")
-            {
-                _renderer.MoveCameraUp(20);
-            }
-            if (cont == "Down")
-            {
-                _renderer.MoveCameraUp(-20);
-            }
-
-            if (cont == "pUp")
-            {
-                testPlayer.Position.Y += 10f;
-            }
-            if (cont == "pDown")
-            {
-                testPlayer.Position.Y -= 10f;
-            }
-            if (cont == "pLeft")
-            {
-                testPlayer.Position.X -= 10f;
-            }
-            if (cont == "pRight")
-            {
-                testPlayer.Position.X += 10f;
-            }
         }
 
         /// <summary>

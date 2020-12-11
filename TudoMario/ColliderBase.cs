@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -17,7 +16,8 @@ namespace TudoMario
 
         protected ColliderBase(bool isSolid = true)
         {
-            instances.Add(this);
+            if (!(this is Probe))
+                instances.Add(this);
             IsSolid = isSolid;
         }
 
@@ -29,13 +29,12 @@ namespace TudoMario
         public bool IsCollisionEnabled { get; set; } = true;
         public bool IsSolid { get; protected set; } = true; // prevents actors from entering it's collision box
 
-        public static IEnumerable<ColliderBase> GetProbeColliders(ColliderBase collider)
+        /// <summary>
+        /// Force remove all previously created Colliders. This will prevent collision checks with previously created Colliders.
+        /// </summary>
+        public static void ClearAllColliders()
         {
-            ProbeCollider probe = new ProbeCollider(collider);
-            List<ColliderBase> colliders = probe.GetColliders().ToList();
-            colliders.Remove(collider);
-            instances.Remove(probe);
-            return colliders;
+            instances.Clear();
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace TudoMario
         /// </summary>
         /// <param name="other"> The other collider. </param>
         /// <returns> Returns true if the param and this collider are colliding. </returns>
-        public bool IsCollidingWith(ColliderBase other)
+        public virtual bool IsCollidingWith(ColliderBase other)
         {
             if (!this.IsCollisionEnabled || !other.IsCollisionEnabled || this.Equals(other))
                 return false;
@@ -72,6 +71,7 @@ namespace TudoMario
             }
 
             return CollidingColliders;
+            //return instances.Where(other => IsCollidingWith(other));
         }
 
         public void SignalCollisionStart(ColliderBase collider) => CollisionStarted?.Invoke(this, collider);
@@ -79,14 +79,25 @@ namespace TudoMario
         public void SignalCollisionEnd(ColliderBase collider) => CollisionEnded?.Invoke(this, collider);
 
         public bool Equals(ColliderBase other) => ReferenceEquals(this, other);
+    }
 
-        private class ProbeCollider : ColliderBase
+    public class Probe : ColliderBase
+    {
+        private ColliderBase parent;
+
+        public Probe(ColliderBase collider)
         {
-            public ProbeCollider(ColliderBase collider)
-            {
-                Position = collider.Position;
-                Size = collider.Size;
-            }
+            parent = collider;
+            Position = collider.Position;
+            Size = collider.Size;
+            IsSolid = false;
+        }
+
+        public override bool IsCollidingWith(ColliderBase other)
+        {
+            if (other == parent)
+                return false;
+            return base.IsCollidingWith(other);
         }
     }
 

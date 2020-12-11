@@ -111,14 +111,18 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
+
+            // Animate movement
             if (HasMovementSprites)
                 SetMovementTexture();
         }
 
-        public void SetMovementTexture()
+        protected void SetMovementTexture()
         {
             if (MovementSpeed.X == 0)
+            {
                 Texture = StandingSprites[GetFacingDirection()];
+            }
             else if (MovementSpeed.X > 0)
             {
                 int index = Array.FindIndex(MovementSprites[1], row => row.Equals(Texture)) + 1;
