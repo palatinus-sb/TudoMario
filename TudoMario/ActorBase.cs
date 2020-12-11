@@ -19,6 +19,7 @@ namespace TudoMario
         private BitmapImage[] StandingSprites = new BitmapImage[2];
         private BitmapImage[][] MovementSprites = new BitmapImage[2][];
         private bool FacingDirection = true;
+        private int TickCounter = 0;
 
         /// <summary>
         /// Actor healthpoints. 0 is perfectly fine, 1000 is dead.
@@ -34,6 +35,7 @@ namespace TudoMario
                 OnTextureChanged();
             }
         }
+        public bool IsVisible { get; set; } = true;
 
         public readonly string id;
         public event EventHandler Died;
@@ -51,14 +53,15 @@ namespace TudoMario
         public bool CanJump { get; set; }
         public bool HasMovementSprites { get; private set; } = false;
 
-        public ActorBase(string id = "")
+        public ActorBase(string id = "", bool isSolid = true) : base(isSolid)
         {
             this.id = string.IsNullOrEmpty(id) ? $"Actor-{GetType().Name}-{instances}" : $"Actor-{id}";
             instances++;
             colliders = base.GetColliders();
         }
 
-        public ActorBase(Vector2 position, Vector2 size, string id = "") : this(id)
+
+        public ActorBase(Vector2 position, Vector2 size, string id = "", bool isSolid = true) : this(id, isSolid)
         {
             Position = position;
             Size = size;
@@ -111,10 +114,13 @@ namespace TudoMario
             PerformBehaviour();
             // Move actor
             PhysicsController.ApplyPhysics(this);
-
-            // Animate movement
-            if (HasMovementSprites)
+            if (HasMovementSprites && TickCounter == 4)
+            {
                 SetMovementTexture();
+                TickCounter = 0;
+            }
+            else
+                TickCounter++;
         }
 
         protected void SetMovementTexture()

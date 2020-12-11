@@ -26,6 +26,7 @@ namespace TudoMario.Map
         public Vector2 Position { get => self.Position; }
         public Vector2 Size { get => self.Size; }
 
+        public bool IsVisible { get => self.IsVisible; set => self.IsVisible = value; }
         public BitmapImage Texture { get => self.Texture; set => self.Texture = value; }
 
         public ActorRender(ActorBase self)

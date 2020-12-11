@@ -442,7 +442,7 @@ namespace TudoMario.Rendering
                 //Add new actors that got in render range
                 foreach (var acRender in ActorRenderAll)
                 {
-                    if (!ActorRenderActive.Contains(acRender) && IsActorInRenderRange(acRender))
+                    if (!ActorRenderActive.Contains(acRender) && IsActorInRenderRange(acRender) && acRender.IsVisible)
                     {
                         ActorRenderActive.Add(acRender);
                         MainCanvas.Children.Add(acRender);

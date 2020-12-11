@@ -21,8 +21,10 @@ namespace TudoMario.Ui
         private Hud CurrentHud = new Hud();
         private MainMenu MainMenu;
         private bool isMainMenuShown;
+        private bool isDialogShown;
 
         public bool IsMainMenuShown { get => isMainMenuShown; }
+        public bool IsDialogShown { get => isDialogShown; private set => isDialogShown = value; }
 
         public UiController(MainPage mainpage, Renderer renderer)
         {
@@ -68,11 +70,13 @@ namespace TudoMario.Ui
         public void ShowDialog(string dialog)
         {
             CurrentHud.ShowDialog(dialog);
+            IsDialogShown = true;
         }
 
         public void RemoveDialog()
         {
             CurrentHud.RemoveDialog();
+            IsDialogShown = false;
         }
 
         /// <summary>

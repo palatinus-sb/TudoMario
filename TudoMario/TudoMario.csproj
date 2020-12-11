@@ -150,6 +150,7 @@
     </Compile>
     <Compile Include="ColliderBase.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="EnemyTestActor.cs" />
     <Compile Include="Map\LoadMap.cs" />
     <Compile Include="LogicController.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -175,6 +176,7 @@
     <Compile Include="Rendering\ITextured.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\TextureHandler.cs" />
+    <Compile Include="StaticCollider.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Ui\Hud.xaml.cs">
       <DependentUpon>Hud.xaml</DependentUpon>
@@ -193,14 +195,26 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BaseBackGroung.png" />
+    <Content Include="Assets\dl.png" />
+    <Content Include="Assets\enemy1-l.png" />
+    <Content Include="Assets\enemy1-move0-l.png" />
+    <Content Include="Assets\enemy1-move0-r.png" />
+    <Content Include="Assets\enemy1-move1-l.png" />
+    <Content Include="Assets\enemy1-move1-r.png" />
+    <Content Include="Assets\enemy1-r.png" />
     <Content Include="Assets\Ground.png" />
     <Content Include="Assets\GroundBase.png" />
     <Content Include="Assets\Ice.png" />
     <Content Include="Assets\ice01.png" />
+    <Content Include="Assets\ice02.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\missing.png" />
     <Content Include="Assets\Mud.png" />
     <Content Include="Assets\mud01.png" />
+    <Content Include="Assets\mud02.png" />
+    <Content Include="Assets\narrator1.png" />
+    <Content Include="Assets\narrator2.png" />
+    <Content Include="Assets\pickup_sw.png" />
     <Content Include="Assets\player1-l.png" />
     <Content Include="Assets\player1-move0-l.png" />
     <Content Include="Assets\player1-move0-r.png" />
@@ -261,10 +275,10 @@
     <Content Include="Assets\TestMapv2.0.csv" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\map01.csv" />
-    <None Include="Assets\map02.csv" />
-    <None Include="Assets\map03.csv" />
-    <None Include="Assets\map06.csv" />
+    <Content Include="Assets\map01.csv" />
+    <Content Include="Assets\map02.csv" />
+    <Content Include="Assets\map03.csv" />
+    <Content Include="Assets\map06.csv" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
