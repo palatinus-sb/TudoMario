@@ -33,6 +33,7 @@ namespace TudoMario
             //timer.Tick += OnTimerTick;
             renderer.MapFinishedLoading += OnMapFinishedLoading;
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            LoadMap.SwitchMap += OnSwitchMap;
         }
 
         private Timer timer;
@@ -42,7 +43,7 @@ namespace TudoMario
         private bool gameStarted = false;
         private bool gameEnded = false;
         private Stopwatch watch = new Stopwatch();
-        private int currentLevel = 0;
+        private int currentLevel = 2;
 
         public void AddActorToGame(ActorBase actorBase)
         {
@@ -107,6 +108,18 @@ namespace TudoMario
             }
         }
 
+        public void OnSwitchMap(object sender, EventArgs e)
+        {
+            TmpOnSwitchMap().Wait();
+            //ColliderBase.ClearAllColliders();
+        }
+        private async Task TmpOnSwitchMap()
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => LoadPickedMap(LoadMap.CurrentLevel));
+        }
+
         private async Task CheckGameState()
         {
             if (!gameStarted)
@@ -117,7 +130,6 @@ namespace TudoMario
             }
             else if (!map.MainPlayer.IsAlive)
             {
-                timer.Stop();
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 () => LoadPickedMap(LoadMap.CurrentLevel));
@@ -149,11 +161,18 @@ namespace TudoMario
 
         private void LoadPickedMap(int level)
         {
+            if (timer != null)
+                timer.Stop();
+            ColliderBase.ClearAllColliders();
             LoadMap.PreLoad(level);
             LoadMap.PostLoad();
 
-            this.map = LoadMap.map;
             var tempMap = LoadMap.map;
+            map = tempMap;
+
+            map.MainPlayer.MovementSpeed.Y = 0;
+            map.MainPlayer.MovementSpeed.X = 0;
+
             renderer.CurrentMap = tempMap;
         }
     }

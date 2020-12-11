@@ -25,6 +25,8 @@ namespace TudoMario
         internal static UiController UiControl { get; set; }
         public static string path = @"Assets//gameSave.txt";
 
+        public static event EventHandler SwitchMap;
+
         /// <summary>
         /// Contains the maps for the game in order
         /// </summary>
@@ -60,7 +62,7 @@ namespace TudoMario
         private static void OnFinishLevel(ColliderBase sender, ColliderBase collider)
         {
             CurrentLevel++;
-            ShowDialog("ASD");
+            SwitchMap?.Invoke(null, EventArgs.Empty);
         }
 
         public static void ModifyMap1()
