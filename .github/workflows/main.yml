@@ -23,7 +23,8 @@ jobs:
       run: msbuild TudoMario.sln /p:Configuration=Debug /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
    
     - name: Build And Deploy
-      run: msbuild.exe TudoMario.sln /t:Build /p:Configuration=Release /p:TargetFrameworkVersion=v4.0 /p:DeployOnBuild=true
+      run: msbuild TudoMario.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:AppxBundlePlatforms="x86" /p:AppxPackageDir=".\AppxPackages" /p:AppxBundle=Always
+      
   
   
   test:
