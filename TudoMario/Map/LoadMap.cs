@@ -99,7 +99,7 @@ namespace TudoMario
                 ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
             }
 
-            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(64, 64));
+            EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(200, 200));
             DeadLineEnemy.IsVisible = true;
             DeadLineEnemy.Texture = TextureHandler.GetMissingTexture();
 
