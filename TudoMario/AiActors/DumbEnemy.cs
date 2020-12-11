@@ -13,7 +13,7 @@ namespace TudoMario.AiActors
         private float lastPostionX = 0;
         public bool canMove = true;
 
-        public DumbEnemy(Vector2 position, Vector2 size, string id = "") : base(position, size, id, false) { }
+        public DumbEnemy(Vector2 position, Vector2 size, string id = "") : base(position, size, id, false) { SpeedLimits.X = 2f; }
 
         protected override void PerformBehaviour()
         {
@@ -21,14 +21,14 @@ namespace TudoMario.AiActors
             {
                 MovementSpeed.X += direction * PhysicsController.friction * 1.25f;
 
-                if (lastPostionX == Position.X)
+                if (Math.Abs(lastPostionX - Position.X) < 1f)
                     stationaryTickCount++;
                 else
                     stationaryTickCount = 0;
 
-                if (stationaryTickCount == 3)
+                if (stationaryTickCount == 4)
                 {
-                    MovementSpeed.Y = 12.5f;
+                    MovementSpeed.Y = 15f;
                     CanJump = false;
                 }
                 else if (stationaryTickCount > 9)
