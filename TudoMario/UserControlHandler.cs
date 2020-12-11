@@ -27,15 +27,36 @@ namespace TudoMario
         {
             switch (key)
             {
-                case VirtualKey.W: PressedKeys |= KeyAction.Up; break;
-                case VirtualKey.A: PressedKeys |= KeyAction.Left; break;
-                case VirtualKey.S: PressedKeys |= KeyAction.Down; break;
-                case VirtualKey.D: PressedKeys |= KeyAction.Right; break;
-                case VirtualKey.Space: PressedKeys |= KeyAction.Up; break;
-                case VirtualKey.GamepadA: PressedKeys |= KeyAction.Up; break;
-                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys |= KeyAction.Left; break;
-                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys |= KeyAction.Down; break;
-                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys |= KeyAction.Up; break;
+                case VirtualKey.W:
+                    PressedKeys |= KeyAction.Up;
+                    break;
+                case VirtualKey.A:
+                    PressedKeys |= KeyAction.Left;
+                    break;
+                case VirtualKey.S:
+                    PressedKeys |= KeyAction.Down;
+                    break;
+                case VirtualKey.D:
+                    PressedKeys |= KeyAction.Right;
+                    break;
+                case VirtualKey.Space:
+                    PressedKeys |= KeyAction.Up;
+                    break;
+                case VirtualKey.GamepadA:
+                    PressedKeys |= KeyAction.Up;
+                    break;
+                case VirtualKey.GamepadDPadLeft:
+                    PressedKeys |= KeyAction.Left;
+                    break;
+                case VirtualKey.GamepadDPadDown:
+                    PressedKeys |= KeyAction.Down;
+                    break;
+                case VirtualKey.GamepadDPadUp:
+                    PressedKeys |= KeyAction.Up;
+                    break;
+                case VirtualKey.GamepadDPadRight:
+                    PressedKeys |= KeyAction.Right;
+                    break;
             }
         }
 
@@ -43,15 +64,36 @@ namespace TudoMario
         {
             switch (key)
             {
-                case VirtualKey.W: PressedKeys &= ~KeyAction.Up; break;
-                case VirtualKey.A: PressedKeys &= ~KeyAction.Left; break;
-                case VirtualKey.S: PressedKeys &= ~KeyAction.Down; break;
-                case VirtualKey.D: PressedKeys &= ~KeyAction.Right; break;
-                case VirtualKey.Space: PressedKeys &= ~KeyAction.Up; break;
-                case VirtualKey.GamepadA: PressedKeys &= ~KeyAction.Up; break;
-                case VirtualKey.GamepadLeftThumbstickLeft: PressedKeys &= ~KeyAction.Left; break;
-                case VirtualKey.GamepadLeftThumbstickDown: PressedKeys &= ~KeyAction.Down; break;
-                case VirtualKey.GamepadLeftThumbstickRight: PressedKeys &= ~KeyAction.Right; break;
+                case VirtualKey.W:
+                    PressedKeys &= ~KeyAction.Up;
+                    break;
+                case VirtualKey.A:
+                    PressedKeys &= ~KeyAction.Left;
+                    break;
+                case VirtualKey.S:
+                    PressedKeys &= ~KeyAction.Down;
+                    break;
+                case VirtualKey.D:
+                    PressedKeys &= ~KeyAction.Right;
+                    break;
+                case VirtualKey.Space:
+                    PressedKeys &= ~KeyAction.Up;
+                    break;
+                case VirtualKey.GamepadA:
+                    PressedKeys &= ~KeyAction.Up;
+                    break;
+                case VirtualKey.GamepadDPadLeft:
+                    PressedKeys &= ~KeyAction.Left;
+                    break;
+                case VirtualKey.GamepadDPadDown:
+                    PressedKeys &= ~KeyAction.Down;
+                    break;
+                case VirtualKey.GamepadDPadRight:
+                    PressedKeys &= ~KeyAction.Right;
+                    break;
+                case VirtualKey.GamepadDPadUp:
+                    PressedKeys &= ~KeyAction.Up;
+                    break;
             }
         }
     }

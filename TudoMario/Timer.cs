@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace TudoMario
 {
-    class Timer
+    internal class Timer
     {
         private readonly Stopwatch stopwatch;
         private readonly int desiredMiliseconds;

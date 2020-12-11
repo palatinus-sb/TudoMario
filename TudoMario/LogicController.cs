@@ -97,7 +97,7 @@ namespace TudoMario
         public void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
         {
             VirtualKey pressedKey = e.VirtualKey;
-            if (pressedKey == VirtualKey.Escape)
+            if (pressedKey == VirtualKey.Escape || pressedKey == VirtualKey.GamepadB)
             {
                 if (uiController.IsMainMenuShown)
                     uiController.RemoveMainMenu();
