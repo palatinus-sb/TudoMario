@@ -145,7 +145,7 @@ namespace TudoMario
             narrator.Texture = TextureHandler.GetImageByName("narrator2");
             narrator.canMove = false;
 
-            DumbEnemy de = new DumbEnemy(new Vector2(450, 200), new Vector2(100, 500));
+            DumbEnemy de = new DumbEnemy(new Vector2(200, 500), new Vector2(100, 500));
             de.Texture = TextureHandler.GetImageByName("dl");
             de.CollisionStarted += OnDeadlineCollison;
             de.canMove = false;
