@@ -34,7 +34,8 @@ namespace TudoMario
         (new List<string> { "map01.csv", "map02.csv", "map03.csv", "map06.csv" });
 
         #region map6 variables
-        internal static DumbEnemy de = new DumbEnemy(new Vector2(450, 200), new Vector2(100, 500));
+        internal static DumbEnemy enemy = null;
+        internal static bool triggerOnce = true;
         #endregion
 
         public static MapBase PreLoad(int level)
@@ -72,6 +73,12 @@ namespace TudoMario
 
             StaticCollider NextMapTrigger = new StaticCollider(new Vector2(64, 64), new Vector2(1983, 1), false);
             NextMapTrigger.CollisionStarted += OnFinishLevel;
+
+            DumbEnemy de = new DumbEnemy(new Vector2(653, -127), new Vector2(64, 64));
+            de.Texture = TextureHandler.GetImageByName("enemy1-r");
+            de.canMove = true;
+            de.IsVisible = true;
+            map.AddActor(de);
         }
         public static void ModifyMap2()
         {
@@ -99,47 +106,53 @@ namespace TudoMario
             static void OnDeadlineCollison(ColliderBase sender, ColliderBase collidor)
             {
                 if (collidor == map.MainPlayer)
+                {
                     ShowDialog("Deadline of Tools of software projects caught you! You failed!\nPress Esc to close!");
+                    enemy.IsStatic = true;
+                    map.MainPlayer.ApplyDamage(999);
+                    map.MainPlayer.IsStatic = true;
+                }
             }
             static void OnRandomText(ColliderBase sender, ColliderBase collidor)
             {
-                if (collidor == map.MainPlayer)
-                    ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up");
+                if (collidor == map.MainPlayer && triggerOnce)
+                {
+                    ShowDialog("The end of the semester is coming! Quick run before the deadlines are catching up!\nPress Esc to continue...");
+                    map.MainPlayer.IsStatic = true;
+                    triggerOnce = false;
+                }
             }
             static void OnDialogClose(object sender, DialogEndedEventArgs e)
             {
-                if (e.Dialog == "The end of the semester is coming! Quick run before the deadlines are catching up")
+                if (e.Dialog == "The end of the semester is coming! Quick run before the deadlines are catching up!\nPress Esc to continue...")
                 {
-                    de.canMove = true;
-                    de.IsVisible = true;
+                    enemy.canMove = true;
+                    enemy.IsVisible = true;
+                    map.MainPlayer.IsStatic = false;
                 }
                 else if (e.Dialog == "Deadline of Tools of software projects caught you! You failed!\nPress Esc to close!")
                 {
-
+                    Environment.Exit(1);
                 }
             }
 
-            /*EnemyTestActor DeadLineEnemy = new EnemyTestActor(new Vector2(112, 200), new Vector2(100, 500));
-            DeadLineEnemy.IsVisible = true;
-            DeadLineEnemy.Texture = TextureHandler.GetImageByName("dl");
+            UiControl.DialogClosed += OnDialogClose;
 
-            EnemyTestActor Testenemy = new EnemyTestActor(new Vector2(2100, 200), new Vector2(64, 64));
-            Testenemy.IsVisible = false;
-            Testenemy.Texture = TextureHandler.GetMissingTexture();*/
-
-            StaticCollider RandomTextPopupHitbox = new StaticCollider(new Vector2(50, 500), new Vector2(1920, -127), false);
-
+            StaticCollider RandomTextPopupHitbox = new StaticCollider(new Vector2(50, 500), new Vector2(2007, -127), false);
             RandomTextPopupHitbox.CollisionStarted += OnRandomText;
-            /*Testenemy.CollisionStarted += OnDeadlineCollison;
 
-            map.AddActor(Testenemy);
-            map.AddActor(DeadLineEnemy);*/
+            DumbEnemy narrator = new DumbEnemy(new Vector2(2007, -127), new Vector2(70, 70));
+            narrator.Texture = TextureHandler.GetImageByName("narrator2");
+            narrator.canMove = false;
+
+            DumbEnemy de = new DumbEnemy(new Vector2(450, 200), new Vector2(100, 500));
             de.Texture = TextureHandler.GetImageByName("dl");
             de.CollisionStarted += OnDeadlineCollison;
-            UiControl.DialogClosed += OnDialogClose;
             de.canMove = false;
-            //de.IsVisible = false;
-            map.AddActor(de);
+            de.IsVisible = false;
+            enemy = de;
+            map.AddActor(narrator);
+            map.AddActor(enemy);
         }
 
         public static void PostLoad()
