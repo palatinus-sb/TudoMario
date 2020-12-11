@@ -78,10 +78,12 @@ namespace TudoMario.Ui
         /// Prints the text into the Hud dialogbox. Returns false if it was not possible.
         /// </summary>
         /// <param name="dialog"></param>
-        public void ShowDialog(string dialog)
+        public async Task ShowDialog(string dialog)
         {
             currentDialog = dialog;
-            CurrentHud.ShowDialog(dialog);
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => CurrentHud.ShowDialog(dialog));
             IsDialogShown = true;
         }
 
@@ -125,7 +127,7 @@ namespace TudoMario.Ui
 
             //_renderer.CurrentMap = mapBase;
 
-            ShowDialog("TEST DYNAMIC DIALOG THAT IS VERY VERY LONG TO TEST THE LENGHT OF THIS DAMN THING AND I HOPE IT WILL WORK CAUSE I AM SO DONE WITH THIS PROJECT AT FKING SATURDAY 6PM REEEEEEEEE. OK IT WORKS HF GUYS");
+            //ShowDialog("TEST DYNAMIC DIALOG THAT IS VERY VERY LONG TO TEST THE LENGHT OF THIS DAMN THING AND I HOPE IT WILL WORK CAUSE I AM SO DONE WITH THIS PROJECT AT FKING SATURDAY 6PM REEEEEEEEE. OK IT WORKS HF GUYS");
 
             // RemoveDialog();
         }

@@ -97,8 +97,13 @@ namespace TudoMario
         {
             var newLimits = speedLimits;
             var additives = actor.MovementModifiers.Where(m => m.Mode == Mode.Additive);
-            foreach (var modifier in additives)
-                newLimits = ApplyModifier(modifier, newLimits);
+            try
+            {
+                foreach (var modifier in additives)
+                    newLimits = ApplyModifier(modifier, newLimits);
+            }
+            catch (Exception) { }
+
             return newLimits;
         }
 
@@ -106,8 +111,12 @@ namespace TudoMario
         {
             var newLimits = speedLimits;
             var multiplicatives = actor.MovementModifiers.Where(m => m.Mode == Mode.Multiplicative);
-            foreach (var modifier in multiplicatives)
-                newLimits = ApplyModifier(modifier, newLimits);
+            try
+            {
+                foreach (var modifier in multiplicatives)
+                    newLimits = ApplyModifier(modifier, newLimits);
+            }
+            catch (Exception) { }
             return newLimits;
         }
 

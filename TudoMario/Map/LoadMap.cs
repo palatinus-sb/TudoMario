@@ -18,13 +18,9 @@ namespace TudoMario
 {
     public static class LoadMap
     {
-
-
-        //private static string fileName;
         public static Vector2 actorStartingPoint = new Vector2();
         private static Vector2 mapStartingPoint = new Vector2(0, 0);
         public static MapBase map = new MapBase(mapStartingPoint);
-        //public static int currentLevel = 0;
         public static int CurrentLevel { get; set; } = 0;
         internal static UiController UiControl { get; set; }
         public static string path = @"Assets//gameSave.txt";
@@ -41,6 +37,7 @@ namespace TudoMario
 
         public static MapBase PreLoad(int level)
         {
+            map = new MapBase(new Vector2(100, 0));
             if (0 > level)
             {
                 throw new IndexOutOfRangeException();
@@ -164,8 +161,6 @@ namespace TudoMario
 
         public static void SaveCurrentLevel()
         {
-            /*using (StreamWriter gameSave = new StreamWriter(path))
-                 gameSave.WriteLine(currentLevel.ToString());*/
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             localSettings.Values["mapSave"] = CurrentLevel.ToString();
         }
@@ -178,8 +173,6 @@ namespace TudoMario
 
         public static void LoadCurrentLevel()
         {
-            /*using (StreamReader reader = new StreamReader(path))
-                int.TryParse(reader.ReadLine(), out currentLevel);*/
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             int currentLevel = 0;
             int.TryParse((string)localSettings.Values["mapSave"], out currentLevel);
@@ -274,7 +267,6 @@ namespace TudoMario
             actorStartingPoint.Y = float.Parse(config[2]) * 16;
             int mapLength = int.Parse(config[4]);
             int mapHeight = int.Parse(config[5]);
-            //int chunksInARow = int.Parse(config[7]);
             int chunksInAColumn = int.Parse(config[8]);
             Vector2 actorSize = new Vector2(64, 64);
             PlayerActor player = new PlayerActor(actorStartingPoint, actorSize);
@@ -306,11 +298,7 @@ namespace TudoMario
 
         private static void ShowDialog(string Text)
         {
-#pragma warning disable CS4014
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-                () => UiControl.ShowDialog(Text));
-#pragma warning restore CS4014
+            UiControl.ShowDialog(Text).Wait();
         }
     }
 }

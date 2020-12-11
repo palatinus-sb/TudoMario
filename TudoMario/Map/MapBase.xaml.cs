@@ -17,11 +17,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TudoMario.Map
 {
-    public sealed partial class MapBase : UserControl
+    public sealed partial class MapBase
     {
         public MapBase(Vector2 startingpoint)
         {
-            InitializeComponent();
+            //InitializeComponent();
             StartingPoint = startingpoint;
             MapActorList.Clear();
             Chunks.Clear();
